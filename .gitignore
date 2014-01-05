@@ -1,0 +1,33 @@
+# Compiled Object files
+*.slo
+*.lo
+*.o
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+
+# Compiled Static Libraries
+*.lai
+*.la
+*.a
+
+# Project Files
+.cproject
+.project
+.wrmakefile
+.wrproject
+
+# Output Files
+PPC603gnu/
+
+# Qt machine-dependent file
+QtProject/FRC-2013.pro.user
+
+# MakeGen.exe // Ethans stuff
+*.exe
+*.dll
+
+#its building here...
+QtProject/builder/2013
+QtProject/builder/2013_partialImage
