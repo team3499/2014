@@ -13,10 +13,10 @@
 *.a
 
 # Project Files
-.cproject
-.project
-.wrmakefile
-.wrproject
+# .cproject
+# .project
+# .wrmakefile
+# .wrproject
 
 # Output Files
 PPC603gnu/
