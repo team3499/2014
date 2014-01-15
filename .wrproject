@@ -245,14 +245,14 @@
         </mapAttribute>
     </attributes>
     <buildtargets>
-        <buildtarget buildtool="Linker" name="Robot2014" passed="false" targetname="Robot2014">
+        <buildtarget buildtool="Linker" name="SimpleTemplate" passed="false" targetname="SimpleTemplate">
             <contents>
-                <buildtargetreference name="/2014/Robot2014_partialImage"/>
+                <buildtargetreference name="/SimpleTemplate/SimpleTemplate_partialImage"/>
             </contents>
         </buildtarget>
-        <buildtarget buildtool="Partial Image Linker" name="Robot2014_partialImage" passed="true" targetname="Robot2014_partialImage">
+        <buildtarget buildtool="Partial Image Linker" name="SimpleTemplate_partialImage" passed="true" targetname="SimpleTemplate_partialImage">
             <contents>
-                <folder name="/2014" recursive="true"/>
+                <folder name="/SimpleTemplate" recursive="true"/>
             </contents>
         </buildtarget>
     </buildtargets>
