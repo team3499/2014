@@ -1,10 +1,23 @@
 #include "RERRobot.h"
 
-START_ROBOT_CLASS(RobotDemo); // Off we gooooooo!!!
+#include "DriverStation.h"
+#include "NetworkCommunication/UsageReporting.h"
+#include "Timer.h"
+#include "SmartDashboard/SmartDashboard.h"
+#include "LiveWindow/LiveWindow.h"
+#include "networktables/NetworkTable.h"
+
+START_ROBOT_CLASS(RERRobot); // Off we gooooooo!!!
 
 RERRobot::RERRobot(){
-	compressor = new Compressor(1, 2);
-	myRobot.SetExpiration(0.1);
+	compressor = new Compressor(4, 2);
+	compressor->Start();
+	valve1 = new Solenoid(1);
+	//myRobot.SetExpiration(0.1);
+}
+
+RERRobot::~RERRobot(){
+	delete compressor;
 }
 
 void RERRobot::StartCompetition(){
@@ -52,5 +65,4 @@ void RERRobot::StartCompetition(){
 			}
 		}
 	}
-}
 }

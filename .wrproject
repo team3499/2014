@@ -247,12 +247,12 @@
     <buildtargets>
         <buildtarget buildtool="Linker" name="SimpleTemplate" passed="false" targetname="SimpleTemplate">
             <contents>
-                <buildtargetreference name="/SimpleTemplate/SimpleTemplate_partialImage"/>
+                <buildtargetreference name="/2014/SimpleTemplate_partialImage"/>
             </contents>
         </buildtarget>
         <buildtarget buildtool="Partial Image Linker" name="SimpleTemplate_partialImage" passed="true" targetname="SimpleTemplate_partialImage">
             <contents>
-                <folder name="/SimpleTemplate" recursive="true"/>
+                <folder name="/2014" recursive="true"/>
             </contents>
         </buildtarget>
     </buildtargets>
