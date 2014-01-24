@@ -31,3 +31,6 @@ QtProject/FRC-2013.pro.user
 #its building here...
 QtProject/builder/2013
 QtProject/builder/2013_partialImage
+
+*.user
+*.pro.user
