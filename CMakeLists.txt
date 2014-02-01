@@ -1,20 +1,47 @@
-cmake_minimum_required(VERSION 2.8)
-include(FRCDeploy)
+# Rivers Edge Robotics (Team 3499) 2014 Robot Code
+CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
+PROJECT(RER_2014)
 
-project(RER-2014)
-find_package(WPILib)
+INCLUDE(FRCDeploy)
+FIND_PACKAGE(WPILib)
 
-file(GLOB_RECURSE SOURCE_CODE *.cpp)
+SET(RER_2014_HEADERS ### =================== HEADERS =================== ###
+    RERRobot.h
+    generated.h
+)
 
-include_directories(
+SET(RER_2014_SOURCES ### =================== SOURCES =================== ###
+    autonomous.cpp
+    disabled.cpp
+    init.cpp
+    RERRobot.cpp
+    teleop.cpp
+    test.cpp
+)
+
+### =================== CONFIG =================== ###
+
+INCLUDE_DIRECTORIES(
+    ${CMAKE_BINARY_DIR}
     ${WPILib_INCLUDE_DIRS}
 )
 
-#add_custom_target(envr COMMAND " bash export WIND_BASE=/usr/powerpc-wrs-vxworks/wind_base")
+# Generate build date
+EXECUTE_PROCESS(COMMAND date OUTPUT_VARIABLE G_MAKE_BUILD_TIME)
+STRING(STRIP ${G_MAKE_BUILD_TIME} G_MAKE_BUILD_TIME)
+CONFIGURE_FILE(generated.h gen_out.h @ONLY)
 
-add_executable(robot_module ${SOURCE_CODE})
-target_link_libraries(robot_module ${WPILib_LIBRARY})
+MESSAGE(STATUS "Building Rivers Edge Robotics (Team 3499) 2014 Robot Code")
+MESSAGE(STATUS "Build Time: ${G_MAKE_BUILD_TIME}")
+MESSAGE(STATUS "Toolchain: ${CMAKE_TOOLCHAIN_FILE}")
 
-#add_dependencies(robot_module envr)
+### =================== BUILD =================== ###
 
-add_make_deploy(robot_module 10.34.99.2)
+ADD_DEFINITIONS(-DBUILDING)
+
+# Add target for robot code
+ADD_EXECUTABLE(robot_module ${RER_2014_SOURCES})
+TARGET_LINK_LIBRARIES(robot_module ${WPILib_LIBRARY})
+
+# Add deploy target
+ADD_MAKE_DEPLOY(robot_module 10.34.99.2)

@@ -3,7 +3,8 @@ CONFIG += console
 CONFIG -= app_bundle
 CONFIG -= qt
 
-HEADERS += RERRobot.h
+HEADERS += RERRobot.h \
+    generated.h
 
 SOURCES += RERRobot.cpp \
     init.cpp \
