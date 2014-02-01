@@ -13,4 +13,8 @@ SOURCES += RERRobot.cpp \
     disabled.cpp
 
 OTHER_FILES += \
-    PPC603gnu/compile.sh
+    PPC603gnu/compile.sh \
+    sample.txt \
+    CMakeLists.txt
+
+INCLUDEPATH += /usr/powerpc-wrs-vxworks/include/WPILib
