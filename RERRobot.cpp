@@ -37,6 +37,8 @@ RERRobot::RERRobot(){
     jagFL->EnableControl();
     jagRR->EnableControl();
     jagRL->EnableControl();
+
+    relayTest = new Relay(3);
 }
 
 RERRobot::~RERRobot(){
