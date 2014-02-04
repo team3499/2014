@@ -7,20 +7,20 @@ void RERRobot::modeTeleoperated(){
 
     while(IsOperatorControl() && IsEnabled()){
 
-        SmartDashboard::PutNumber("3 Speed", jagFR->GetSpeed());
-        SmartDashboard::PutNumber("4 Speed", jagFL->GetSpeed());
-        SmartDashboard::PutNumber("2 Speed", jagRR->GetSpeed());
-        SmartDashboard::PutNumber("5 Speed", jagRL->GetSpeed());
+        SD_PN("3 Speed", jagFR->GetSpeed());
+        SD_PN("4 Speed", jagFL->GetSpeed());
+        SD_PN("2 Speed", jagRR->GetSpeed());
+        SD_PN("5 Speed", jagRL->GetSpeed());
 
-        jagFR->SetPID(SmartDashboard::GetNumber("3P"), SmartDashboard::GetNumber("3I"), SmartDashboard::GetNumber("3D"));
-        jagFL->SetPID(SmartDashboard::GetNumber("4P"), SmartDashboard::GetNumber("4I"), SmartDashboard::GetNumber("4D"));
-        jagRR->SetPID(SmartDashboard::GetNumber("2P"), SmartDashboard::GetNumber("2I"), SmartDashboard::GetNumber("2D"));
-        jagRL->SetPID(SmartDashboard::GetNumber("5P"), SmartDashboard::GetNumber("5I"), SmartDashboard::GetNumber("5D"));
+        jagFR->SetPID(SD_GN("3P"), SD_GN("3I"), SD_GN("3D"));
+        jagFL->SetPID(SD_GN("4P"), SD_GN("4I"), SD_GN("4D"));
+        jagRR->SetPID(SD_GN("2P"), SD_GN("2I"), SD_GN("2D"));
+        jagRL->SetPID(SD_GN("5P"), SD_GN("5I"), SD_GN("5D"));
 
-        jagFR->Set(SmartDashboard::GetNumber("3 SetSpeed"));
-        jagFL->Set(SmartDashboard::GetNumber("4 SetSpeed"));
-        jagRR->Set(SmartDashboard::GetNumber("2 SetSpeed"));
-        jagRL->Set(SmartDashboard::GetNumber("5 SetSpeed"));
+        jagFR->Set(SD_GN("3 SetSpeed"));
+        jagFL->Set(SD_GN("4 SetSpeed"));
+        jagRR->Set(SD_GN("2 SetSpeed"));
+        jagRL->Set(SD_GN("5 SetSpeed"));
 
         Wait(0.005);
     }

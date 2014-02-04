@@ -7,6 +7,17 @@
 #include <DigitalOutput.h>
 #include <DriverStationLCD.h>
 
+// SmartDashboard macros: n = name, x = value
+#define SD_PN(n, x) SmartDashboard::PutNumber(n, x)
+#define SD_GN(n)    SmartDashboard::GetNumber(n)
+
+#define SD_PB(n, x) SmartDashboard::PutNumber(n, x)
+#define SD_GB(n)    SmartDashboard::GetNumber(n)
+
+#define SD_PS(n, x) SmartDashboard::PutNumber(n, x)
+#define SD_GS(n)    SmartDashboard::GetNumber(n)
+
+
 class RERRobot : public RobotBase {
 public:
     RERRobot();
