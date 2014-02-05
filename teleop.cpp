@@ -1,11 +1,16 @@
 #include "RERRobot.h"
-#include <SmartDashboard/SmartDashboard.h>
 
 void RERRobot::modeTeleoperated(){
     compressor->Start();
     //SetSafetyEnabled(false); //on a dev board
 
     int i = 0;
+
+    SD_PB("Testing i eh", false);
+    SD_PN("Testing i eh?", 0.0);
+
+    SD_PN("IsOperatorControl eh?", IsOperatorControl());
+    SD_PN("IsEnabled eh?", IsEnabled());
 
     while(IsOperatorControl() && IsEnabled()){
 
@@ -27,10 +32,13 @@ void RERRobot::modeTeleoperated(){
         iotest->Set(i < 50);
 
         ++i;
-        if(i == 100)
+        if(i == 100){
             SD_PB("Testing i eh", true);
-        else if (i == 50)
+            SD_PN("Testing i eh?", 1.0);
+        } else if (i == 50){
             SD_PB("Testing i eh", false);
+            SD_PN("Testing i eh?", 0.0);
+        }
         i %= 100;
 
         Wait(0.005);
