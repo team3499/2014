@@ -25,10 +25,15 @@ void RERRobot::modeTest(){
     SD_PN("2 SetSpeed", 50);
     SD_PN("5 SetSpeed", 50);
 
+    SD_PB("TestEh() == ", IsTest());
+    SD_PB("EnabledEh() == ", IsEnabled());
+
+
     while(IsTest() && IsEnabled()){
         SD_PB("LED eh ", false);
         iotest->Set(0);
         Wait(1);
+        SD_PS("String! ", "String 1");
         SD_PB("LED eh ", true);
         iotest->Set(1);
         Wait(0.5);

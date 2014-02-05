@@ -11,7 +11,7 @@ RERRobot::RERRobot(){
 
     compressor = new Compressor(2, 2);
     valve1 = new Solenoid(1);
-    iotest = new DigitalOutput(8);
+    iotest = new DigitalOutput(1, 8);
 
     jagFR = new CANJaguar(3, CANJaguar::kSpeed);
     jagFL = new CANJaguar(4, CANJaguar::kSpeed);

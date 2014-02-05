@@ -5,6 +5,8 @@ void RERRobot::modeTeleoperated(){
     compressor->Start();
     //SetSafetyEnabled(false); //on a dev board
 
+    int i = 0;
+
     while(IsOperatorControl() && IsEnabled()){
 
         SD_PN("3 Speed", jagFR->GetSpeed());
@@ -21,6 +23,15 @@ void RERRobot::modeTeleoperated(){
         jagFL->Set(SD_GN("4 SetSpeed"));
         jagRR->Set(SD_GN("2 SetSpeed"));
         jagRL->Set(SD_GN("5 SetSpeed"));
+
+        iotest->Set(i < 50);
+
+        ++i;
+        if(i == 100)
+            SD_PB("Testing i eh", true);
+        else if (i == 50)
+            SD_PB("Testing i eh", false);
+        i %= 100;
 
         Wait(0.005);
     }
