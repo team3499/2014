@@ -1,5 +1,5 @@
 #include "RERRobot.h"
-#include <SmartDashboard/SmartDashboard.h>
+#include <unistd.h>
 
 void RERRobot::modeTest(){
     compressor->Start();
@@ -32,11 +32,11 @@ void RERRobot::modeTest(){
     while(IsTest() && IsEnabled()){
         SD_PB("LED eh ", false);
         iotest->Set(0);
-        Wait(1);
+        sleep(1);
         SD_PS("String! ", "String 1");
         SD_PB("LED eh ", true);
         iotest->Set(1);
-        Wait(0.5);
+        sleep(1);
     }
 
     compressor->Stop();

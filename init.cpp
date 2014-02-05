@@ -9,7 +9,7 @@
 void RERRobot::init(){
 
     dsLCD->Clear();
-    dsLCD->PrintfLine(DriverStationLCD::kUser_Line1, "Running 2014 Code: "BUILD_DATE);
+    dsLCD->PrintfLine(DriverStationLCD::kUser_Line1, "BD: "BUILD_DATE);
     dsLCD->UpdateLCD();
 
     compressor->Stop();

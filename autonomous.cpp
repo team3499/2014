@@ -1,5 +1,4 @@
 #include "RERRobot.h"
-#include <SmartDashboard/SmartDashboard.h>
 
 void RERRobot::modeAutonomous(){
     compressor->Start();
