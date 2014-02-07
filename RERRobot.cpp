@@ -7,6 +7,7 @@
 #include "networktables/NetworkTable.h"
 
 RERRobot::RERRobot(){
+    // Initialize all of the members
     dsLCD = DriverStationLCD::GetInstance();
 
     compressor = new Compressor(2, 2);
@@ -18,6 +19,9 @@ RERRobot::RERRobot(){
     jagRR = new CANJaguar(2, CANJaguar::kSpeed);
     jagRL = new CANJaguar(5, CANJaguar::kSpeed);
 
+    testjag = new Jaguar(1, 4);
+
+    // Set up the members
     jagFR->SetExpiration(0.1);
     jagFL->SetExpiration(0.1);
     jagRR->SetExpiration(0.1);

@@ -7,6 +7,7 @@
 #include <DigitalOutput.h>
 #include <DriverStationLCD.h>
 #include <SmartDashboard/SmartDashboard.h>
+#include <Jaguar.h>
 
 // SmartDashboard macros: n = name, x = value
 #define SD_PN(n, x) SmartDashboard::PutNumber(n, x)
@@ -40,6 +41,8 @@ private:
     CANJaguar *jagFL; // Jaguar #4
     CANJaguar *jagRR; // Jaguar #2
     CANJaguar *jagRL; // Jaguar #5
+
+    Jaguar *testjag;
 
     Relay *relayTest; // Relay port 3
 };

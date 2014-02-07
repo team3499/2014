@@ -31,6 +31,8 @@ void RERRobot::modeTeleoperated(){
 
         iotest->Set(i < 50);
 
+        testjag->Set((float)(i-50)/100.0);
+
         ++i;
         if(i == 100){
             SD_PB("Testing i eh", true);
