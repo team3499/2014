@@ -7,7 +7,15 @@
 #include <DigitalOutput.h>
 #include <DriverStationLCD.h>
 #include <SmartDashboard/SmartDashboard.h>
-#include <Jaguar.h>
+
+#include <DriverStation.h>
+
+#ifndef BUILDING
+    #include "generated.h"
+#else
+    #include "gen_out.h"
+#endif
+
 
 // SmartDashboard macros: n = name, x = value
 #define SD_PN(n, x) SmartDashboard::PutNumber(n, x)
@@ -21,16 +29,41 @@
 
 
 class RERRobot : public RobotBase {
+private:
+    enum mode_type {
+        disable = 1,
+        test = 2,
+        teleop = 3,
+        autonomous = 4
+    };
+
 public:
     RERRobot();
     ~RERRobot();
-    void StartCompetition(); // basically the entry point
+    void StartCompetition(); // The entry point
+
     void init();
-    void modeAutonomous();
-    void modeTeleoperated();
-    void modeTest();
+    bool modeChange(mode_type newmode);
+
+    void initDisabled();
     void modeDisabled();
+    void endDisabled();
+
+    void initTest();
+    void modeTest();
+    void endTest();
+
+    void initTeleoperated();
+    void modeTeleoperated();
+    void endTeleoperated();
+
+    void initAutonomous();
+    void modeAutonomous();
+    void endAutonomous();
+
 private:
+    mode_type mode;
+
     DriverStationLCD *dsLCD;
 
     Compressor *compressor; // Relay port 2, digital I/O 2
@@ -41,8 +74,6 @@ private:
     CANJaguar *jagFL; // Jaguar #4
     CANJaguar *jagRR; // Jaguar #2
     CANJaguar *jagRL; // Jaguar #5
-
-    Jaguar *testjag;
 
     Relay *relayTest; // Relay port 3
 };
