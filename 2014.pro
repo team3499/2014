@@ -6,12 +6,7 @@ CONFIG -= qt
 HEADERS += RERRobot.h \
     generated.h
 
-SOURCES += RERRobot.cpp \
-    init.cpp \
-    test.cpp \
-    autonomous.cpp \
-    teleop.cpp \
-    disabled.cpp
+SOURCES += RERRobot.cpp
 
 OTHER_FILES += \
     sample.txt \

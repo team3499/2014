@@ -4,6 +4,8 @@
 #include <Timer.h>
 #include <LiveWindow/LiveWindow.h>
 #include <networktables/NetworkTable.h>
+#include <csignal>
+#include <unistd.h>
 
 RERRobot::RERRobot(){
     dsLCD = DriverStationLCD::GetInstance();
@@ -37,7 +39,7 @@ RERRobot::RERRobot(){
     jagRR->EnableControl();
     jagRL->EnableControl();
 
-    relayTest = new Relay(3);
+    relayTest = new Relay(1, 8);
 }
 
 RERRobot::~RERRobot(){
@@ -50,6 +52,30 @@ RERRobot::~RERRobot(){
     delete jagRL;
 }
 
+bool RERRobot::modeChange(mode_type newmode){
+    if(mode != newmode){
+
+        switch(mode){
+        case disable:
+            endDisabled();
+            break;
+        case test:
+            endTest();
+            break;
+        case teleop:
+            endTeleoperated();
+            break;
+        case autonomous:
+            endAutonomous();
+            break;
+        }
+
+        mode = newmode;
+        return true;
+    }
+    return false;
+}
+
 void RERRobot::StartCompetition(){
     LiveWindow *lw = LiveWindow::GetInstance();
     nUsageReporting::report(nUsageReporting::kResourceType_Framework, nUsageReporting::kFramework_Simple);
@@ -60,46 +86,188 @@ void RERRobot::StartCompetition(){
     init();
 
     while(true){
-        if(IsOperatorControl()){ // teleop mode
-            dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "Teleop Mode");
-            dsLCD->UpdateLCD();
-            m_ds->InOperatorControl(true);
-            modeTeleoperated();
-            m_ds->InOperatorControl(false);
-            while(IsOperatorControl() && IsEnabled()){
-                m_ds->WaitForData();
+        if(IsDisabled()){
+            if(modeChange(disable)){
+                initDisabled();
             }
-        } else if(IsAutonomous()){ // autonomous mode
-            dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "Autonomous Mode");
-            dsLCD->UpdateLCD();
-            m_ds->InAutonomous(true);
-            modeAutonomous();
-            m_ds->InAutonomous(false);
-            while(IsAutonomous() && IsEnabled()){
-                m_ds->WaitForData();
-            }
-        } else if(IsTest()){ // test mode
-            dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "Test Mode");
-            dsLCD->UpdateLCD();
-            lw->SetEnabled(true);
-            m_ds->InTest(true);
-            modeTest();
-            m_ds->InTest(false);
-            while(IsTest() && IsEnabled()){
-                m_ds->WaitForData();
-            }
-            lw->SetEnabled(false);
-        } else { // disabled mode
-            dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "Disabled Mode");
-            dsLCD->UpdateLCD();
-            m_ds->InDisabled(true);
             modeDisabled();
-            m_ds->InDisabled(false);
-            while(IsDisabled()){
-                m_ds->WaitForData();
+        } else if(IsTest()){
+            if(modeChange(test)){
+                initTest();
             }
+            modeTest();
+        } else if(IsOperatorControl()){
+            if(modeChange(teleop)){
+                initTeleoperated();
+            }
+            modeTeleoperated();
+        } else if(IsAutonomous()){
+            if(modeChange(autonomous)){
+                initAutonomous();
+            }
+            modeAutonomous();
+        } else {
+            // oh shit!
+            raise(SIGABRT);
+            return;
         }
     }
+}
+
+void RERRobot::init(){
+
+    dsLCD->Clear();
+    dsLCD->PrintfLine(DriverStationLCD::kUser_Line1, "BD: "BUILD_DATE);
+    dsLCD->UpdateLCD();
+
+    compressor->Stop();
+}
+
+// Disabled
+void RERRobot::initDisabled(){
+    dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "Disabled Mode");
+    dsLCD->UpdateLCD();
+
+    m_ds->InDisabled(true);
+
+    compressor->Stop();
+}
+
+void RERRobot::modeDisabled(){
+    Wait(0.005);
+}
+
+void RERRobot::endDisabled(){
+    m_ds->InDisabled(false);
+}
+
+// Teleop
+static int i = 0;
+
+void RERRobot::initTeleoperated(){
+    dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "Teleop Mode");
+    dsLCD->UpdateLCD();
+
+    m_ds->InOperatorControl(true);
+
+    compressor->Start();
+    //SetSafetyEnabled(false); //on a dev board
+
+    i = 0;
+
+    SD_PB("Testing i eh", false);
+    SD_PN("Testing i eh?", 0.0);
+
+    SD_PN("IsOperatorControl eh?", IsOperatorControl());
+    SD_PN("IsEnabled eh?", IsEnabled());
+}
+
+void RERRobot::modeTeleoperated(){
+    SD_PN("3 Speed", jagFR->GetSpeed());
+    SD_PN("4 Speed", jagFL->GetSpeed());
+    SD_PN("2 Speed", jagRR->GetSpeed());
+    SD_PN("5 Speed", jagRL->GetSpeed());
+
+    jagFR->SetPID(SD_GN("3P"), SD_GN("3I"), SD_GN("3D"));
+    jagFL->SetPID(SD_GN("4P"), SD_GN("4I"), SD_GN("4D"));
+    jagRR->SetPID(SD_GN("2P"), SD_GN("2I"), SD_GN("2D"));
+    jagRL->SetPID(SD_GN("5P"), SD_GN("5I"), SD_GN("5D"));
+
+    jagFR->Set(SD_GN("3 SetSpeed"));
+    jagFL->Set(SD_GN("4 SetSpeed"));
+    jagRR->Set(SD_GN("2 SetSpeed"));
+    jagRL->Set(SD_GN("5 SetSpeed"));
+
+    iotest->Set(i < 100);
+
+    ++i;
+    if(i == 200){
+        SD_PB("Testing i eh", true);
+        SD_PN("Testing i eh?", 1.0);
+    } else if (i == 100){
+        SD_PB("Testing i eh", false);
+        SD_PN("Testing i eh?", 0.0);
+    }
+    SD_PN("i ", i);
+    i %= 200;
+
+    Wait(0.005);
+}
+
+void RERRobot::endTeleoperated(){
+    compressor->Stop();
+
+    m_ds->InOperatorControl(false);
+}
+
+// Autonomous
+void RERRobot::initAutonomous(){
+    dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "Autonomous Mode");
+    dsLCD->UpdateLCD();
+
+    m_ds->InAutonomous(true);
+
+    compressor->Start();
+}
+
+void RERRobot::modeAutonomous(){
+    Wait(0.005);
+}
+
+void RERRobot::endAutonomous(){
+    compressor->Stop();
+
+    m_ds->InAutonomous(false);
+}
+
+// Test
+void RERRobot::initTest(){
+    dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "Test Mode");
+    dsLCD->UpdateLCD();
+
+    m_ds->InTest(true);
+
+    compressor->Start();
+
+    SD_PN("2P", 0.20);
+    SD_PN("2I", 0.001);
+    SD_PN("2D", 0.00);
+
+    SD_PN("3P", 0.20);
+    SD_PN("3I", 0.001);
+    SD_PN("3D", 0.00);
+
+    SD_PN("4P", 0.20);
+    SD_PN("4I", 0.001);
+    SD_PN("4D", 0.00);
+
+    SD_PN("5P", 0.20);
+    SD_PN("5I", 0.001);
+    SD_PN("5D", 0.00);
+
+    SD_PN("3 SetSpeed", 50);
+    SD_PN("4 SetSpeed", 50);
+    SD_PN("2 SetSpeed", 50);
+    SD_PN("5 SetSpeed", 50);
+
+    SD_PB("TestEh() == ", IsTest());
+    SD_PB("EnabledEh() == ", IsEnabled());
+}
+
+void RERRobot::modeTest(){
+    SD_PB("LED eh ", false);
+    iotest->Set(0);
+    sleep(1);
+    SD_PS("String! ", "String 1");
+    SD_PB("LED eh ", true);
+    iotest->Set(1);
+    sleep(1);
+}
+
+void RERRobot::endTest(){
+    compressor->Stop();
+
+    m_ds->InTest(false);
 }
 
 START_ROBOT_CLASS(RERRobot) // Off we gooooooo!!!

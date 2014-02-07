@@ -11,12 +11,12 @@ SET(RER_2014_HEADERS ### =================== HEADERS =================== ###
 )
 
 SET(RER_2014_SOURCES ### =================== SOURCES =================== ###
-    autonomous.cpp
-    disabled.cpp
-    init.cpp
+#    autonomous.cpp
+#    disabled.cpp
+#    init.cpp
     RERRobot.cpp
-    teleop.cpp
-    test.cpp
+#    teleop.cpp
+#    test.cpp
 )
 
 ### =================== CONFIG =================== ###
