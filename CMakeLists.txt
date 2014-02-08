@@ -11,8 +11,8 @@ SET(RER_2014_HEADERS ### =================== HEADERS =================== ###
 #    tcpconnection.h
     solenoidbreakout.h
     action.h
-    Input/buttonreg.h
-    Input/jsbase.h
+    input/buttonreg.h
+    input/jsbase.h
 )
 
 SET(RER_2014_SOURCES ### =================== SOURCES =================== ###
@@ -20,8 +20,8 @@ SET(RER_2014_SOURCES ### =================== SOURCES =================== ###
 #    tcpconnection.cpp
     solenoidbreakout.cpp
     action.cpp
-    Input/buttonreg.cpp
-    Input/jsbase.cpp
+    input/buttonreg.cpp
+    input/jsbase.cpp
 )
 
 ### =================== CONFIG =================== ###

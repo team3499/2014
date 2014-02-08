@@ -8,15 +8,15 @@ HEADERS += RERRobot.h \
     tcpconnection.h \
     solenoidbreakout.h \
     action.h \
-    Input/buttonreg.h \
-    Input/jsbase.h
+    input/buttonreg.h \
+    input/jsbase.h
 
 SOURCES += RERRobot.cpp \
     tcpconnection.cpp \
     solenoidbreakout.cpp \
     action.cpp \
-    Input/buttonreg.cpp \
-    Input/jsbase.cpp
+    input/buttonreg.cpp \
+    input/jsbase.cpp
 
 OTHER_FILES += \
     sample.txt \

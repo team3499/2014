@@ -74,7 +74,7 @@ private:
     DriverStationLCD *dsLCD;
 
     Compressor *compressor; // Relay 2, Digital I/O 2
-    DigitalOutput *iotest; // Digital I/O 8
+    DigitalOutput *proximityLight; // Digital I/O 8
     DigitalInput *pstest; // Digital I/O 5
 
     CANJaguar *jagFR; // Jaguar #3
