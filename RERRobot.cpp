@@ -39,6 +39,8 @@ RERRobot::RERRobot(){
     jagFL->EnableControl();
     jagRR->EnableControl();
     jagRL->EnableControl();
+
+    airsys = new SolenoidBreakout();
 }
 
 RERRobot::~RERRobot(){
@@ -50,30 +52,6 @@ RERRobot::~RERRobot(){
     delete jagRL;
 }
 
-bool RERRobot::modeChange(mode_type newmode){
-    if(mode != newmode){
-
-        switch(mode){
-        case disable:
-            endDisabled();
-            break;
-        case test:
-            endTest();
-            break;
-        case teleop:
-            endTeleoperated();
-            break;
-        case autonomous:
-            endAutonomous();
-            break;
-        }
-
-        mode = newmode;
-        return true;
-    }
-    return false;
-}
-
 void RERRobot::StartCompetition(){
     LiveWindow *lw = LiveWindow::GetInstance();
     nUsageReporting::report(nUsageReporting::kResourceType_Framework, nUsageReporting::kFramework_Simple);
@@ -81,35 +59,12 @@ void RERRobot::StartCompetition(){
     NetworkTable::GetTable("LiveWindow")->GetSubTable("~STATUS~")->PutBoolean("LW Enabled", false);
     lw->SetEnabled(false);
 
-    init();
+    // Init stuff
+    dsLCD->Clear();
+    dsLCD->PrintfLine(DriverStationLCD::kUser_Line1, "BD: "BUILD_DATE);
+    dsLCD->UpdateLCD();
 
-//    while(true){
-//        if(IsDisabled()){
-//            if(modeChange(disable)){
-//                initDisabled();
-//            }
-//            modeDisabled();
-//        } else if(IsTest()){
-//            if(modeChange(test)){
-//                initTest();
-//            }
-//            modeTest();
-//        } else if(IsOperatorControl()){
-//            if(modeChange(teleop)){
-//                initTeleoperated();
-//            }
-//            modeTeleoperated();
-//        } else if(IsAutonomous()){
-//            if(modeChange(autonomous)){
-//                initAutonomous();
-//            }
-//            modeAutonomous();
-//        } else {
-//            // oh shit!
-//            raise(SIGABRT);
-//            return;
-//        }
-//    }
+    compressor->Stop();
 
     while(true){
         if(IsOperatorControl()){ // teleop mode
@@ -166,42 +121,19 @@ void RERRobot::StartCompetition(){
     }
 }
 
-void RERRobot::init(){
-
-    dsLCD->Clear();
-    dsLCD->PrintfLine(DriverStationLCD::kUser_Line1, "BD: "BUILD_DATE);
-    dsLCD->UpdateLCD();
-
-    compressor->Stop();
-}
-
 // Disabled
 void RERRobot::initDisabled(){
-    m_ds->InDisabled(true);
-
-
-    dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "Disabled Mode");
-    dsLCD->UpdateLCD();
-
-
     compressor->Stop();
 }
-
 void RERRobot::modeDisabled(){
     Wait(0.005);
 }
-
 void RERRobot::endDisabled(){
-    m_ds->InDisabled(false);
+
 }
 
+// Teleop
 void RERRobot::initTeleoperated(){
-    m_ds->InOperatorControl(true);
-
-    dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "Teleop Mode");
-    dsLCD->UpdateLCD();
-
-
     compressor->Start();
     //SetSafetyEnabled(false); //on a dev board
 
@@ -211,7 +143,6 @@ void RERRobot::initTeleoperated(){
 //    SD_PN("IsOperatorControl eh?", IsOperatorControl());
 //    SD_PN("IsEnabled eh?", IsEnabled());
 }
-
 void RERRobot::modeTeleoperated(){
     SD_PN("3 Speed", jagFR->GetSpeed());
     SD_PN("4 Speed", jagFL->GetSpeed());
@@ -230,42 +161,23 @@ void RERRobot::modeTeleoperated(){
 
     Wait(0.005);
 }
-
 void RERRobot::endTeleoperated(){
     compressor->Stop();
-
-    m_ds->InOperatorControl(false);
 }
 
 // Autonomous
 void RERRobot::initAutonomous(){
-    m_ds->InAutonomous(true);
-
-    dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "Autonomous Mode");
-    dsLCD->UpdateLCD();
-
-
     compressor->Start();
 }
-
 void RERRobot::modeAutonomous(){
     Wait(0.005);
 }
-
 void RERRobot::endAutonomous(){
     compressor->Stop();
-
-    m_ds->InAutonomous(false);
 }
 
 // Test
 void RERRobot::initTest(){
-    m_ds->InTest(true);
-
-    dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "Test Mode");
-    dsLCD->UpdateLCD();
-
-
     compressor->Start();
 
     SD_PN("2P", 0.20);
@@ -292,7 +204,6 @@ void RERRobot::initTest(){
     SD_PB("TestEh() == ", IsTest());
     SD_PB("EnabledEh() == ", IsEnabled());
 }
-
 void RERRobot::modeTest(){
     SD_PB("LED eh ", false);
     iotest->Set(0);
@@ -302,11 +213,8 @@ void RERRobot::modeTest(){
     iotest->Set(1);
     sleep(1);
 }
-
 void RERRobot::endTest(){
     compressor->Stop();
-
-    m_ds->InTest(false);
 }
 
 START_ROBOT_CLASS(RERRobot) // Off we gooooooo!!!
