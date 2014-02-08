@@ -1,5 +1,0 @@
-how to install libraries
-open arduino
-click on sketch -> import library -> add library
-go to arduino folder of team 3499 2014 repository select the adafruit folder
-click sketch->import library->Adafruit_NeoPixel
