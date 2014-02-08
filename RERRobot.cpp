@@ -217,4 +217,13 @@ void RERRobot::endTest(){
     compressor->Stop();
 }
 
+
+
+
+// High -> nothing there
+
+// add led
+
+
+
 START_ROBOT_CLASS(RERRobot) // Off we gooooooo!!!

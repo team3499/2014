@@ -7,10 +7,17 @@ class SolenoidBreakout
 {
 public:
     SolenoidBreakout();
+    ~SolenoidBreakout();
 
+    // Shooter
     void shootBall();
     void unShootBall();
     bool isBallShot();
+
+    // Arm
+    void openArm();
+    void closeArm();
+    bool isArmOpen();
 
 private:
     Solenoid **s;

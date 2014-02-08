@@ -57,7 +57,7 @@ TCPConnection::~TCPConnection(){
 
 
 // Scheduled accepter
-bool connect(){
+bool TCPConnection::connect(){
     // This IS blocking! need to fix!
     sockaddr_in *addr;
     int *addrlen;
