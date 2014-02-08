@@ -309,4 +309,13 @@ void RERRobot::endTest(){
     m_ds->InTest(false);
 }
 
+
+
+
+// High -> nothing there
+
+// add led
+
+
+
 START_ROBOT_CLASS(RERRobot) // Off we gooooooo!!!
