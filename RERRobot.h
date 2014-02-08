@@ -4,10 +4,12 @@
 #include <CANJaguar.h>
 #include <Compressor.h>
 #include <DigitalOutput.h>
+#include <DigitalInput.h>
 #include <DriverStation.h>
 #include <DriverStationLCD.h>
 #include <SmartDashboard/SmartDashboard.h>
 #include <Solenoid.h>
+#include <Joystick.h>
 
 //#include "tcpconnection.h"
 //#include "oninput.h"
@@ -64,13 +66,16 @@ public:
     void modeAutonomous();
     void endAutonomous();
 
+    void setupSmartDashboard();
+
 private:
     mode_type mode;
 
     DriverStationLCD *dsLCD;
 
-    Compressor *compressor; // Relay port 2, digital I/O 2
-    DigitalOutput *iotest; // Digital I/O port 8
+    Compressor *compressor; // Relay 2, Digital I/O 2
+    DigitalOutput *iotest; // Digital I/O 8
+    DigitalInput *pstest; // Digital I/O 5
 
     CANJaguar *jagFR; // Jaguar #3
     CANJaguar *jagFL; // Jaguar #4
@@ -78,4 +83,6 @@ private:
     CANJaguar *jagRL; // Jaguar #5
 
     SolenoidBreakout *airsys;
+
+    Joystick *teststick; // Joystick 1
 };
