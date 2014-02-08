@@ -45,7 +45,7 @@ public:
     ~RERRobot();
     void StartCompetition(); // The entry point
 
-    void init();
+    //void init();
     bool modeChange(mode_type newmode);
 
     void initDisabled();
