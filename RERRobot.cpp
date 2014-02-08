@@ -12,7 +12,7 @@ RERRobot::RERRobot(){
     dsLCD = DriverStationLCD::GetInstance();
 
     compressor = new Compressor(2, 2);
-    iotest = new DigitalOutput(1, 8);
+    proximityLight = new DigitalOutput(1, 8);
     pstest = new DigitalInput(1, 5);
 
     jagFR = new CANJaguar(3, CANJaguar::kSpeed);
@@ -47,7 +47,7 @@ RERRobot::RERRobot(){
 
 RERRobot::~RERRobot(){
     delete compressor;
-    delete iotest;
+    delete proximityLight;
     delete pstest;
 
     delete jagFR;
@@ -161,6 +161,7 @@ void RERRobot::modeTeleoperated(){
         airsys->unShootBall();
 
     SD_PN("Proximity Sensor", pstest->Get());
+    proximityLight->Set(pstest->Get());
 
     Wait(0.005);
 }
@@ -184,15 +185,14 @@ void RERRobot::initTest(){
     compressor->Start();
     setupSmartDashboard();
 }
+
 void RERRobot::modeTest(){
     switch((int)SD_GN("TEST_MODE")){
     case 1:
-        SD_PB("LED eh ", false);
-        iotest->Set(0);
+        proximityLight->Set(0);
         sleep(1);
-        SD_PS("String! ", "String 1");
         SD_PB("LED eh ", true);
-        iotest->Set(1);
+        proximityLight->Set(1);
         sleep(2);
         break;
 
@@ -247,14 +247,6 @@ void RERRobot::setupSmartDashboard(){
 
     SD_PN("Proximity Sensor", 1337);
 }
-
-
-
-
-// High -> nothing there
-
-// add led
-
 
 
 START_ROBOT_CLASS(RERRobot) // Off we gooooooo!!!

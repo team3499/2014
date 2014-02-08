@@ -19,3 +19,9 @@ OnInput::reg(...):
 
 OnInput:
   Change to event/action (so its name is not misleading, and it can be used with a high/low swap on an DInput.)
+
+
+LEDs
+  High -> nothing there
+
+  add led

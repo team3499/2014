@@ -25,12 +25,18 @@ unsigned int Action::callCount(){
 }
 
 void Action::activate(){
-    for(unsigned int i = 0; i < count; i++){
-        (*(calls[count]))();
+    // GetFPGATime() returns microseconds, so convert to milliseconds.
+    if((GetFPGATime() * 1.0e-3) <= (timeout[count] + lastCall)){
+        for(unsigned int i = 0; i < count; i++){
+            (*(calls[count]))();
 
-        if(afters[count]){
-            // Schedule an event timeout msec from now.
-            // Schedule::addSingle(this, count, timeout[count]);
+            if(afters[count]){
+                // Schedule an event timeout msec from now.
+                // Schedule::addSingle(this, count, timeout[count]);
+            }
         }
-    }
+
+        // Set the run time
+        lastCall = GetFPGATime() * 1.0e-3;
+    } // If we are too early, dont do anything.
 }
