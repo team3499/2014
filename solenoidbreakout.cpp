@@ -9,11 +9,26 @@ SolenoidBreakout::SolenoidBreakout()
     s[3] = new Solenoid(4);
     s[4] = new Solenoid(5);
 
+    // Open/Close arm
     s[5] = new Solenoid(6);
+
+    // Unused so far
     s[6] = new Solenoid(7);
     s[7] = new Solenoid(8);
 }
 
+
+void SolenoidBreakout::openArm(){
+    s[5]->Set(true);
+}
+
+void SolenoidBreakout::closeArm(){
+    s[5]->Set(false);
+}
+
+bool SolenoidBreakout::isArmOpen(){
+    s[5]->Get();
+}
 
 void SolenoidBreakout::shootBall(){
     s[0]->Set(true);

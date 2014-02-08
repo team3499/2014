@@ -7,12 +7,14 @@ HEADERS += RERRobot.h \
     generated.h \
     tcpconnection.h \
     solenoidbreakout.h \
-    oninput.h
+    action.h \
+    buttonreg.h
 
 SOURCES += RERRobot.cpp \
     tcpconnection.cpp \
     solenoidbreakout.cpp \
-    oninput.cpp
+    action.cpp \
+    buttonreg.cpp
 
 OTHER_FILES += \
     sample.txt \

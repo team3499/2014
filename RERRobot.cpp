@@ -253,4 +253,13 @@ void RERRobot::setupSmartDashboard(){
     SD_PN("Proximity Sensor", 1337);
 }
 
+
+
+
+// High -> nothing there
+
+// add led
+
+
+
 START_ROBOT_CLASS(RERRobot) // Off we gooooooo!!!
