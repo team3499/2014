@@ -19,8 +19,6 @@ RERRobot::RERRobot(){
     jagRR = new CANJaguar(2, CANJaguar::kSpeed);
     jagRL = new CANJaguar(5, CANJaguar::kSpeed);
 
-    airsys = new SolenoidBreakout();
-
     // Set up the members
     jagFR->SetExpiration(0.1);
     jagFL->SetExpiration(0.1);
@@ -50,8 +48,6 @@ RERRobot::~RERRobot(){
     delete jagFL;
     delete jagRR;
     delete jagRL;
-
-    delete airsys;
 }
 
 bool RERRobot::modeChange(mode_type newmode){
@@ -87,31 +83,85 @@ void RERRobot::StartCompetition(){
 
     init();
 
+//    while(true){
+//        if(IsDisabled()){
+//            if(modeChange(disable)){
+//                initDisabled();
+//            }
+//            modeDisabled();
+//        } else if(IsTest()){
+//            if(modeChange(test)){
+//                initTest();
+//            }
+//            modeTest();
+//        } else if(IsOperatorControl()){
+//            if(modeChange(teleop)){
+//                initTeleoperated();
+//            }
+//            modeTeleoperated();
+//        } else if(IsAutonomous()){
+//            if(modeChange(autonomous)){
+//                initAutonomous();
+//            }
+//            modeAutonomous();
+//        } else {
+//            // oh shit!
+//            raise(SIGABRT);
+//            return;
+//        }
+//    }
+
     while(true){
-        if(IsDisabled()){
-            if(modeChange(disable)){
-                initDisabled();
+        if(IsOperatorControl()){ // teleop mode
+            m_ds->InOperatorControl(true);
+            dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "Teleop Mode");
+            dsLCD->UpdateLCD();
+            initTeleoperated();
+            while(IsOperatorControl() && IsEnabled())
+                modeTeleoperated();
+            endTeleoperated();
+            m_ds->InOperatorControl(false);
+            while(IsOperatorControl() && IsEnabled()){
+                m_ds->WaitForData();
             }
-            modeDisabled();
-        } else if(IsTest()){
-            if(modeChange(test)){
-                initTest();
+        } else if(IsAutonomous()){ // autonomous mode
+            m_ds->InAutonomous(true);
+            dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "Autonomous Mode");
+            dsLCD->UpdateLCD();
+            initAutonomous();
+            while(IsAutonomous() && IsEnabled())
+                modeAutonomous();
+            endAutonomous();
+            m_ds->InAutonomous(false);
+            while(IsAutonomous() && IsEnabled()){
+                m_ds->WaitForData();
             }
-            modeTest();
-        } else if(IsOperatorControl()){
-            if(modeChange(teleop)){
-                initTeleoperated();
+        } else if(IsTest()){ // test mode
+            lw->SetEnabled(true);
+            m_ds->InTest(true);
+            dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "Test Mode");
+            dsLCD->UpdateLCD();
+            initTest();
+            while(IsTest() && IsEnabled())
+                modeTest();
+            endTest();
+            m_ds->InTest(false);
+            while(IsTest() && IsEnabled()){
+                m_ds->WaitForData();
             }
-            modeTeleoperated();
-        } else if(IsAutonomous()){
-            if(modeChange(autonomous)){
-                initAutonomous();
+            lw->SetEnabled(false);
+        } else { // disabled mode
+            m_ds->InDisabled(true);
+            dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "Disabled Mode");
+            dsLCD->UpdateLCD();
+            initDisabled();
+            while(IsDisabled())
+                modeDisabled();
+            endDisabled();
+            m_ds->InDisabled(false);
+            while(IsDisabled()){
+                m_ds->WaitForData();
             }
-            modeAutonomous();
-        } else {
-            // oh shit!
-            raise(SIGABRT);
-            return;
         }
     }
 }
@@ -139,7 +189,6 @@ void RERRobot::initDisabled(){
 
 void RERRobot::modeDisabled(){
     Wait(0.005);
-    if(airsys->isBallShot()) airsys->unShootBall();
 }
 
 void RERRobot::endDisabled(){
@@ -152,8 +201,6 @@ void RERRobot::initTeleoperated(){
     dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "Teleop Mode");
     dsLCD->UpdateLCD();
 
-    // FIRIN MAA LAZE-ZAS
-    airsys->shootBall();
 
     compressor->Start();
     //SetSafetyEnabled(false); //on a dev board
@@ -218,7 +265,6 @@ void RERRobot::initTest(){
     dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "Test Mode");
     dsLCD->UpdateLCD();
 
-    airsys->unShootBall();
 
     compressor->Start();
 
