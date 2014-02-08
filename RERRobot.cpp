@@ -182,12 +182,7 @@ void RERRobot::endAutonomous(){
 // Test
 void RERRobot::initTest(){
     compressor->Start();
-
-//    SD_PB("Testing i eh", false);
-//    SD_PN("Testing i eh?", 0.0);
-
-//    SD_PN("IsOperatorControl eh?", IsOperatorControl());
-//    SD_PN("IsEnabled eh?", IsEnabled());
+    setupSmartDashboard();
 }
 void RERRobot::modeTest(){
     switch((int)SD_GN("TEST_MODE")){

@@ -27,7 +27,7 @@ void SolenoidBreakout::closeArm(){
 }
 
 bool SolenoidBreakout::isArmOpen(){
-    s[5]->Get();
+    return s[5]->Get();
 }
 
 void SolenoidBreakout::shootBall(){
