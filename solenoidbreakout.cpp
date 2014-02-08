@@ -2,14 +2,16 @@
 
 SolenoidBreakout::SolenoidBreakout()
 {
-    s[0] = new Solenoid(1, 1);
-    s[1] = new Solenoid(1, 2);
-    s[2] = new Solenoid(1, 3);
-    s[3] = new Solenoid(1, 4);
-    s[4] = new Solenoid(1, 5);
-    s[5] = new Solenoid(1, 6);
-    s[6] = new Solenoid(1, 7);
-    s[7] = new Solenoid(1, 8);
+    // Ball shooter
+    s[0] = new Solenoid(1);
+    s[1] = new Solenoid(2);
+    s[2] = new Solenoid(3);
+    s[3] = new Solenoid(4);
+    s[4] = new Solenoid(5);
+
+    s[5] = new Solenoid(6);
+    s[6] = new Solenoid(7);
+    s[7] = new Solenoid(8);
 }
 
 
