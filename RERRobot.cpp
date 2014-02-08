@@ -63,6 +63,8 @@ RERRobot::~RERRobot(){
 }
 
 void RERRobot::StartCompetition(){
+    printf("$$FRC3499$$ - Earlist entry");
+
     LiveWindow *lw = LiveWindow::GetInstance();
     nUsageReporting::report(nUsageReporting::kResourceType_Framework, nUsageReporting::kFramework_Simple);
     SmartDashboard::init();
@@ -77,6 +79,8 @@ void RERRobot::StartCompetition(){
     setupSmartDashboard();
 
     compressor->Stop();
+
+    printf("$$FRC3499$$ - Starting 2014 Robot Code");
 
     while(true){
         if(IsOperatorControl()){ // teleop mode
@@ -143,6 +147,7 @@ void RERRobot::StartCompetition(){
 
 // Disabled
 void RERRobot::initDisabled(){
+    printf("$$FRC3499$$ - Disabled Init");
     compressor->Stop();
 }
 void RERRobot::modeDisabled(){
@@ -154,6 +159,7 @@ void RERRobot::endDisabled(){
 
 // Teleop
 void RERRobot::initTeleoperated(){
+    printf("$$FRC3499$$ - Teleop Init");
     compressor->Start();
     //SetSafetyEnabled(false); //on a dev board
 }
@@ -174,6 +180,7 @@ void RERRobot::endTeleoperated(){
 
 // Autonomous
 void RERRobot::initAutonomous(){
+    printf("$$FRC3499$$ - Autonomous Init");
     compressor->Start();
 }
 void RERRobot::modeAutonomous(){
@@ -185,6 +192,7 @@ void RERRobot::endAutonomous(){
 
 // Test
 void RERRobot::initTest(){
+    printf("$$FRC3499$$ - Test Init");
     compressor->Start();
     setupSmartDashboard();
 }
