@@ -16,7 +16,9 @@ SolenoidBreakout::SolenoidBreakout()
     s[6] = new Solenoid(7);
     s[7] = new Solenoid(8);
 }
-
+SolenoidBreakout::~SolenoidBreakout(){
+    delete[] s;
+}
 
 void SolenoidBreakout::openArm(){
     s[5]->Set(true);

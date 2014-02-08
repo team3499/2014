@@ -77,6 +77,8 @@ void RERRobot::StartCompetition(){
     setupSmartDashboard();
 
     compressor->Stop();
+    
+    printf()
 
     while(true){
         if(IsOperatorControl()){ // teleop mode
