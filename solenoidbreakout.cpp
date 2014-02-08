@@ -3,51 +3,58 @@
 SolenoidBreakout::SolenoidBreakout()
 {
     // Ball shooter
-    s[0] = new Solenoid(1);
-    s[1] = new Solenoid(2);
-    s[2] = new Solenoid(3);
-    s[3] = new Solenoid(4);
-    s[4] = new Solenoid(5);
+    s1 = new Solenoid(1);
+    s2 = new Solenoid(2);
+    s3 = new Solenoid(3);
+    s4 = new Solenoid(4);
+    s5 = new Solenoid(5);
 
     // Open/Close arm
-    s[5] = new Solenoid(6);
+    s6 = new Solenoid(6);
 
     // Unused so far
-    s[6] = new Solenoid(7);
-    s[7] = new Solenoid(8);
+    s7 = new Solenoid(7);
+    s8 = new Solenoid(8);
 }
 SolenoidBreakout::~SolenoidBreakout(){
-    delete[] s;
+    delete s1;
+    delete s2;
+    delete s3;
+    delete s4;
+    delete s5;
+    delete s6;
+    delete s7;
+    delete s8;
 }
 
 void SolenoidBreakout::openArm(){
-    s[5]->Set(true);
+    s6->Set(true);
 }
 
 void SolenoidBreakout::closeArm(){
-    s[5]->Set(false);
+    s6->Set(false);
 }
 
 bool SolenoidBreakout::isArmOpen(){
-    return s[5]->Get();
+    return s6->Get();
 }
 
 void SolenoidBreakout::shootBall(){
-    s[0]->Set(true);
-    s[1]->Set(true);
-    s[2]->Set(true);
-    s[3]->Set(true);
-    s[4]->Set(true);
+    s1->Set(true);
+    s2->Set(true);
+    s3->Set(true);
+    s4->Set(true);
+    s5->Set(true);
 }
 
 void SolenoidBreakout::unShootBall(){
-    s[0]->Set(false);
-    s[1]->Set(false);
-    s[2]->Set(false);
-    s[3]->Set(false);
-    s[4]->Set(false);
+    s1->Set(false);
+    s2->Set(false);
+    s3->Set(false);
+    s4->Set(false);
+    s5->Set(false);
 }
 
 bool SolenoidBreakout::isBallShot(){
-    return s[0]->Get();
+    return s1->Get();
 }

@@ -82,7 +82,7 @@ private:
     CANJaguar *jagRR; // Jaguar #2
     CANJaguar *jagRL; // Jaguar #5
 
-    SolenoidBreakout *airsys;
+    SolenoidBreakout *airsys; // Solenoids 1-8
 
     Joystick *teststick; // Joystick 1
 };

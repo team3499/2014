@@ -20,7 +20,14 @@ public:
     bool isArmOpen();
 
 private:
-    Solenoid **s;
+    Solenoid *s1;
+    Solenoid *s2;
+    Solenoid *s3;
+    Solenoid *s4;
+    Solenoid *s5;
+    Solenoid *s6;
+    Solenoid *s7;
+    Solenoid *s8;
 };
 
 #endif // SOLENOIDBREAKOUT_H
