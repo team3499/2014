@@ -6,11 +6,13 @@ Action::Action(){
 
 
 
-void Action::regCall( void (*function)(), unsigned int timeout,  void (*afterTimeout)() = NULL){
+void Action::regCall( void (*function)(), unsigned int timeout,  void (*afterTimeout)()){
 //    void (**calls)();
 //    void (**afters)();
 
     // Check for special input (aka timeout == 0)
+    if(timeout == 0 && afterTimeout)
+        regCall(afterTimeout);
 
     calls[count] = function;
     this->timeout[count] = timeout;
@@ -23,8 +25,8 @@ unsigned int Action::callCount(){
 }
 
 void Action::activate(){
-    for(int i = 0; i < count; i++){
-        ;
+    for(unsigned int i = 0; i < count; i++){
+        (*(calls[count]))();
 
         if(afters[count]){
             // Schedule an event timeout msec from now.

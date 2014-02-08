@@ -1,13 +1,16 @@
 #ifndef ACTION_H
 #define ACTION_H
 
+#include <stdlib.h>
+
 class Action
 {
 public:
     Action();
     ~Action();
 
-    void regCall( void (*function)(), unsigned int timeout,  void (*afterTimeout)() = NULL);
+    // NOTE: timeout does TWO things; it is the time before executing afterTimeout, AND the time before you are able to activate the action again.
+    void regCall( void (*function)(), unsigned int timeout = 0,  void (*afterTimeout)() = NULL);
 
     unsigned int callCount();
 

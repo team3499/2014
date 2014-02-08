@@ -8,11 +8,13 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netinet/ip.h>
-//#include <net/socketvar.h>
+#include <net/socketvar.h>
 #include <netinet/in.h>
 #include <stdio.h>
 #include <sys/types.h>
 #include <netdb.h>
+#include <iostream>
+#include <stdlib.h>
 
 class TCPConnection {
 public:

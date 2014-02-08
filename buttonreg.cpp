@@ -4,10 +4,10 @@ ButtonReg::ButtonReg(DriverStation *ds)
 {
     this->ds = ds;
 
-    sticks[0] = Joystick::GetStickForPort(1);
-    sticks[1] = Joystick::GetStickForPort(2);
-    sticks[2] = Joystick::GetStickForPort(3);
-    sticks[3] = Joystick::GetStickForPort(4);
-    sticks[4] = Joystick::GetStickForPort(5);
-    sticks[5] = Joystick::GetStickForPort(6);
+    sticks[0] = joysticks[0];
+    sticks[1] = joysticks[1];
+    sticks[2] = joysticks[2];
+    sticks[3] = joysticks[3];
+    sticks[4] = joysticks[4];
+    sticks[5] = joysticks[5];
 }

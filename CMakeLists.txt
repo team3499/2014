@@ -10,7 +10,7 @@ SET(RER_2014_HEADERS ### =================== HEADERS =================== ###
     generated.h
 #    tcpconnection.h
     solenoidbreakout.h
-#    action.h
+    action.h
 #    buttonreg.h
 )
 
@@ -18,7 +18,7 @@ SET(RER_2014_SOURCES ### =================== SOURCES =================== ###
     RERRobot.cpp
 #    tcpconnection.cpp
     solenoidbreakout.cpp
-#    action.cpp
+    action.cpp
 #    buttonreg.cpp
 )
 
