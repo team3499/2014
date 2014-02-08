@@ -1,14 +1,17 @@
 //#include <WPILib.h>
 #include <RobotBase.h>
-#include <Compressor.h>
-#include <Solenoid.h>
+
 #include <CANJaguar.h>
-#include <Timer.h>
+#include <Compressor.h>
 #include <DigitalOutput.h>
+#include <DriverStation.h>
 #include <DriverStationLCD.h>
 #include <SmartDashboard/SmartDashboard.h>
+#include <Solenoid.h>
 
-#include <DriverStation.h>
+//#include "tcpconnection.h"
+//#include "oninput.h"
+#include "solenoidbreakout.h"
 
 #ifndef BUILDING
     #include "generated.h"
@@ -67,7 +70,6 @@ private:
     DriverStationLCD *dsLCD;
 
     Compressor *compressor; // Relay port 2, digital I/O 2
-    Solenoid *valve1; // Solenoid port 1
     DigitalOutput *iotest; // Digital I/O port 8
 
     CANJaguar *jagFR; // Jaguar #3
@@ -75,5 +77,5 @@ private:
     CANJaguar *jagRR; // Jaguar #2
     CANJaguar *jagRL; // Jaguar #5
 
-    Relay *relayTest; // Relay port 3
+    SolenoidBreakout *airsys;
 };

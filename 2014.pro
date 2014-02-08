@@ -4,9 +4,15 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 HEADERS += RERRobot.h \
-    generated.h
+    generated.h \
+    tcpconnection.h \
+    solenoidbreakout.h \
+    oninput.h
 
-SOURCES += RERRobot.cpp
+SOURCES += RERRobot.cpp \
+    tcpconnection.cpp \
+    solenoidbreakout.cpp \
+    oninput.cpp
 
 OTHER_FILES += \
     sample.txt \

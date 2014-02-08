@@ -8,15 +8,16 @@ FIND_PACKAGE(WPILib)
 SET(RER_2014_HEADERS ### =================== HEADERS =================== ###
     RERRobot.h
     generated.h
+#    tcpconnection.h
+    solenoidbreakout.h
+#    oninput.h
 )
 
 SET(RER_2014_SOURCES ### =================== SOURCES =================== ###
-#    autonomous.cpp
-#    disabled.cpp
-#    init.cpp
     RERRobot.cpp
-#    teleop.cpp
-#    test.cpp
+#    tcpconnection.cpp
+    solenoidbreakout.cpp
+#    oninput.cpp
 )
 
 ### =================== CONFIG =================== ###

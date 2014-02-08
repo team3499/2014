@@ -12,13 +12,14 @@ RERRobot::RERRobot(){
     dsLCD = DriverStationLCD::GetInstance();
 
     compressor = new Compressor(2, 2);
-    valve1 = new Solenoid(1);
     iotest = new DigitalOutput(1, 8);
 
     jagFR = new CANJaguar(3, CANJaguar::kSpeed);
     jagFL = new CANJaguar(4, CANJaguar::kSpeed);
     jagRR = new CANJaguar(2, CANJaguar::kSpeed);
     jagRL = new CANJaguar(5, CANJaguar::kSpeed);
+
+    airsys = new SolenoidBreakout();
 
     // Set up the members
     jagFR->SetExpiration(0.1);
@@ -40,18 +41,17 @@ RERRobot::RERRobot(){
     jagFL->EnableControl();
     jagRR->EnableControl();
     jagRL->EnableControl();
-
-    relayTest = new Relay(1, 8);
 }
 
 RERRobot::~RERRobot(){
     delete compressor;
-    delete valve1;
 
     delete jagFR;
     delete jagFL;
     delete jagRR;
     delete jagRL;
+
+    delete airsys;
 }
 
 bool RERRobot::modeChange(mode_type newmode){
@@ -139,6 +139,7 @@ void RERRobot::initDisabled(){
 
 void RERRobot::modeDisabled(){
     Wait(0.005);
+    if(airsys->isBallShot()) airsys->unShootBall();
 }
 
 void RERRobot::endDisabled(){
@@ -151,6 +152,8 @@ void RERRobot::initTeleoperated(){
     dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "Teleop Mode");
     dsLCD->UpdateLCD();
 
+    // FIRIN MAA LAZE-ZAS
+    airsys->shootBall();
 
     compressor->Start();
     //SetSafetyEnabled(false); //on a dev board
@@ -215,6 +218,7 @@ void RERRobot::initTest(){
     dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "Test Mode");
     dsLCD->UpdateLCD();
 
+    airsys->unShootBall();
 
     compressor->Start();
 
