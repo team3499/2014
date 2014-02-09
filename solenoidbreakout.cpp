@@ -11,9 +11,9 @@ SolenoidBreakout::SolenoidBreakout()
 
     // Open/Close arm
     s6 = new Solenoid(6);
-
-    // Unused so far
     s7 = new Solenoid(7);
+
+    // Unused so far10
     s8 = new Solenoid(8);
 }
 SolenoidBreakout::~SolenoidBreakout(){
@@ -29,10 +29,12 @@ SolenoidBreakout::~SolenoidBreakout(){
 
 void SolenoidBreakout::openArm(){
     s6->Set(true);
+    s7->Set(false);
 }
 
 void SolenoidBreakout::closeArm(){
     s6->Set(false);
+    s7->Set(true);
 }
 
 bool SolenoidBreakout::isArmOpen(){
