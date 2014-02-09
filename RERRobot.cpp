@@ -23,6 +23,11 @@ RERRobot::RERRobot(){
     jagRR = new CANJaguar(2, CANJaguar::kSpeed);
     jagRL = new CANJaguar(5, CANJaguar::kSpeed);
 
+    handstilt = new CANJaguar(63, CANJaguar::kSpeed);
+
+    airsys = new SolenoidBreakout();
+    teststick = new Joystick(1);
+
     // Set up the members
     jagFR->SetExpiration(0.1);
     jagFL->SetExpiration(0.1);
@@ -44,8 +49,8 @@ RERRobot::RERRobot(){
     jagRR->EnableControl();
     jagRL->EnableControl();
 
-    airsys = new SolenoidBreakout();
-    teststick = new Joystick(1);
+    handstilt->SetExpiration(0.1);
+    handstilt->EnableControl();
 }
 
 RERRobot::~RERRobot(){
@@ -57,6 +62,8 @@ RERRobot::~RERRobot(){
     delete jagFL;
     delete jagRR;
     delete jagRL;
+
+    delete handstilt;
 
     delete airsys;
     delete teststick;
@@ -271,6 +278,8 @@ void RERRobot::modeTeleoperated(){
         airsys->shootBall();
     else
         airsys->unShootBall();
+
+    if(teststick->GetAxis(Joystick::kYAxis))
 
     SD_PN("Proximity Sensor", pstest->Get());
     proximityLight->Set(pstest->Get());

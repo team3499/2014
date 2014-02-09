@@ -82,6 +82,8 @@ private:
     CANJaguar *jagRR; // Jaguar #2
     CANJaguar *jagRL; // Jaguar #5
 
+    CANJaguar *handstilt; // For tilting the arm up and down. #63
+
     SolenoidBreakout *airsys; // Solenoids 1-8
 
     Joystick *teststick; // Joystick 1
