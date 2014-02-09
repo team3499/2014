@@ -5,8 +5,6 @@ PROJECT(RER_2014)
 INCLUDE(FRCDeploy)
 FIND_PACKAGE(WPILib)
 
-ADD_SUBDIRECTORY(libchaos)
-
 SET(RER_2014_HEADERS ### =================== HEADERS =================== ###
     RERRobot.h
     generated.h
