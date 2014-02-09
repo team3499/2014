@@ -62,8 +62,30 @@ RERRobot::~RERRobot(){
     delete teststick;
 }
 
+bool RERRobot::modeChange(mode_type newmode){
+    if(mode != newmode){
+        switch(mode){
+        case disable:
+            endDisabled();
+            break;
+        case test:
+            endTest();
+            break;
+        case teleop:
+            endTeleoperated();
+            break;
+        case autonomous:
+            endAutonomous();
+            break;
+        }
+        mode = newmode;
+        return true;
+    }
+    return false;
+}
+
 void RERRobot::StartCompetition(){
-    printf("$$FRC3499$$ - Earlist entry");
+    printf("$$FRC3499$$ - Earlist entry\n");
 
     LiveWindow *lw = LiveWindow::GetInstance();
     nUsageReporting::report(nUsageReporting::kResourceType_Framework, nUsageReporting::kFramework_Simple);
@@ -80,74 +102,155 @@ void RERRobot::StartCompetition(){
 
     compressor->Stop();
 
-    printf("$$FRC3499$$ - Starting 2014 Robot Code");
+    printf("$$FRC3499$$ - Starting 2014 Robot Code\n");
 
     while(true){
-        if(IsOperatorControl()){ // teleop mode
-            m_ds->InOperatorControl(true);
-            dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "Teleop Mode");
-            dsLCD->UpdateLCD();
-            initTeleoperated();
-            while(IsOperatorControl() && IsEnabled())
-                modeTeleoperated();
-            endTeleoperated();
-            dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "Unknown Mode");
-            dsLCD->UpdateLCD();
-            m_ds->InOperatorControl(false);
-            while(IsOperatorControl() && IsEnabled()){
-                m_ds->WaitForData();
+        // Determine mode
+        mode_type newmode;
+        if(IsDisabled()){
+            newmode = disable;
+        } else if(IsTest()){
+            newmode = test;
+        } else if(IsOperatorControl()){
+            newmode = teleop;
+        } else if(IsAutonomous()){
+            newmode = autonomous;
+        } else {
+            // oh shit!
+            raise(SIGABRT);
+            return;
+        }
+
+        // Run end / init mode functions
+        if(mode != newmode){
+            if(mode == disable){
+                endDisabled();
+                m_ds->InDisabled(false);
+            } else {
+                if(mode == teleop){
+                    endTeleoperated();
+                    m_ds->InOperatorControl(false);
+                    m_ds->WaitForData();
+                } else if(mode == autonomous){
+                    endAutonomous();
+                    m_ds->InAutonomous(false);
+                    m_ds->WaitForData();
+                } else if(mode == test){
+                    endTest();
+                    m_ds->InTest(false);
+                    m_ds->WaitForData();
+                }
             }
-        } else if(IsAutonomous()){ // autonomous mode
-            m_ds->InAutonomous(true);
-            dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "Autonomous Mode");
-            dsLCD->UpdateLCD();
-            initAutonomous();
-            while(IsAutonomous() && IsEnabled())
-                modeAutonomous();
-            endAutonomous();
-            dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "Unknown Mode");
-            dsLCD->UpdateLCD();
-            m_ds->InAutonomous(false);
-            while(IsAutonomous() && IsEnabled()){
-                m_ds->WaitForData();
+            mode = newmode;
+            if(newmode == disable){
+                dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "DISABLED");
+                m_ds->InDisabled(true);
+                initDisabled();
+            } else {
+                dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "ENABLED");
+                if(mode == teleop){
+                    m_ds->InOperatorControl(true);
+                    dsLCD->PrintfLine(DriverStationLCD::kUser_Line3, "Teleop Mode");
+                    initTeleoperated();
+                } else if(mode == autonomous){
+                    m_ds->InAutonomous(true);
+                    dsLCD->PrintfLine(DriverStationLCD::kUser_Line3, "Autonomous Mode");
+                    initAutonomous();
+                } else if(mode == test){
+                    m_ds->InTest(true);
+                    dsLCD->PrintfLine(DriverStationLCD::kUser_Line3, "Test Mode");
+                    initTest();
+                }
             }
-        } else if(IsTest()){ // test mode
-            lw->SetEnabled(true);
-            m_ds->InTest(true);
-            dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "Test Mode");
             dsLCD->UpdateLCD();
-            initTest();
-            while(IsTest() && IsEnabled())
-                modeTest();
-            endTest();
-            dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "Unknown Mode");
-            dsLCD->UpdateLCD();
-            m_ds->InTest(false);
-            while(IsTest() && IsEnabled()){
-                m_ds->WaitForData();
-            }
-            lw->SetEnabled(false);
-        } else { // disabled mode
-            m_ds->InDisabled(true);
-            dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "Disabled Mode");
-            dsLCD->UpdateLCD();
-            initDisabled();
-            while(IsDisabled())
-                modeDisabled();
-            endDisabled();
-            dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "Unknown Mode");
-            dsLCD->UpdateLCD();
-            m_ds->InDisabled(false);
-            while(IsDisabled()){
-                m_ds->WaitForData();
-            }
+        }
+
+        // Run mode loop function
+        if(mode == disable){
+            modeDisabled();
+        } else if(mode == teleop){
+            modeTeleoperated();
+        } else if(mode == autonomous){
+            modeAutonomous();
+        } else if(mode == test){
+            modeTest();
         }
     }
+
+//    while(true){
+//        if(IsOperatorControl()){ // teleop mode
+//            m_ds->InOperatorControl(true);
+//            dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "Teleop Mode");
+//            dsLCD->UpdateLCD();
+//            if(IsEnabled()){
+//                initTeleoperated();
+//                while(IsOperatorControl() && IsEnabled())
+//                    modeTeleoperated();
+//                endTeleoperated();
+//            }
+//            dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "Unknown Mode");
+//            dsLCD->UpdateLCD();
+//            m_ds->InOperatorControl(false);
+//            while(IsOperatorControl() && IsEnabled()){
+//                m_ds->WaitForData();
+//            }
+//        } else if(IsAutonomous()){ // autonomous mode
+//            m_ds->InAutonomous(true);
+//            dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "Autonomous Mode");
+//            dsLCD->UpdateLCD();
+//            if(IsEnabled()){
+//                initAutonomous();
+//                while(IsAutonomous() && IsEnabled())
+//                    modeAutonomous();
+//                endAutonomous();
+//            }
+//            dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "Unknown Mode");
+//            dsLCD->UpdateLCD();
+//            m_ds->InAutonomous(false);
+//            while(IsAutonomous() && IsEnabled()){
+//                m_ds->WaitForData();
+//            }
+//        } else if(IsTest()){ // test mode
+//            lw->SetEnabled(true);
+//            m_ds->InTest(true);
+//            dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "Test Mode");
+//            dsLCD->UpdateLCD();
+//            if(IsEnabled()){
+//                initTest();
+//                while(IsTest() && IsEnabled())
+//                    modeTest();
+//                endTest();
+//            }
+//            dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "Unknown Mode");
+//            dsLCD->UpdateLCD();
+//            m_ds->InTest(false);
+//            while(IsTest() && IsEnabled()){
+//                m_ds->WaitForData();
+//            }
+//            lw->SetEnabled(false);
+//        } else { // disabled mode
+//            m_ds->InDisabled(true);
+//            dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "Disabled Mode");
+//            dsLCD->UpdateLCD();
+//            if(IsDisabled()){
+//                initDisabled();
+//                while(IsDisabled())
+//                    modeDisabled();
+//                endDisabled();
+//            }
+//            dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "Unknown Mode");
+//            dsLCD->UpdateLCD();
+//            m_ds->InDisabled(false);
+//            while(IsDisabled()){
+//                m_ds->WaitForData();
+//            }
+//        }
+//    }
 }
 
 // Disabled
 void RERRobot::initDisabled(){
-    printf("$$FRC3499$$ - Disabled Init");
+    printf("$$FRC3499$$ - Disabled Init\n");
     compressor->Stop();
 }
 void RERRobot::modeDisabled(){
@@ -159,7 +262,7 @@ void RERRobot::endDisabled(){
 
 // Teleop
 void RERRobot::initTeleoperated(){
-    printf("$$FRC3499$$ - Teleop Init");
+    printf("$$FRC3499$$ - Teleop Init\n");
     compressor->Start();
     //SetSafetyEnabled(false); //on a dev board
 }
@@ -180,7 +283,7 @@ void RERRobot::endTeleoperated(){
 
 // Autonomous
 void RERRobot::initAutonomous(){
-    printf("$$FRC3499$$ - Autonomous Init");
+    printf("$$FRC3499$$ - Autonomous Init\n");
     compressor->Start();
 }
 void RERRobot::modeAutonomous(){
@@ -192,7 +295,7 @@ void RERRobot::endAutonomous(){
 
 // Test
 void RERRobot::initTest(){
-    printf("$$FRC3499$$ - Test Init");
+    printf("$$FRC3499$$ - Test Init\n");
     compressor->Start();
     setupSmartDashboard();
 }
