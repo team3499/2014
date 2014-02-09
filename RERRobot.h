@@ -21,7 +21,6 @@
     #include "gen_out.h"
 #endif
 
-
 // SmartDashboard macros: n = name, x = value
 #define SD_PN(n, x) SmartDashboard::PutNumber(n, x)
 #define SD_GN(n)    SmartDashboard::GetNumber(n)
@@ -32,6 +31,7 @@
 #define SD_PS(n, x) SmartDashboard::PutString(n, x)
 #define SD_GS(n)    SmartDashboard::GetString(n)
 
+#define OUT(A) printf("$$FRC3499$$ - " A);
 
 class RERRobot : public RobotBase {
 private:
@@ -82,6 +82,7 @@ private:
     CANJaguar *jagRR; // Jaguar #2
     CANJaguar *jagRL; // Jaguar #5
 
+    Relay *cmp; // Relay 5
     SolenoidBreakout *airsys; // Solenoids 1-8
 
     Joystick *teststick; // Joystick 1
