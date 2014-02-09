@@ -18,6 +18,8 @@ RERRobot::RERRobot(){
     proximityLight = new DigitalOutput(1, 8);
     pstest = new DigitalInput(1, 5);
 
+    cmp = new Relay(1, 5, Relay::kForwardOnly);
+
     jagFR = new CANJaguar(3, CANJaguar::kSpeed);
     jagFL = new CANJaguar(4, CANJaguar::kSpeed);
     jagRR = new CANJaguar(2, CANJaguar::kSpeed);
@@ -85,7 +87,7 @@ bool RERRobot::modeChange(mode_type newmode){
 }
 
 void RERRobot::StartCompetition(){
-    printf("$$FRC3499$$ - Earlist entry\n");
+    printf("$$FRC3499$$ - Starting 2014 Robot Code\n");
 
     LiveWindow *lw = LiveWindow::GetInstance();
     nUsageReporting::report(nUsageReporting::kResourceType_Framework, nUsageReporting::kFramework_Simple);
@@ -101,8 +103,6 @@ void RERRobot::StartCompetition(){
     setupSmartDashboard();
 
     compressor->Stop();
-
-    printf("$$FRC3499$$ - Starting 2014 Robot Code\n");
 
     while(true){
         // Determine mode
@@ -272,8 +272,20 @@ void RERRobot::modeTeleoperated(){
     else
         airsys->unShootBall();
 
+    if(teststick->GetRawButton(10))
+        compressor->SetRelayValue(Relay::kOn);
+    else
+        compressor->SetRelayValue(Relay::kOff);
+
+    if(teststick->GetRawButton(11))
+        cmp->Set(Relay::kOn);
+    else
+        cmp->Set(Relay::kOff);
+
     SD_PN("Proximity Sensor", pstest->Get());
     proximityLight->Set(pstest->Get());
+
+    dsLCD->PrintfLine(DriverStationLCD::kUser_Line4, "IO %d", compressor->GetPressureSwitchValue());
 
     Wait(0.005);
 }
