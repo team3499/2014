@@ -21,7 +21,7 @@ RERRobot::RERRobot(){
     jagFR = new CANJaguar(3, CANJaguar::kSpeed);
     jagFL = new CANJaguar(4, CANJaguar::kSpeed);
     jagRR = new CANJaguar(2, CANJaguar::kSpeed);
-    jagRL = new CANJaguar(5, CANJaguar::kSpeed);
+    jagRL = new CANJaguar(5, CANJaguar::kPercentVbus);
 
     handstilt = new CANJaguar(63, CANJaguar::kSpeed);
 
@@ -279,7 +279,7 @@ void RERRobot::modeTeleoperated(){
     else
         airsys->unShootBall();
 
-    if(teststick->GetAxis(Joystick::kYAxis))
+    handstilt->Set(teststick->GetAxis(Joystick::kYAxis));
 
     SD_PN("Proximity Sensor", pstest->Get());
     proximityLight->Set(pstest->Get());
