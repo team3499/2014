@@ -5,10 +5,10 @@ class JsBase
 {
 public:
     // to whoever reads this: yea, it works.
-    enum struct ControllerType : char {
+    enum ControllerType {
         xBoxController, LogitechController, NonController
     };
-    enum class Button : char {
+    enum Button {
         BUTTON_A, BUTTON_B, BUTTON_X, BUTTON_Y, BUTTON_START, BUTTON_BACK, BUTTON_GUIDE, BUTTON_RIGHTBUMPER, BUTTON_LEFTBUMPER,
         BUTTON_RIGHTJS, BUTTON_LEFTJS, BUTTON_DPAD_UP, BUTTON_DPAD_DOWN, BUTTON_D_DPAD_LEFT, BUTTON_D_DPAD_RIGHT
     };

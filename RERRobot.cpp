@@ -183,6 +183,7 @@ void RERRobot::StartCompetition(){
             modeTest();
         }
     }
+    GetWatchdog().SetEnabled(false);
 
 //    while(true){
 //        if(IsOperatorControl()){ // teleop mode
@@ -271,9 +272,12 @@ void RERRobot::endDisabled(){
 void RERRobot::initTeleoperated(){
     printf("$$FRC3499$$ - Teleop Init\n");
     compressor->Start();
+    GetWatchdog().SetEnabled(false);
     //SetSafetyEnabled(false); //on a dev board
 }
 void RERRobot::modeTeleoperated(){
+    GetWatchdog().SetEnabled(false);
+    
     if(teststick->GetTrigger())
         airsys->shootBall();
     else
@@ -303,7 +307,8 @@ void RERRobot::modeTeleoperated(){
     proximityLight->Set(pstest->Get());
 
     dsLCD->PrintfLine(DriverStationLCD::kUser_Line4, "IO %d", compressor->GetPressureSwitchValue());
-
+    dsLCD->UpdateLCD();
+    
     Wait(0.005);
 }
 void RERRobot::endTeleoperated(){

@@ -1,7 +1,6 @@
 #include "buttonreg.h"
 
-ButtonReg::ButtonReg(DriverStation *ds)
-{
+ButtonReg::ButtonReg(DriverStation *ds){
     this->ds = ds;
 
     // If you are wondering where these (joysticks[]) come from, they are globally defined in the Joystick.h header file.
@@ -14,5 +13,5 @@ ButtonReg::ButtonReg(DriverStation *ds)
 }
 
 void ButtonReg::regAction(unsigned int jsPort, unsigned int button, Action *action){
-    jsPort;
+    //jsPort;
 }
