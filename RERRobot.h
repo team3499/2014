@@ -21,6 +21,8 @@
     #include "gen_out.h"
 #endif
 
+#define abs(x) (x < 0 ? -x : x)
+
 // SmartDashboard macros: n = name, x = value
 #define SD_PN(n, x) SmartDashboard::PutNumber(n, x)
 #define SD_GN(n)    SmartDashboard::GetNumber(n)
