@@ -13,10 +13,17 @@
 #include <SmartDashboard/SmartDashboard.h>
 #include <Solenoid.h>
 
+
 //#include "tcpconnection.h"
-//#include "oninput.h"
 #include "solenoidbreakout.h"
 #include "arduino.h"
+
+#ifndef BUILDING
+    #include "generated.h"
+#else
+    #include "gen_out.h"
+#endif
+
 
 // SmartDashboard macros: n = name, x = value
 #define SD_PN(n, x) SmartDashboard::PutNumber(n, x)
@@ -79,21 +86,13 @@ private:
     CANJaguar *jagRR; // Jaguar #2
     CANJaguar *jagRL; // Jaguar #5
 
+    Relay *cmp; // Relay 5
+    
     CANJaguar *handstilt; // For tilting the arm up and down. #63
 
     SolenoidBreakout *airsys; // Solenoids 1-8
 
     Joystick *teststick; // Joystick 1
 
-
     ArduinoControl *mainLights;
-    ArduinoControl *mainLights1;
-    ArduinoControl *mainLights2;
-    ArduinoControl *mainLights3;
-    ArduinoControl *mainLights4;
-
-    Jaguar *j2;
-    Jaguar *j4;
-    Jaguar *j6;
-    Jaguar *j9;
 };

@@ -8,3 +8,20 @@ timer. This is an excellent starting point for your programs.
 This program simply drives forward for 2 seconds in the
 Autonomous period and does simple arcade driving during the
 Operator Control period.
+
+
+-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+                          TODO
+-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+
+OnInput::reg(...):
+  Watch for special input
+
+OnInput:
+  Change to event/action (so its name is not misleading, and it can be used with a high/low swap on an DInput.)
+
+
+LEDs
+  High -> nothing there
+
+  add led

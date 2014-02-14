@@ -1,17 +1,19 @@
 #include "RERRobot.h"
+#include "solenoidbreakout.h"
+
 #include <DriverStation.h>
-#include <NetworkCommunication/UsageReporting.h>
-#include <Timer.h>
 #include <LiveWindow/LiveWindow.h>
+#include <NetworkCommunication/UsageReporting.h>
 #include <networktables/NetworkTable.h>
+#include <Timer.h>
+#include <WPILib.h>
+
 #include <csignal>
 #include <unistd.h>
 
-#include <WPILib.h>
 
-#include "solenoidbreakout.h"
+#define abs(x) (x < 0 ? -x : x)
 
-#define abs(x) (x < 0 ? -x : x) 
 
 RERRobot::RERRobot(){
     // Initialize all of the members
@@ -20,6 +22,8 @@ RERRobot::RERRobot(){
     compressor = new Compressor(2, 2);
     proximityLight = new DigitalOutput(1, 8);
     pstest = new DigitalInput(1, 5);
+
+    cmp = new Relay(1, 5, Relay::kForwardOnly);
 
     jagFR = new CANJaguar(3, CANJaguar::kSpeed);
     jagFL = new CANJaguar(4, CANJaguar::kSpeed);
@@ -32,15 +36,6 @@ RERRobot::RERRobot(){
     teststick = new Joystick(1);
 
     mainLights  = new ArduinoControl(7);
-    mainLights1 = new ArduinoControl(1);
-    mainLights2 = new ArduinoControl(3);
-    mainLights3 = new ArduinoControl(5);
-    mainLights4 = new ArduinoControl(10);
-
-    j2 = new Jaguar(2);
-    j4 = new Jaguar(4);
-    j6 = new Jaguar(6);
-    j9 = new Jaguar(9);
 
     // Set up the members
     jagFR->SetExpiration(0.1);
@@ -65,6 +60,7 @@ RERRobot::RERRobot(){
 
     handstilt->SetExpiration(0.1);
     handstilt->EnableControl();
+
     m_watchdog.SetEnabled(false);
 }
 
@@ -117,6 +113,7 @@ void RERRobot::StartCompetition(){
 
     // Init stuff
     dsLCD->Clear();
+    dsLCD->PrintfLine(DriverStationLCD::kUser_Line1, "BD: "BUILD_DATE);
     dsLCD->UpdateLCD();
 
     setupSmartDashboard();
@@ -136,9 +133,7 @@ void RERRobot::StartCompetition(){
             newmode = autonomous;
         } else {
             // Report problem...
-            //raise(SIGABRT);
             m_ds->WaitForData();
-            return;
         }
 
         // Run end / init mode functions
@@ -196,6 +191,8 @@ void RERRobot::StartCompetition(){
             modeTest();
         }
     }
+
+    GetWatchdog().SetEnabled(false);
 
 //    while(true){
 //        if(IsOperatorControl()){ // teleop mode
@@ -286,7 +283,10 @@ void RERRobot::initTeleoperated(){
     compressor->Start();
 //    SetSafetyEnabled(false); //on a dev board
 }
+
 void RERRobot::modeTeleoperated(){
+    GetWatchdog().SetEnabled(false);
+    
     if(teststick->GetTrigger())
         airsys->shootBall();
     else
@@ -305,6 +305,15 @@ void RERRobot::modeTeleoperated(){
     SD_PN("Joystick Y", teststick->GetAxis(Joystick::kYAxis));
     if(abs(teststick->GetAxis(Joystick::kYAxis)) > 0.01){
         handstilt->Set(teststick->GetAxis(Joystick::kYAxis) * 30);
+
+    if(teststick->GetRawButton(11))
+        cmp->Set(Relay::kOn);
+    else
+        cmp->Set(Relay::kOff);
+
+    SD_PN("Joystick Y", teststick->GetAxis(Joystick::kYAxis));
+    if(abs(teststick->GetAxis(Joystick::kYAxis)) > 0.01){
+        handstilt->Set(teststick->GetAxis(Joystick::kYAxis) * 100);
     }
 
     SD_PN("Proximity Sensor", pstest->Get());
@@ -312,17 +321,10 @@ void RERRobot::modeTeleoperated(){
 
     dsLCD->PrintfLine(DriverStationLCD::kUser_Line4, "IO %d", compressor->GetPressureSwitchValue());
 
-    j2->Set(.6);
-    j4->Set(.2);
-    j6->Set(-.6);
-    j9->Set(-.4);
-
     mainLights->setFlat();
-    mainLights1->setFlat();
-    mainLights2->setFlat();
-    mainLights3->setFlat();
-    mainLights4->setFlat();
 
+    dsLCD->UpdateLCD();
+    
     Wait(0.005);
 }
 void RERRobot::endTeleoperated(){

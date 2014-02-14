@@ -3,14 +3,24 @@ CONFIG += console
 CONFIG -= app_bundle
 CONFIG -= qt
 
-HEADERS += RERRobot.h
+HEADERS += RERRobot.h \
+    generated.h \
+    tcpconnection.h \
+    solenoidbreakout.h \
+    action.h \
+    input/buttonreg.h \
+    input/jsbase.h
 
 SOURCES += RERRobot.cpp \
-    init.cpp \
-    test.cpp \
-    autonomous.cpp \
-    teleop.cpp \
-    disabled.cpp
+    tcpconnection.cpp \
+    solenoidbreakout.cpp \
+    action.cpp \
+    input/buttonreg.cpp \
+    input/jsbase.cpp
 
 OTHER_FILES += \
-    PPC603gnu/compile.sh
+    sample.txt \
+    CMakeLists.txt \
+    .gitignore
+
+INCLUDEPATH += /usr/powerpc-wrs-vxworks/include/WPILib

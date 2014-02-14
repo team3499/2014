@@ -10,22 +10,12 @@
 class ButtonReg
 {
 public:
-    struct JsButtons{
-        ;
-    };
-
-    ButtonReg(DriverStation *ds);
+    ButtonReg();
 
     void regAction(unsigned int jsPort, unsigned int button, Action *action);
 private:
-    Joystick *sticks;
-    char *thing;
-
-    DriverStation *ds;
 
     Action **actions;
-    ;
-
 };
 
 #endif // BUTTONREG_H
