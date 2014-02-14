@@ -1,24 +1,25 @@
-#ifndef COMMAND_BASE_H
-#define COMMAND_BASE_H
+#ifndef __COMMAND_BASE_H__
+#define __COMMAND_BASE_H__
 
 #include "Commands/Command.h"
-#include "Subsystems/ExampleSubsystem.h"
+#include "Subsystems/BallDetectorSubsystem.h"
+#include "Subsystems/CompressorSubsystem.h"
+#include "Subsystems/GripperSubsystem.h"
 #include "OI.h"
 
 
-/**
- * The base for all commands. All atomic commands should subclass CommandBase.
- * CommandBase stores creates and stores each control system. To access a
- * subsystem elsewhere in your code in your code use CommandBase.examplesubsystem
- */
-class CommandBase: public Command {
-public:
-	CommandBase(const char *name);
-	CommandBase();
-	static void init();
-	// Create a single static instance of all of your subsystems
-	static ExampleSubsystem *examplesubsystem;
-	static OI *oi;
+class CommandBase : public Command {
+
+  public:
+    CommandBase(const char *name);
+    CommandBase();
+
+    static void init();
+
+    static BallDetectorSubsystem * ballDetectorSubsystem;
+    static CompressorSubsystem *   compressorSubsystem;
+    static GripperSubsystem *      gripperSubsystem;
+    static OI *                    oi;
 };
 
-#endif
+#endif /* __COMMAND_BASE_H__ */
