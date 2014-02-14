@@ -1,9 +1,9 @@
-#ifndef __PASS_COMMAND_H__
-#define __PASS_COMMAND_H__
+#ifndef __DRIVING_PASS_COMMAND_H__
+#define __DRIVING_PASS_COMMAND_H__
 
 #include "CommandBase.h"
 
-class PassCommand : public CommandBase {
+class DrivingPassCommand : public CommandBase {
 
   private:
     Timer * timer;
@@ -20,7 +20,7 @@ class PassCommand : public CommandBase {
     State state;
 
   public:
-    PassCommand();
+    DrivingPassCommand();
 
     virtual void Initialize();
     virtual void Execute();
@@ -29,4 +29,4 @@ class PassCommand : public CommandBase {
     virtual void Interrupted();
 };
 
-#endif /* __PASS_COMMAND_H__ */
+#endif /* __DRIVING_PASS_COMMAND_H__ */

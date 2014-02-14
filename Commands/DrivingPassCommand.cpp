@@ -1,18 +1,18 @@
-#include "PassCommand.h"
+#include "DrivingPassCommand.h"
 
-PassCommand::PassCommand() {
+DrivingPassCommand::DrivingPassCommand() {
     timer = new Timer();
     Requires(gripperSubsystem);
     // TODO: Requires(driveSubsystem);
 }
 
-void PassCommand::Initialize() {
+void DrivingPassCommand::Initialize() {
     timer->Start();
     timer->Reset();
     state = PENDING;
 }
 
-void PassCommand::Execute() {
+void DrivingPassCommand::Execute() {
     switch (state) {
     case PENDING:
         gripperSubsystem->Open();
@@ -39,16 +39,16 @@ void PassCommand::Execute() {
     }
 }
 
-bool PassCommand::IsFinished() {
+bool DrivingPassCommand::IsFinished() {
     return state == FINISHED;
 }
 
-void PassCommand::End() {
+void DrivingPassCommand::End() {
     gripperSubsystem->Open();
     // TODO: driveSubsystem->Stop();
 }
 
-void PassCommand::Interrupted() {
+void DrivingPassCommand::Interrupted() {
     state = FINISHED;
     End();
 }
