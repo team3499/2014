@@ -303,7 +303,7 @@ void RERRobot::modeTeleoperated(){
         compressor->SetRelayValue(Relay::kOff);
 
     SD_PN("Joystick Y", teststick->GetAxis(Joystick::kYAxis));
-    if(abs(teststick->GetAxis(Joystick::kYAxis)) > 0.01){
+    if(abs(teststick->GetAxis(Joystick::kYAxis)) > 0.01)
         handstilt->Set(teststick->GetAxis(Joystick::kYAxis) * 30);
 
     if(teststick->GetRawButton(11))
