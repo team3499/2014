@@ -86,7 +86,12 @@
 #define SHOOTER_LOWER_LEFT_CHANNEL        SOL_4
 #define SHOOTER_LOWER_RIGHT_CHANNEL       SOL_5
 
-// Passer
-#define PASSER_CHANNEL                    SHOOTER_CENTER_CHANNEL
+//
+// Operator Interface
+//
+
+// Gamepad
+#define DRIVE_GAMEPAD_PORT                1
+#define ACCESSORY_GAMEPAD_PORT            2
 
 #endif /* __ROBOTMAP_H__ */

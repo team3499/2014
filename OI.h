@@ -1,13 +1,18 @@
-#ifndef OI_H
-#define OI_H
+#ifndef __OI_H__
+#define __OI_H__
 
 #include "WPILib.h"
+#include "Gamepad/Gamepad.h"
 
 class OI {
-private:
 
-public:
-	OI();
+  private:
+
+  public:
+    OI();
+
+    Gamepad * drivePad;
+    Gamepad * accessoryPad;
 };
 
-#endif
+#endif /* __OI_H__ */
