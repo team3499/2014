@@ -20,14 +20,14 @@ void DrivingPassCommand::Execute() {
         break;
     case OPENING:
         // Open the gripper for 0.25 seconds before passing
-        if (timer->HasPeriodPassed(0.25)) { state == STARTING; }
+        if (timer->HasPeriodPassed(0.25)) { state = STARTING; }
         break;
     case STARTING:
         // TODO: driveSubsystem->DriveForward();
         state = PASSING;
     case PASSING:
         // Drive for 0.5 seconds to perform pass
-        if (timer->HasPeriodPassed(0.5)) { state == STOPPING; }
+        if (timer->HasPeriodPassed(0.5)) { state = STOPPING; }
         break;
     case STOPPING:
         // TODO: driveSubsystem->Stop();
