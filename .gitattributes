@@ -1,0 +1,11 @@
+# Normalize CRLF to LF
+.cproject     text
+.project      text
+.wrmakefile   text
+.wrproject    text
+2014.pro      text
+*.cpp         text
+*.c           text
+*.h           text
+*.txt         text
+

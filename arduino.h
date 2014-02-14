@@ -5,32 +5,32 @@
 
 class ArduinoControl : PWM {
 public:
-	ArduinoControl(unsigned int pwmport):
-	    PWM(pwmport) 
-	{
+    ArduinoControl(unsigned int pwmport):
+        PWM(pwmport) 
+    {
         SetBounds(20.0, 10.0, 10.0, 10.0, 0.0);
         SetPeriodMultiplier(kPeriodMultiplier_1X);
-		SetRaw(m_centerPwm);
-	}
-	
-	~ArduinoControl(){}
+        SetRaw(m_centerPwm);
+    }
+    
+    ~ArduinoControl(){}
 
-	void setModeTeleop(){}
-	void setModeAutonomous(){}
-	void setModeDisabled(){}
-	
-	void setModeWaitCatch(){}
-	void setModeBallHere(){}
-	
-	void unsetMode(){}
-	
-	void setFlat(){
-		SetRaw(m_centerPwm);
-	}
-	
+    void setModeTeleop(){}
+    void setModeAutonomous(){}
+    void setModeDisabled(){}
+    
+    void setModeWaitCatch(){}
+    void setModeBallHere(){}
+    
+    void unsetMode(){}
+    
+    void setFlat(){
+        SetRaw(m_centerPwm);
+    }
+    
 private:
-	int mode;
-	int modeStack;
+    int mode;
+    int modeStack;
 };
 
 
