@@ -74,4 +74,9 @@
 #define COMPRESSOR_CHANNEL                RELAY_2
 #define PRESSURE_SWITCH_CHANNEL           DIO_2
 
+// Gripper
+#define GRIPPER_TILT_CAN_ID               63
+#define GRIPPER_OPEN_CHANNEL              SOL_6
+#define GRIPPER_CLOSE_CHANNEL             SOL_7
+
 #endif /* __ROBOTMAP_H__ */
