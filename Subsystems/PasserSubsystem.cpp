@@ -14,5 +14,5 @@ void PasserSubsystem::Retract() {
 }
 
 bool PasserSubsystem::IsExtended() {
-    solenoid->Get();
+    return solenoid->Get();
 }
