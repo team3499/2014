@@ -79,4 +79,14 @@
 #define GRIPPER_OPEN_CHANNEL              SOL_6
 #define GRIPPER_CLOSE_CHANNEL             SOL_7
 
+// Shooter
+#define SHOOTER_UPPER_LEFT_CHANNEL        SOL_1
+#define SHOOTER_UPPER_RIGHT_CHANNEL       SOL_2
+#define SHOOTER_CENTER_CHANNEL            SOL_3
+#define SHOOTER_LOWER_LEFT_CHANNEL        SOL_4
+#define SHOOTER_LOWER_RIGHT_CHANNEL       SOL_5
+
+// Passer
+#define PASSER_CHANNEL                    SHOOTER_CENTER_CHANNEL
+
 #endif /* __ROBOTMAP_H__ */
