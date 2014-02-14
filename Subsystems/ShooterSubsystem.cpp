@@ -25,6 +25,18 @@ void ShooterSubsystem::Retract() {
     solenoid[3]->Set(false);
 }
 
+void ShooterSubsystem::ExtendCenter() {
+    solenoid[2]->Set(true);
+}
+
+void ShooterSubsystem::RetractCenter() {
+    solenoid[2]->Set(false);
+}
+
 bool ShooterSubsystem::IsExtended() {
+    return solenoid[0]->Get();
+}
+
+bool ShooterSubsystem::IsCenterExtended() {
     return solenoid[2]->Get();
 }

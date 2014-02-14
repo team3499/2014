@@ -15,7 +15,11 @@ class ShooterSubsystem : public Subsystem {
     void Extend();
     void Retract();
 
+    void ExtendCenter();
+    void RetractCenter();
+
     bool IsExtended();
+    bool IsCenterExtended();
 };
 
 #endif /* __SHOOTER_SUBSYSTEM_H__ */

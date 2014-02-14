@@ -3,7 +3,7 @@
 PassCommand::PassCommand() {
     timer = new Timer();
     Requires(gripperSubsystem);
-    Requires(passerSubsystem);
+    Requires(shooterSubsystem);
 }
 
 void PassCommand::Initialize() {
@@ -23,14 +23,14 @@ void PassCommand::Execute() {
         if (timer->HasPeriodPassed(0.25)) { state = STARTING; }
         break;
     case STARTING:
-        passerSubsystem->Extend();
+        shooterSubsystem->ExtendCenter();
         state = PASSING;
     case PASSING:
         // Allow 0.5 seconds to perform pass
         if (timer->HasPeriodPassed(0.5)) { state = STOPPING; }
         break;
     case STOPPING:
-        passerSubsystem->Retract();
+        shooterSubsystem->Retract();
         state = FINISHING;
         break;
     case FINISHING:
@@ -49,7 +49,7 @@ bool PassCommand::IsFinished() {
 
 void PassCommand::End() {
     if (gripperSubsystem->IsClosed()) { gripperSubsystem->Open(); }
-    if (!passerSubsystem->IsExtended()) { passerSubsystem->Retract(); }
+    if (!shooterSubsystem->IsCenterExtended()) { shooterSubsystem->Retract(); }
 }
 
 void PassCommand::Interrupted() {
