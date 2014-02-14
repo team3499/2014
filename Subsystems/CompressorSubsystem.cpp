@@ -1,8 +1,13 @@
 #include "CompressorSubsystem.h"
+#include "Commands/ChargeAirCommand.h"
 #include "Robotmap.h"
 
 CompressorSubsystem::CompressorSubsystem() : Subsystem("CompressorSubsystem") {
     compressor = new Compressor(COMPRESSOR_CHANNEL, PRESSURE_SWITCH_CHANNEL);
+}
+
+void CompressorSubsystem::InitDefaultCommand() {
+    SetDefaultCommand(new ChargeAirCommand());
 }
 
 void CompressorSubsystem::Start() {

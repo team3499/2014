@@ -12,6 +12,8 @@ class CompressorSubsystem : public Subsystem {
   public:
     CompressorSubsystem();
 
+    void InitDefaultCommand();
+
     void Start();
     void Stop();
     bool IsEnabled();
