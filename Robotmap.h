@@ -70,4 +70,8 @@
 // Ball Detector -- IR Proximity Detector
 #define BALL_DETECTOR_CHANNEL             DIO_5
 
+// Compressor
+#define COMPRESSOR_CHANNEL                RELAY_2
+#define PRESSURE_SWITCH_CHANNEL           DIO_2
+
 #endif /* __ROBOTMAP_H__ */
