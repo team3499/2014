@@ -1,4 +1,4 @@
-#include "input/jsbase.h"
+#include "jsbase.h"
 
 JsBase::JsBase(int jsport, JsBase::ControllerType type) {
     this->js = new Joystick(jsport);
