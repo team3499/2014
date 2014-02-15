@@ -3,7 +3,7 @@
 
 TestLedSubsystem::TestLedSubsystem() : Subsystem("TestLedSubsystem") {
     digitalOutput = new DigitalOutput(TEST_LED_CHANNEL);
-    state         = false;
+    state         = true;
 }
 
 void TestLedSubsystem::Set(bool state) {

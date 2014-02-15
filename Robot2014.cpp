@@ -1,42 +1,55 @@
 #include "WPILib.h"
 #include "Commands/Command.h"
-#include "Commands/ExampleCommand.h"
+#include "Commands/TestLedCommand.h"
+#include "Gamepad/Gamepad.h"
 #include "CommandBase.h"
+#include "Robotmap.h"
 
 class Robot2014 : public IterativeRobot {
-private:
-	Command *autonomousCommand;
-	LiveWindow *lw;
-	
-	virtual void RobotInit() {
-		CommandBase::init();
-		autonomousCommand = new ExampleCommand();
-		lw = LiveWindow::GetInstance();
-	}
-	
-	virtual void AutonomousInit() {
-		autonomousCommand->Start();
-	}
-	
-	virtual void AutonomousPeriodic() {
-		Scheduler::GetInstance()->Run();
-	}
-	
-	virtual void TeleopInit() {
-		// This makes sure that the autonomous stops running when
-		// teleop starts running. If you want the autonomous to 
-		// continue until interrupted by another command, remove
-		// this line or comment it out.
-		autonomousCommand->Cancel();
-	}
-	
-	virtual void TeleopPeriodic() {
-		Scheduler::GetInstance()->Run();
-	}
-	
-	virtual void TestPeriodic() {
-		lw->Run();
-	}
+
+  private:
+    LiveWindow * lw;
+    Gamepad *    drivePad;
+    Gamepad *    accessoryPad;
+    TestLedCommand * testLedCommand;
+
+    bool leftTriggerState;
+    bool rightTriggerState;
+
+    virtual void RobotInit() {
+        CommandBase::init();
+        lw = LiveWindow::GetInstance();
+
+        drivePad       = new Gamepad(DRIVE_GAMEPAD_PORT);
+        accessoryPad   = new Gamepad(ACCESSORY_GAMEPAD_PORT);
+        testLedCommand = new TestLedCommand();
+
+        CommandBase::oi->AssignCommandToButton(testLedCommand, 1);
+    }
+
+    virtual void AutonomousInit() {
+
+    }
+
+    virtual void AutonomousPeriodic() {
+        Scheduler::GetInstance()->Run();
+    }
+
+    virtual void TeleopInit() {
+        leftTriggerState = drivePad->GetNumberedButton(1);
+        //rightTriggerState = false;
+        testLedCommand->Start();
+    }
+
+    virtual void TeleopPeriodic() {
+        Scheduler::GetInstance()->Run();
+
+        CommandBase::oi->Process();
+    }
+
+    virtual void TestPeriodic() {
+        lw->Run();
+    }
 };
 
 START_ROBOT_CLASS(Robot2014);
