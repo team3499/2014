@@ -177,7 +177,6 @@ void RERRobot::StartCompetition(){
                     initTest();
                 }
             }
-            dsLCD->UpdateLCD();
         }
 
         // Run mode loop function
@@ -190,79 +189,12 @@ void RERRobot::StartCompetition(){
         } else if(mode == test){
             modeTest();
         }
+        
+        // Update Driver Station LCD
+        dsLCD->UpdateLCD();
     }
 
     GetWatchdog().SetEnabled(false);
-
-//    while(true){
-//        if(IsOperatorControl()){ // teleop mode
-//            m_ds->InOperatorControl(true);
-//            dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "Teleop Mode");
-//            dsLCD->UpdateLCD();
-//            if(IsEnabled()){
-//                initTeleoperated();
-//                while(IsOperatorControl() && IsEnabled())
-//                    modeTeleoperated();
-//                endTeleoperated();
-//            }
-//            dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "Unknown Mode");
-//            dsLCD->UpdateLCD();
-//            m_ds->InOperatorControl(false);
-//            while(IsOperatorControl() && IsEnabled()){
-//                m_ds->WaitForData();
-//            }
-//        } else if(IsAutonomous()){ // autonomous mode
-//            m_ds->InAutonomous(true);
-//            dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "Autonomous Mode");
-//            dsLCD->UpdateLCD();
-//            if(IsEnabled()){
-//                initAutonomous();
-//                while(IsAutonomous() && IsEnabled())
-//                    modeAutonomous();
-//                endAutonomous();
-//            }
-//            dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "Unknown Mode");
-//            dsLCD->UpdateLCD();
-//            m_ds->InAutonomous(false);
-//            while(IsAutonomous() && IsEnabled()){
-//                m_ds->WaitForData();
-//            }
-//        } else if(IsTest()){ // test mode
-//            lw->SetEnabled(true);
-//            m_ds->InTest(true);
-//            dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "Test Mode");
-//            dsLCD->UpdateLCD();
-//            if(IsEnabled()){
-//                initTest();
-//                while(IsTest() && IsEnabled())
-//                    modeTest();
-//                endTest();
-//            }
-//            dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "Unknown Mode");
-//            dsLCD->UpdateLCD();
-//            m_ds->InTest(false);
-//            while(IsTest() && IsEnabled()){
-//                m_ds->WaitForData();
-//            }
-//            lw->SetEnabled(false);
-//        } else { // disabled mode
-//            m_ds->InDisabled(true);
-//            dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "Disabled Mode");
-//            dsLCD->UpdateLCD();
-//            if(IsDisabled()){
-//                initDisabled();
-//                while(IsDisabled())
-//                    modeDisabled();
-//                endDisabled();
-//            }
-//            dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "Unknown Mode");
-//            dsLCD->UpdateLCD();
-//            m_ds->InDisabled(false);
-//            while(IsDisabled()){
-//                m_ds->WaitForData();
-//            }
-//        }
-//    }
 }
 
 // Disabled
@@ -322,8 +254,6 @@ void RERRobot::modeTeleoperated(){
     dsLCD->PrintfLine(DriverStationLCD::kUser_Line4, "IO %d", compressor->GetPressureSwitchValue());
 
     mainLights->setFlat();
-
-    dsLCD->UpdateLCD();
     
     Wait(0.005);
 }
@@ -349,10 +279,18 @@ void RERRobot::initTest(){
     printf("$$FRC3499$$ - Test Init\n");
     compressor->Start();
     setupSmartDashboard();
+    
+    test_mode = (int)SD_GN("TEST_MODE");
+    
+    switch(test_mode){
+    case 3:
+    	jaglog = new std::ofstream("jaguar_speed.log");
+    	break;
+    }
 }
 
 void RERRobot::modeTest(){
-    switch((int)SD_GN("TEST_MODE")){
+    switch(test_mode){
     case 1:
         proximityLight->Set(0);
         sleep(1);
@@ -377,14 +315,32 @@ void RERRobot::modeTest(){
         jagRR->Set(SD_GN("2 SetSpeed"));
         jagRL->Set(SD_GN("5 SetSpeed"));
         break;
+    case 3:
+    {
+    	float speed = 10.0;
+    	jagFR->Set(speed);
+    	jagFL->Set(speed);
+    	jagRR->Set(speed);
+    	jagRL->Set(speed);
+    	
+    	*jaglog << "Set-" << speed << " FR-" << jagFR->Get() << " FL-" << jagFL->Get() << " RR-" << jagRR->Get() << " RL-" << jagRL->Get() << std::endl;
+    	jaglog->flush();
+    }
+    	break;
     }
 }
 void RERRobot::endTest(){
+    switch(test_mode){
+    case 3:
+    	jaglog->close();
+    	delete jaglog;
+    	break;
+    }
     compressor->Stop();
 }
 
 void RERRobot::setupSmartDashboard(){
-    SD_PN("TEST_MODE", 1);
+    SD_PN("TEST_MODE", 3);
 
     SD_PN("2P", 0.20);
     SD_PN("2I", 0.001);
