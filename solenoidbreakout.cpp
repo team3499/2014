@@ -27,9 +27,10 @@ SolenoidBreakout::~SolenoidBreakout(){
     delete s8;
 }
 
+// ARM -- OPEN/CLOSE //
 void SolenoidBreakout::openArm(){
-    s6->Set(true);
     s7->Set(false);
+    s6->Set(true);
 }
 
 void SolenoidBreakout::closeArm(){
@@ -41,6 +42,7 @@ bool SolenoidBreakout::isArmOpen(){
     return s6->Get();
 }
 
+// FIRING MECHANISM -- SHOT/UNSHOT //
 void SolenoidBreakout::shootBall(){
     s1->Set(true);
     s2->Set(true);
