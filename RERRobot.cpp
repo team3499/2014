@@ -33,7 +33,9 @@ RERRobot::RERRobot(){
     handstilt = new CANJaguar(63, CANJaguar::kPercentVbus);
 
     airsys = new SolenoidBreakout();
-    teststick = new Joystick(1);
+    teststick = new Joystick(3);
+    
+    controller = new JsBase();
 
     mainLights  = new ArduinoControl(7);
 
@@ -349,10 +351,13 @@ void RERRobot::initTest(){
     printf("$$FRC3499$$ - Test Init\n");
     compressor->Start();
     setupSmartDashboard();
+    SD_PN("TEST_MODE", 0);
 }
 
 void RERRobot::modeTest(){
     switch((int)SD_GN("TEST_MODE")){
+    case 0:
+    	Wait(.25);
     case 1:
         proximityLight->Set(0);
         sleep(1);
