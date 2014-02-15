@@ -12,7 +12,7 @@
 #include <PWM.h>
 #include <SmartDashboard/SmartDashboard.h>
 #include <Solenoid.h>
-
+#include <fstream>
 
 //#include "tcpconnection.h"
 #include "solenoidbreakout.h"
@@ -74,6 +74,7 @@ public:
 
 private:
     mode_type mode;
+    int test_mode;
 
     DriverStationLCD *dsLCD;
 
@@ -95,4 +96,6 @@ private:
     Joystick *teststick; // Joystick 1
 
     ArduinoControl *mainLights;
+    
+    std::ofstream *jaglog;
 };
