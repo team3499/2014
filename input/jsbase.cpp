@@ -1,4 +1,4 @@
-#include "input/jsbase.h"
+#include "jsbase.h"
 
 JsBase::JsBase() {
 	if(!initialized){
