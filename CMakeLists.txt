@@ -11,13 +11,8 @@ SET(RER_2014_HEADERS ### =================== HEADERS =================== ###
 #    tcpconnection.h
     solenoidbreakout.h
     action.h
-<<<<<<< HEAD
-#    input/buttonreg.h
-#    input/jsbase.h
-=======
     input/buttonreg.h
     input/jsbase.h
->>>>>>> 8b2bb403687039d61902eb0ffa909933d8031d12
 )
 
 SET(RER_2014_SOURCES ### =================== SOURCES =================== ###
@@ -25,13 +20,8 @@ SET(RER_2014_SOURCES ### =================== SOURCES =================== ###
 #    tcpconnection.cpp
     solenoidbreakout.cpp
     action.cpp
-<<<<<<< HEAD
-#    input/buttonreg.cpp
-#    input/jsbase.cpp
-=======
     input/buttonreg.cpp
     input/jsbase.cpp
->>>>>>> 8b2bb403687039d61902eb0ffa909933d8031d12
 )
 
 ### =================== CONFIG =================== ###
@@ -51,6 +41,9 @@ MESSAGE(STATUS "Build Time: ${G_MAKE_BUILD_TIME}")
 MESSAGE(STATUS "Toolchain: ${CMAKE_TOOLCHAIN_FILE}")
 
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -ansi -std=c++11")
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fstrength-reduce -fno-builtin -MD -MP")
+#SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m4-nofpu -U__sh3__ -D__SH4__=1")
+#SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mno-implicit-fp")
 
 ### =================== BUILD =================== ###
 
