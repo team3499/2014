@@ -1,13 +1,18 @@
 #include "RERRobot.h"
+#include "solenoidbreakout.h"
+
 #include <DriverStation.h>
-#include <NetworkCommunication/UsageReporting.h>
-#include <Timer.h>
 #include <LiveWindow/LiveWindow.h>
+#include <NetworkCommunication/UsageReporting.h>
 #include <networktables/NetworkTable.h>
+#include <Timer.h>
+#include <WPILib.h>
+
 #include <csignal>
 #include <unistd.h>
 
-#include "solenoidbreakout.h"
+
+#define abs(x) (x < 0 ? -x : x)
 
 
 RERRobot::RERRobot(){
@@ -29,6 +34,8 @@ RERRobot::RERRobot(){
 
     airsys = new SolenoidBreakout();
     teststick = new Joystick(1);
+
+    mainLights  = new ArduinoControl(7);
 
     // Set up the members
     jagFR->SetExpiration(0.1);
@@ -53,6 +60,8 @@ RERRobot::RERRobot(){
 
     handstilt->SetExpiration(0.1);
     handstilt->EnableControl();
+
+    m_watchdog.SetEnabled(false);
 }
 
 RERRobot::~RERRobot(){
@@ -123,9 +132,8 @@ void RERRobot::StartCompetition(){
         } else if(IsAutonomous()){
             newmode = autonomous;
         } else {
-            // oh shit!
-            raise(SIGABRT);
-            return;
+            // Report problem...
+            m_ds->WaitForData();
         }
 
         // Run end / init mode functions
@@ -183,6 +191,8 @@ void RERRobot::StartCompetition(){
             modeTest();
         }
     }
+
+    GetWatchdog().SetEnabled(false);
 
 //    while(true){
 //        if(IsOperatorControl()){ // teleop mode
@@ -271,9 +281,12 @@ void RERRobot::endDisabled(){
 void RERRobot::initTeleoperated(){
     printf("$$FRC3499$$ - Teleop Init\n");
     compressor->Start();
-    //SetSafetyEnabled(false); //on a dev board
+//    SetSafetyEnabled(false); //on a dev board
 }
+
 void RERRobot::modeTeleoperated(){
+    GetWatchdog().SetEnabled(false);
+    
     if(teststick->GetTrigger())
         airsys->shootBall();
     else
@@ -288,6 +301,10 @@ void RERRobot::modeTeleoperated(){
         compressor->SetRelayValue(Relay::kOn);
     else
         compressor->SetRelayValue(Relay::kOff);
+
+    SD_PN("Joystick Y", teststick->GetAxis(Joystick::kYAxis));
+    if(abs(teststick->GetAxis(Joystick::kYAxis)) > 0.01)
+        handstilt->Set(teststick->GetAxis(Joystick::kYAxis) * 30);
 
     if(teststick->GetRawButton(11))
         cmp->Set(Relay::kOn);
@@ -304,10 +321,15 @@ void RERRobot::modeTeleoperated(){
 
     dsLCD->PrintfLine(DriverStationLCD::kUser_Line4, "IO %d", compressor->GetPressureSwitchValue());
 
+    mainLights->setFlat();
+
+    dsLCD->UpdateLCD();
+    
     Wait(0.005);
 }
 void RERRobot::endTeleoperated(){
     compressor->Stop();
+    // Turn everything off.
 }
 
 // Autonomous

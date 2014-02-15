@@ -7,19 +7,23 @@
 #include <DigitalInput.h>
 #include <DriverStation.h>
 #include <DriverStationLCD.h>
+#include <Jaguar.h>
+#include <Joystick.h>
+#include <PWM.h>
 #include <SmartDashboard/SmartDashboard.h>
 #include <Solenoid.h>
-#include <Joystick.h>
+
 
 //#include "tcpconnection.h"
-//#include "oninput.h"
 #include "solenoidbreakout.h"
+#include "arduino.h"
 
 #ifndef BUILDING
     #include "generated.h"
 #else
     #include "gen_out.h"
 #endif
+
 
 // SmartDashboard macros: n = name, x = value
 #define SD_PN(n, x) SmartDashboard::PutNumber(n, x)
@@ -83,9 +87,12 @@ private:
     CANJaguar *jagRL; // Jaguar #5
 
     Relay *cmp; // Relay 5
+    
     CANJaguar *handstilt; // For tilting the arm up and down. #63
 
     SolenoidBreakout *airsys; // Solenoids 1-8
 
     Joystick *teststick; // Joystick 1
+
+    ArduinoControl *mainLights;
 };
