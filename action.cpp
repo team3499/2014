@@ -4,8 +4,6 @@ Action::Action(){
     count = 0;
 }
 
-
-
 void Action::regCall( void (*function)(), unsigned int timeout,  void (*afterTimeout)()){
 //    void (**calls)();
 //    void (**afters)();
@@ -15,7 +13,7 @@ void Action::regCall( void (*function)(), unsigned int timeout,  void (*afterTim
         regCall(afterTimeout);
 
     calls[count] = function;
-    this->timeout[count] = timeout;
+    this->timeouts[count] = timeout;
     afters[count] = afterTimeout; // This doesnt matter if its null or not.
     ++count;
 }
@@ -26,7 +24,7 @@ unsigned int Action::callCount(){
 
 void Action::activate(){
     // GetFPGATime() returns microseconds, so convert to milliseconds.
-    if((GetFPGATime() * 1.0e-3) <= (timeout[count] + lastCall)){
+    if((GetFPGATime() * 1.0e-3) <= (timeouts[count] + lastCall)){
         for(unsigned int i = 0; i < count; i++){
             (*(calls[count]))();
 
@@ -39,4 +37,14 @@ void Action::activate(){
         // Set the run time
         lastCall = GetFPGATime() * 1.0e-3;
     } // If we are too early, dont do anything.
+}
+
+//void Action::release(){
+//	for(int i = 0; i < releaseCount); ++i){
+//		(*(releases[i]))();
+//	}
+//}
+
+void Action::update(){
+	;
 }

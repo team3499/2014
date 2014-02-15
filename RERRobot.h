@@ -15,8 +15,9 @@
 
 
 //#include "tcpconnection.h"
-#include "solenoidbreakout.h"
 #include "arduino.h"
+#include "input/jsbase.h"
+#include "solenoidbreakout.h"
 
 #ifndef BUILDING
     #include "generated.h"
@@ -95,4 +96,6 @@ private:
     Joystick *teststick; // Joystick 1
 
     ArduinoControl *mainLights;
+
+    JsBase *controller;
 };
