@@ -11,6 +11,7 @@ public:
 
     // Shooter
     void shootBall();
+    void shootCenter();
     void unShootBall();
     bool isBallShot();
 
