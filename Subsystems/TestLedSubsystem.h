@@ -8,12 +8,13 @@ class TestLedSubsystem : public Subsystem {
 
   private:
     DigitalOutput * digitalOutput;
+    bool            state;
 
   public:
     TestLedSubsystem();
 
-    void On();
-    void Off();
+    void Set(bool state);
+    bool Get();
 };
 
 #endif /* __TEST_LED_SUBSYSTEM_H__ */

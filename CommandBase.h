@@ -6,6 +6,7 @@
 #include "Subsystems/CompressorSubsystem.h"
 #include "Subsystems/GripperSubsystem.h"
 #include "Subsystems/ShooterSubsystem.h"
+#include "Subsystems/TestLedSubsystem.h"
 #include "OI.h"
 
 
@@ -21,6 +22,7 @@ class CommandBase : public Command {
     static CompressorSubsystem *   compressorSubsystem;
     static GripperSubsystem *      gripperSubsystem;
     static ShooterSubsystem *      shooterSubsystem;
+    static TestLedSubsystem *      testLedSubsystem;
     static OI *                    oi;
 };
 
