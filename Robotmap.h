@@ -86,6 +86,9 @@
 #define SHOOTER_LOWER_LEFT_CHANNEL        SOL_4
 #define SHOOTER_LOWER_RIGHT_CHANNEL       SOL_5
 
+// Test LED
+#define TEST_LED_CHANNEL                  DIO_10
+
 //
 // Operator Interface
 //
