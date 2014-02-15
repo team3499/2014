@@ -6,14 +6,7 @@
 #include <NetworkCommunication/UsageReporting.h>
 #include <networktables/NetworkTable.h>
 #include <Timer.h>
-#include <WPILib.h>
-
-#include <csignal>
-#include <unistd.h>
-
-
-#define abs(x) (x < 0 ? -x : x)
-
+#include <WPILib.h>s
 
 RERRobot::RERRobot(){
     // Initialize all of the members
@@ -21,7 +14,7 @@ RERRobot::RERRobot(){
 
     compressor = new Compressor(2, 2);
     proximityLight = new DigitalOutput(1, 8);
-    pstest = new DigitalInput(1, 5);
+    psensor = new DigitalInput(1, 5);
 
     cmp = new Relay(1, 5, Relay::kForwardOnly);
 
@@ -60,14 +53,12 @@ RERRobot::RERRobot(){
 
     handstilt->SetExpiration(0.1);
     handstilt->EnableControl();
-
-    m_watchdog.SetEnabled(false);
 }
 
 RERRobot::~RERRobot(){
     delete compressor;
     delete proximityLight;
-    delete pstest;
+    delete psensor;
 
     delete jagFR;
     delete jagFL;
@@ -115,6 +106,8 @@ void RERRobot::StartCompetition(){
     dsLCD->Clear();
     dsLCD->PrintfLine(DriverStationLCD::kUser_Line1, "BD: "BUILD_DATE);
     dsLCD->UpdateLCD();
+    
+    m_watchdog.SetEnabled(true);
 
     setupSmartDashboard();
 
@@ -122,45 +115,56 @@ void RERRobot::StartCompetition(){
 
     while(true){
         // Determine mode
+    	bool newdisabled;
         mode_type newmode;
         if(IsDisabled()){
-            newmode = disable;
-        } else if(IsTest()){
-            newmode = test;
-        } else if(IsOperatorControl()){
-            newmode = teleop;
-        } else if(IsAutonomous()){
-            newmode = autonomous;
+        	newdisabled = true;
         } else {
-            // Report problem...
-            m_ds->WaitForData();
+        	newdisabled = false;
         }
+        
+		if(IsTest()){
+			newmode = test;
+		} else if(IsOperatorControl()){
+			newmode = teleop;
+		} else if(IsAutonomous()){
+			newmode = autonomous;
+		} else {
+			m_ds->WaitForData();
+		}
 
         // Run end / init mode functions
-        if(mode != newmode){
-            if(mode == disable){
-                endDisabled();
-                m_ds->InDisabled(false);
-            } else {
-                if(mode == teleop){
-                    endTeleoperated();
-                    m_ds->InOperatorControl(false);
-                    m_ds->WaitForData();
-                } else if(mode == autonomous){
-                    endAutonomous();
-                    m_ds->InAutonomous(false);
-                    m_ds->WaitForData();
-                } else if(mode == test){
-                    endTest();
-                    m_ds->InTest(false);
-                    m_ds->WaitForData();
-                }
-            }
-            mode = newmode;
-            if(newmode == disable){
+        if(disabled != newdisabled){
+        	disabled = newdisabled;
+        	if(disabled){
                 dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "DISABLED");
                 m_ds->InDisabled(true);
-                initDisabled();
+                modeCode = new ModeDisabled();
+                modeCode->start();
+        	} else {
+                modeCode->end();
+                delete modeCode;
+                m_ds->InDisabled(false);
+        	}
+        }
+		
+        if(mode != newmode){
+			if(mode == teleop){
+				endTeleoperated();
+				m_ds->InOperatorControl(false);
+				m_ds->WaitForData();
+			} else if(mode == autonomous){
+				endAutonomous();
+				m_ds->InAutonomous(false);
+				m_ds->WaitForData();
+			} else if(mode == test){
+				endTest();
+				m_ds->InTest(false);
+				m_ds->WaitForData();
+			}
+            mode = newmode;
+            if(newmode == disable){
+
             } else {
                 dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "ENABLED");
                 if(mode == teleop){
@@ -190,20 +194,20 @@ void RERRobot::StartCompetition(){
             modeTest();
         }
         
+        dsLCD->PrintfLine(DriverStationLCD::kUser_Line5, "%d %d %d %d", IsDisabled(), IsOperatorControl(), IsAutonomous(), IsTest());
         // Update Driver Station LCD
         dsLCD->UpdateLCD();
+        
+        m_watchdog.Feed();
     }
-
-    GetWatchdog().SetEnabled(false);
 }
 
 // Disabled
 void RERRobot::initDisabled(){
-    printf("$$FRC3499$$ - Disabled Init\n");
-    compressor->Stop();
+
 }
 void RERRobot::modeDisabled(){
-    Wait(0.005);
+	
 }
 void RERRobot::endDisabled(){
 
@@ -211,132 +215,37 @@ void RERRobot::endDisabled(){
 
 // Teleop
 void RERRobot::initTeleoperated(){
-    printf("$$FRC3499$$ - Teleop Init\n");
-    compressor->Start();
-//    SetSafetyEnabled(false); //on a dev board
+
 }
 
 void RERRobot::modeTeleoperated(){
-    GetWatchdog().SetEnabled(false);
-    
-    if(teststick->GetTrigger())
-        airsys->shootBall();
-    else
-        airsys->unShootBall();
 
-    if(teststick->GetRawButton(3))
-        airsys->closeArm();
-    else
-        airsys->openArm();
-
-    if(teststick->GetRawButton(10))
-        compressor->SetRelayValue(Relay::kOn);
-    else
-        compressor->SetRelayValue(Relay::kOff);
-
-    SD_PN("Joystick Y", teststick->GetAxis(Joystick::kYAxis));
-    if(abs(teststick->GetAxis(Joystick::kYAxis)) > 0.01)
-        handstilt->Set(teststick->GetAxis(Joystick::kYAxis) * 30);
-
-    if(teststick->GetRawButton(11))
-        cmp->Set(Relay::kOn);
-    else
-        cmp->Set(Relay::kOff);
-
-    SD_PN("Joystick Y", teststick->GetAxis(Joystick::kYAxis));
-    if(abs(teststick->GetAxis(Joystick::kYAxis)) > 0.01){
-        handstilt->Set(teststick->GetAxis(Joystick::kYAxis) * 100);
-    }
-
-    SD_PN("Proximity Sensor", pstest->Get());
-    proximityLight->Set(pstest->Get());
-
-    dsLCD->PrintfLine(DriverStationLCD::kUser_Line4, "IO %d", compressor->GetPressureSwitchValue());
-
-    mainLights->setFlat();
-    
-    Wait(0.005);
 }
 void RERRobot::endTeleoperated(){
-    compressor->Stop();
-    // Turn everything off.
+
 }
 
 // Autonomous
 void RERRobot::initAutonomous(){
-    printf("$$FRC3499$$ - Autonomous Init\n");
-    compressor->Start();
+
 }
 void RERRobot::modeAutonomous(){
-    Wait(0.005);
+
 }
 void RERRobot::endAutonomous(){
-    compressor->Stop();
+
 }
 
 // Test
 void RERRobot::initTest(){
-    printf("$$FRC3499$$ - Test Init\n");
-    compressor->Start();
-    setupSmartDashboard();
-    
-    test_mode = (int)SD_GN("TEST_MODE");
-    
-    switch(test_mode){
-    case 3:
-    	jaglog = new std::ofstream("jaguar_speed.log");
-    	break;
-    }
+
 }
 
 void RERRobot::modeTest(){
-    switch(test_mode){
-    case 1:
-        proximityLight->Set(0);
-        sleep(1);
-        SD_PB("LED eh ", true);
-        proximityLight->Set(1);
-        sleep(2);
-        break;
 
-    case 2:
-        SD_PN("3 Speed", jagFR->GetSpeed());
-        SD_PN("4 Speed", jagFL->GetSpeed());
-        SD_PN("2 Speed", jagRR->GetSpeed());
-        SD_PN("5 Speed", jagRL->GetSpeed());
-
-        jagFR->SetPID(SD_GN("3P"), SD_GN("3I"), SD_GN("3D"));
-        jagFL->SetPID(SD_GN("4P"), SD_GN("4I"), SD_GN("4D"));
-        jagRR->SetPID(SD_GN("2P"), SD_GN("2I"), SD_GN("2D"));
-        jagRL->SetPID(SD_GN("5P"), SD_GN("5I"), SD_GN("5D"));
-
-        jagFR->Set(SD_GN("3 SetSpeed"));
-        jagFL->Set(SD_GN("4 SetSpeed"));
-        jagRR->Set(SD_GN("2 SetSpeed"));
-        jagRL->Set(SD_GN("5 SetSpeed"));
-        break;
-    case 3:
-    {
-    	float speed = 10.0;
-    	jagFR->Set(speed);
-    	jagFL->Set(speed);
-    	jagRR->Set(speed);
-    	jagRL->Set(speed);
-    	
-    	*jaglog << "Set-" << speed << " FR-" << jagFR->Get() << " FL-" << jagFL->Get() << " RR-" << jagRR->Get() << " RL-" << jagRL->Get() << std::endl;
-    	jaglog->flush();
-    }
-    	break;
-    }
 }
 void RERRobot::endTest(){
-    switch(test_mode){
-    case 3:
-    	jaglog->close();
-    	delete jaglog;
-    	break;
-    }
-    compressor->Stop();
+
 }
 
 void RERRobot::setupSmartDashboard(){
