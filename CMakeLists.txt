@@ -41,6 +41,9 @@ MESSAGE(STATUS "Build Time: ${G_MAKE_BUILD_TIME}")
 MESSAGE(STATUS "Toolchain: ${CMAKE_TOOLCHAIN_FILE}")
 
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -ansi -std=c++11")
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fstrength-reduce -fno-builtin -MD -MP")
+#SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m4-nofpu -U__sh3__ -D__SH4__=1")
+#SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mno-implicit-fp")
 
 ### =================== BUILD =================== ###
 
