@@ -2,15 +2,16 @@
 
 #include <Timer.h>
 
-ModeAutonomous::ModeAutonomous(){
-	
+ModeAutonomous::ModeAutonomous(DriverStation *ds) : ModeBase(ds){
+	OUT("Autonomous Construct");
 }
 ModeAutonomous::~ModeAutonomous(){
-	
+	OUT("Autonomous Destroy");
 }
 
-void ModeAutonomous::start(){
-    printf("$$FRC3499$$ - Autonomous Init\n");
+void ModeAutonomous::init(){
+	m_ds->InAutonomous(true);
+    OUT("Autonomous Init");
     compressor->Start();
 }
 void ModeAutonomous::run(){
@@ -18,4 +19,6 @@ void ModeAutonomous::run(){
 }
 void ModeAutonomous::end(){
     compressor->Stop();
+    OUT("Autonomous End");
+    m_ds->InAutonomous(false);
 }

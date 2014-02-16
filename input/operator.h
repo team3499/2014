@@ -9,7 +9,7 @@
 #include "input/jsbase.h"
 
 
-class Operator : JsBase {
+class Operator : public JsBase {
 public:
     Operator();
 
@@ -19,7 +19,6 @@ public:
     
     void update();
     void updateDriveSystem();
-    
     
 private:
     

@@ -1,5 +1,7 @@
 #include "jsbase.h"
 
+bool JsBase::initialized = false;
+
 JsBase::JsBase() {
 	if(!initialized){
         this->js = new Joystick(1);
@@ -47,18 +49,18 @@ bool JsBase::getButton(JsBase::Button b){
     case JsBase::BUTTON_LEFTJS:
         return getButton(9);
         break;
-    case JsBase::BUTTON_DPAD_UP:
-    	return getStick(DPad)[1] > 0.5;
-        break;
-    case JsBase::BUTTON_DPAD_DOWN:
-    	return getStick(DPad)[1] < -0.5;
-        break;
-    case JsBase::BUTTON_D_DPAD_LEFT:
-    	return getStick(DPad)[0] < -0.5;
-        break;
-    case JsBase::BUTTON_D_DPAD_RIGHT:
-    	return getStick(DPad)[0] > 0.5;
-        break;
+//    case JsBase::BUTTON_DPAD_UP:
+//    	return getStick(DPad)[1] > 0.5;
+//        break;
+//    case JsBase::BUTTON_DPAD_DOWN:
+//    	return getStick(DPad)[1] < -0.5;
+//        break;
+//    case JsBase::BUTTON_D_DPAD_LEFT:
+//    	return getStick(DPad)[0] < -0.5;
+//        break;
+//    case JsBase::BUTTON_D_DPAD_RIGHT:
+//    	return getStick(DPad)[0] > 0.5;
+//        break;
     default:
         return 0;
         break;
@@ -79,6 +81,10 @@ bool JsBase::hasChanged(){
 // This returns a POINTER to MEMORY THAT GETS UPDATED (maybe). DO NOT SET OR DELETE!
 JsBase::JsAxis *JsBase::getAxisInstance(){
 	return this->axis;
+}
+
+JsBase::JsButtons *JsBase::getButtonsInstance(){
+	return this->data;
 }
 
 void JsBase::jsBaseTick(){

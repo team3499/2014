@@ -1,3 +1,6 @@
+#ifndef RERROBOT_H
+#define RERROBOT_H
+
 #include "outputcommon.h"
 #include "modebase.h"
 #include "modedisabled.h"
@@ -18,9 +21,12 @@
     #include "gen_out.h"
 #endif
 
+#define SUICIDAL 2
+
 class RERRobot : public RobotBase, public OutputCommon {
 private:
     typedef enum {
+    	disable = 1,
         test = 2,
         teleop = 3,
         autonomous = 4
@@ -31,30 +37,14 @@ public:
     ~RERRobot();
     void StartCompetition(); // The entry point
 
-    //void init();
-    bool modeChange(mode_type newmode);
-
-    void initDisabled();
-    void modeDisabled();
-    void endDisabled();
-
-    void initTest();
-    void modeTest();
-    void endTest();
-
-    void initTeleoperated();
-    void modeTeleoperated();
-    void endTeleoperated();
-
-    void initAutonomous();
-    void modeAutonomous();
-    void endAutonomous();
-
     void setupSmartDashboard();
 
 private:
     bool disabled;
     mode_type mode;
 
-    ModeBase *modeCode;
+    ModeBase *enabledMode;
+    ModeBase *disabledMode;
 };
+
+#endif
