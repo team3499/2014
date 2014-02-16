@@ -1,11 +1,16 @@
+#ifndef MODEDISABLED_H
+#define MODEDISABLED_H
+
 #include "modebase.h"
 
 class ModeDisabled : public ModeBase {
 public:
-	ModeDisabled();
+	ModeDisabled(DriverStation *ds);
 	~ModeDisabled();
 	
-	void start();
+	void init();
 	void run();
 	void end();
 };
+
+#endif

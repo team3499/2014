@@ -1,9 +1,9 @@
 #ifndef ARDUINO_CNTL_H
-#define ARDUNNO_CNTL_H
+#define ARDUINO_CNTL_H
 
 #include <PWM.h>
 
-class ArduinoControl : PWM {
+class ArduinoControl : public PWM {
 public:
     ArduinoControl(unsigned int pwmport):
         PWM(pwmport) 

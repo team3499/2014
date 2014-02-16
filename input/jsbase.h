@@ -75,17 +75,18 @@ public:
     void jsBaseTickAxis();
     bool hasChanged();
 
-    float *getStick(JsBase::Stick);
     float getTrigger();
     
     unsigned int getRawInt();
     
     JsBase::JsAxis *getAxisInstance();
-    
-    JsBase::JsAxis *axis;
+    JsBase::JsButtons *getButtonsInstance();
     
     unsigned int nowPressed();    
     unsigned int nowUnPressed();
+    
+    JsBase::JsAxis *axis;
+    JsBase::JsButtons *data;
     
 private:
     static bool initialized;
@@ -94,7 +95,6 @@ private:
 
     Joystick *js;
     
-    JsBase::JsButtons *data;
     JsBase::JsButtons *lastdata;
 };
 

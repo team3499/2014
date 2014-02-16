@@ -1,14 +1,17 @@
 #include "RERRobot.h"
 #include "solenoidbreakout.h"
+#include "input/jsbase.h"
 
 #include <DriverStation.h>
 #include <LiveWindow/LiveWindow.h>
 #include <NetworkCommunication/UsageReporting.h>
 #include <networktables/NetworkTable.h>
 #include <Timer.h>
-#include <WPILib.h>s
+#include <WPILib.h>
 
 RERRobot::RERRobot(){
+	OUT("Initializing 2014 Robot Code");
+	
     // Initialize all of the members
     dsLCD = DriverStationLCD::GetInstance();
 
@@ -18,17 +21,19 @@ RERRobot::RERRobot(){
 
     cmp = new Relay(1, 5, Relay::kForwardOnly);
 
-    jagFR = new CANJaguar(3, CANJaguar::kSpeed);
-    jagFL = new CANJaguar(4, CANJaguar::kSpeed);
-    jagRR = new CANJaguar(2, CANJaguar::kSpeed);
-    jagRL = new CANJaguar(5, CANJaguar::kSpeed);
+//    jagFR = new CANJaguar(3, CANJaguar::kSpeed);
+//    jagFL = new CANJaguar(4, CANJaguar::kSpeed);
+//    jagRR = new CANJaguar(2, CANJaguar::kSpeed);
+//    jagRL = new CANJaguar(5, CANJaguar::kSpeed);
+    jagFR = new CANJaguar(3, CANJaguar::kPercentVbus);
+    jagFL = new CANJaguar(4, CANJaguar::kPercentVbus);
+    jagRR = new CANJaguar(2, CANJaguar::kPercentVbus);
+    jagRL = new CANJaguar(5, CANJaguar::kPercentVbus);
 
     handstilt = new CANJaguar(63, CANJaguar::kPercentVbus);
 
     airsys = new SolenoidBreakout();
     teststick = new Joystick(3);
-    
-    controller = new JsBase();
 
     mainLights  = new ArduinoControl(7);
 
@@ -38,15 +43,15 @@ RERRobot::RERRobot(){
     jagRR->SetExpiration(0.1);
     jagRL->SetExpiration(0.1);
 
-    jagFR->ConfigEncoderCodesPerRev(1024);
-    jagFL->ConfigEncoderCodesPerRev(1024);
-    jagRR->ConfigEncoderCodesPerRev(1024);
-    jagRL->ConfigEncoderCodesPerRev(1024);
-
-    jagFR->SetSpeedReference(CANJaguar::kSpeedRef_QuadEncoder);
-    jagFL->SetSpeedReference(CANJaguar::kSpeedRef_QuadEncoder);
-    jagRR->SetSpeedReference(CANJaguar::kSpeedRef_QuadEncoder);
-    jagRL->SetSpeedReference(CANJaguar::kSpeedRef_QuadEncoder);
+//    jagFR->SetSpeedReference(CANJaguar::kSpeedRef_QuadEncoder);
+//    jagFL->SetSpeedReference(CANJaguar::kSpeedRef_QuadEncoder);
+//    jagRR->SetSpeedReference(CANJaguar::kSpeedRef_QuadEncoder);
+//    jagRL->SetSpeedReference(CANJaguar::kSpeedRef_QuadEncoder);
+//    
+//    jagFR->ConfigEncoderCodesPerRev(1024);
+//    jagFL->ConfigEncoderCodesPerRev(1024);
+//    jagRR->ConfigEncoderCodesPerRev(1024);
+//    jagRL->ConfigEncoderCodesPerRev(1024);
 
     jagFR->EnableControl();
     jagFL->EnableControl();
@@ -55,6 +60,8 @@ RERRobot::RERRobot(){
 
     handstilt->SetExpiration(0.1);
     handstilt->EnableControl();
+    
+    op = new Operator();
 }
 
 RERRobot::~RERRobot(){
@@ -70,33 +77,11 @@ RERRobot::~RERRobot(){
     delete handstilt;
 
     delete airsys;
-    delete teststick;
-}
-
-bool RERRobot::modeChange(mode_type newmode){
-    if(mode != newmode){
-        switch(mode){
-        case disable:
-            endDisabled();
-            break;
-        case test:
-            endTest();
-            break;
-        case teleop:
-            endTeleoperated();
-            break;
-        case autonomous:
-            endAutonomous();
-            break;
-        }
-        mode = newmode;
-        return true;
-    }
-    return false;
+    //delete teststick;
 }
 
 void RERRobot::StartCompetition(){
-    printf("$$FRC3499$$ - Starting 2014 Robot Code\n");
+    OUT("Starting 2014 Robot Code");
 
     LiveWindow *lw = LiveWindow::GetInstance();
     nUsageReporting::report(nUsageReporting::kResourceType_Framework, nUsageReporting::kFramework_Simple);
@@ -110,142 +95,155 @@ void RERRobot::StartCompetition(){
     dsLCD->UpdateLCD();
     
     m_watchdog.SetEnabled(true);
+    m_watchdog.SetExpiration(1);
 
     setupSmartDashboard();
 
     compressor->Stop();
-
-    while(true){
-        // Determine mode
-    	bool newdisabled;
-        mode_type newmode;
-        if(IsDisabled()){
-        	newdisabled = true;
-        } else {
-        	newdisabled = false;
-        }
-        
-		if(IsTest()){
-			newmode = test;
-		} else if(IsOperatorControl()){
-			newmode = teleop;
-		} else if(IsAutonomous()){
-			newmode = autonomous;
-		} else {
-			m_ds->WaitForData();
-		}
-
-        // Run end / init mode functions
-        if(disabled != newdisabled){
-        	disabled = newdisabled;
-        	if(disabled){
-                dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "DISABLED");
-                m_ds->InDisabled(true);
-                modeCode = new ModeDisabled();
-                modeCode->start();
-        	} else {
-                modeCode->end();
-                delete modeCode;
-                m_ds->InDisabled(false);
-        	}
-        }
-		
-        if(mode != newmode){
-			if(mode == teleop){
-				endTeleoperated();
-				m_ds->InOperatorControl(false);
-				m_ds->WaitForData();
-			} else if(mode == autonomous){
-				endAutonomous();
-				m_ds->InAutonomous(false);
-				m_ds->WaitForData();
-			} else if(mode == test){
-				endTest();
-				m_ds->InTest(false);
-				m_ds->WaitForData();
-			}
-            mode = newmode;
-            if(newmode == disable){
-
+    
+    disabled = false;
+    
+    try {
+        	
+#if SUICIDAL == 1
+    	enabledMode = new ModeDisabled(m_ds);
+    	
+        while(true){
+            // Determine mode
+            mode_type newmode;
+            if(IsDisabled()){
+                newmode = disable;
+            } else if(IsTest()){
+                newmode = test;
+            } else if(IsOperatorControl()){
+                newmode = teleop;
+            } else if(IsAutonomous()){
+                newmode = autonomous;
             } else {
-                dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "ENABLED");
-                if(mode == teleop){
-                    m_ds->InOperatorControl(true);
-                    dsLCD->PrintfLine(DriverStationLCD::kUser_Line3, "Teleop Mode");
-                    initTeleoperated();
-                } else if(mode == autonomous){
-                    m_ds->InAutonomous(true);
-                    dsLCD->PrintfLine(DriverStationLCD::kUser_Line3, "Autonomous Mode");
-                    initAutonomous();
-                } else if(mode == test){
-                    m_ds->InTest(true);
-                    dsLCD->PrintfLine(DriverStationLCD::kUser_Line3, "Test Mode");
-                    initTest();
+                // Report problem...
+                m_ds->WaitForData();
+            }
+
+            // Run end / init mode functions
+            if(mode != newmode){
+                if(mode == disable){
+                	enabledMode->end();
+                	delete enabledMode;
+                } else {
+                    if(mode == teleop){
+                    	enabledMode->end();
+                    	delete enabledMode;
+                        m_ds->WaitForData();
+                    } else if(mode == autonomous){
+                    	enabledMode->end();
+                    	delete enabledMode;
+                        m_ds->WaitForData();
+                    } else if(mode == test){
+                    	enabledMode->end();
+                    	delete enabledMode;
+                        m_ds->WaitForData();
+                    }
+                }
+                mode = newmode;
+                if(newmode == disable){
+                    dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "DISABLED");
+                    enabledMode = new ModeDisabled(m_ds);
+                    enabledMode->init();
+                } else {
+                    dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "ENABLED");
+                    if(mode == teleop){
+                        dsLCD->PrintfLine(DriverStationLCD::kUser_Line3, "Teleop Mode");
+                        enabledMode = new ModeTeleoperated(m_ds);
+                        enabledMode->init();
+                    } else if(mode == autonomous){
+                        dsLCD->PrintfLine(DriverStationLCD::kUser_Line3, "Autonomous Mode");
+                        enabledMode = new ModeAutonomous(m_ds);
+                        enabledMode->init();
+                    } else if(mode == test){
+                        dsLCD->PrintfLine(DriverStationLCD::kUser_Line3, "Test Mode");
+                        enabledMode = new ModeTest(m_ds);
+                        enabledMode->init();
+                    }
                 }
             }
+
+            // Run mode loop function
+            enabledMode->run();
+            
+            // Update Driver Station LCD
+            dsLCD->UpdateLCD();
         }
-
-        // Run mode loop function
-        if(mode == disable){
-            modeDisabled();
-        } else if(mode == teleop){
-            modeTeleoperated();
-        } else if(mode == autonomous){
-            modeAutonomous();
-        } else if(mode == test){
-            modeTest();
-        }
+#elif SUICIDAL == 2
+        enabledMode = new ModeTeleoperated(m_ds);
+        disabledMode = new ModeDisabled(m_ds);
         
-        dsLCD->PrintfLine(DriverStationLCD::kUser_Line5, "%d %d %d %d", IsDisabled(), IsOperatorControl(), IsAutonomous(), IsTest());
-        // Update Driver Station LCD
-        dsLCD->UpdateLCD();
-        
-        m_watchdog.Feed();
-    }
-}
-
-// Disabled
-void RERRobot::initDisabled(){
-
-}
-void RERRobot::modeDisabled(){
+		while(true){
+			if(IsDisabled() != disabled){
+				disabled = IsDisabled();
+				if(disabled){
+					enabledMode->stop();
+					dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "DISABLED");
+					disabledMode = new ModeDisabled(m_ds);
+					disabledMode->start();
+				} else {
+					disabledMode->stop();
+					delete disabledMode;
+					enabledMode->start();
+				}
+			}
+			
+			mode_type newmode;
+			if(IsTest()){
+				newmode = test;
+			} else if(IsOperatorControl()){
+				newmode = teleop;
+			} else if(IsAutonomous()){
+				newmode = autonomous;
+			} else {
+				m_ds->WaitForData();
+			}
+			
+			if(mode != newmode){
+				//enabledMode->stop();
+				delete enabledMode;
+				
+				mode = newmode;
 	
-}
-void RERRobot::endDisabled(){
-
-}
-
-// Teleop
-void RERRobot::initTeleoperated(){
-
-}
-
-void RERRobot::modeTeleoperated(){
-
-}
-void RERRobot::endTeleoperated(){
-
-}
-
-// Autonomous
-void RERRobot::initAutonomous(){
-
-}
-void RERRobot::modeAutonomous(){
-
-}
-void RERRobot::endAutonomous(){
-
-}
-
-// Test
-void RERRobot::initTest(){
-
-}
-
-void RERRobot::modeTest(){
-}
-void RERRobot::endTest(){
+				dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "ENABLED");
+				if(mode == teleop){
+					enabledMode = new ModeTeleoperated(m_ds);
+					dsLCD->PrintfLine(DriverStationLCD::kUser_Line3, "Teleop Mode");
+				} else if(mode == autonomous){
+					enabledMode = new ModeAutonomous(m_ds);
+					dsLCD->PrintfLine(DriverStationLCD::kUser_Line3, "Autonomous Mode");
+				} else if(mode == test){
+					enabledMode = new ModeTest(m_ds);
+					dsLCD->PrintfLine(DriverStationLCD::kUser_Line3, "Test Mode");
+				}
+				
+				//enabledMode->start();
+			}
+	
+			if(disabled){
+				disabledMode->run();
+			} else {
+				enabledMode->run();
+			}
+			
+			dsLCD->PrintfLine(DriverStationLCD::kUser_Line5, "%d %d %d %d", IsDisabled(), IsOperatorControl(), IsAutonomous(), IsTest());
+			
+			// Update Driver Station LCD
+			dsLCD->UpdateLCD();
+			
+			m_watchdog.Feed();
+		}
+#else
+	#error Enter a valid SUICIDAL level
+#endif
+    
+    } catch(std::exception e){
+    	printf("ERROR: %s\n", e.what());
+    }
 }
 
 void RERRobot::setupSmartDashboard(){

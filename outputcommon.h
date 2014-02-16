@@ -1,3 +1,6 @@
+#ifndef OUTPUTCOMMON_H
+#define OUTPUTCOMMON_H
+
 #include <CANJaguar.h>
 #include <Compressor.h>
 #include <DigitalOutput.h>
@@ -5,6 +8,7 @@
 #include <DriverStation.h>
 #include <DriverStationLCD.h>
 #include <Jaguar.h>
+
 #include <Joystick.h>
 #include <PWM.h>
 #include <SmartDashboard/SmartDashboard.h>
@@ -12,6 +16,7 @@
 
 #include "solenoidbreakout.h"
 #include "arduino.h"
+#include "input/operator.h"
 
 // SmartDashboard macros: n = name, x = value
 #define SD_PN(n, x) SmartDashboard::PutNumber(n, x)
@@ -23,7 +28,7 @@
 #define SD_PS(n, x) SmartDashboard::PutString(n, x)
 #define SD_GS(n)    SmartDashboard::GetString(n)
 
-#define OUT(A) printf("$$FRC3499$$ - " A);
+#define OUT(A) printf("$$FRC3499$$ - " A "\n");
 
 class OutputCommon {
 protected:
@@ -45,6 +50,9 @@ protected:
     static SolenoidBreakout *airsys; // Solenoids 1-8
 
     static Joystick *teststick; // Joystick 1
+    static Operator *op;
 
     static ArduinoControl *mainLights;
 };
+
+#endif

@@ -6,15 +6,16 @@
 #include <ctime>
 #include <unistd.h>
 
-ModeTest::ModeTest(){
-	
+ModeTest::ModeTest(DriverStation *ds) : ModeBase(ds){
+	OUT("Test Construct");
 }
 ModeTest::~ModeTest(){
-	
+	OUT("Test Destroy");
 }
 
-void ModeTest::start(){
-    printf("$$FRC3499$$ - Test Init\n");
+void ModeTest::init(){
+	m_ds->InTest(true);
+    OUT("Test Init");
     compressor->Start();
     
     test_mode = (int)SD_GN("TEST_MODE");
@@ -76,4 +77,6 @@ void ModeTest::end(){
     	break;
     }
     compressor->Stop();
+    OUT("Test End");
+    m_ds->InTest(false);
 }
