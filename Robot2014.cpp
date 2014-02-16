@@ -1,5 +1,7 @@
 #include "WPILib.h"
 #include "Commands/Command.h"
+#include "Commands/PassCommand.h"
+#include "Commands/CatchCommand.h"
 #include "Commands/TestLedCommand.h"
 #include "Gamepad/Gamepad.h"
 #include "CommandBase.h"
@@ -11,6 +13,9 @@ class Robot2014 : public IterativeRobot {
     LiveWindow * lw;
     Gamepad *    drivePad;
     Gamepad *    accessoryPad;
+
+    PassCommand *    passCommand;
+    CatchCommand *   catchCommand;
     TestLedCommand * testLedCommand;
 
     bool leftTriggerState;
@@ -22,8 +27,12 @@ class Robot2014 : public IterativeRobot {
 
         drivePad       = new Gamepad(DRIVE_GAMEPAD_PORT);
         accessoryPad   = new Gamepad(ACCESSORY_GAMEPAD_PORT);
+        passCommand    = new PassCommand();
+        catchCommand   = new CatchCommand();
         testLedCommand = new TestLedCommand();
 
+        CommandBase::oi->AssignCommandToTrigger(passCommand, 0);
+        CommandBase::oi->AssignCommandToTrigger(catchCommand, 1);
         CommandBase::oi->AssignCommandToButton(testLedCommand, 1);
     }
 

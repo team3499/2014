@@ -16,7 +16,15 @@ class OI {
         Command * command;
     } ButtonInfo;
 
+    typedef struct {
+        bool      state;
+        bool      cancelOnRelease;
+        double    threshold;
+        Command * command;
+    } TriggerInfo;
+
     ButtonInfo button[4];
+    TriggerInfo trigger[2];
 
     void ProcessButton(int n);
     void ProcessStick(int n);
@@ -27,6 +35,7 @@ class OI {
 
     void Process();
     void AssignCommandToButton(Command * command, int n, bool cancelOnRelease = true);
+    void AssignCommandToTrigger(Command * command, int n, double threshold = 0.5, bool cancelOnRelease = true);
 };
 
 #endif /* __OI_H__ */
