@@ -64,6 +64,16 @@ public:
     			float ls_y;
     		};
     	};
+    	union {
+    		struct {
+    			float x;
+    			float y;
+    		} dpad;
+    		struct {
+    			float dpad_x;
+    			float dpad_y;
+    		};
+    	};
     };
 
 public:

@@ -25,10 +25,6 @@ RERRobot::RERRobot(){
     jagFL = new CANJaguar(4, CANJaguar::kSpeed);
     jagRR = new CANJaguar(2, CANJaguar::kSpeed);
     jagRL = new CANJaguar(5, CANJaguar::kSpeed);
-//    jagFR = new CANJaguar(3, CANJaguar::kPercentVbus);
-//    jagFL = new CANJaguar(4, CANJaguar::kPercentVbus);
-//    jagRR = new CANJaguar(2, CANJaguar::kPercentVbus);
-//    jagRL = new CANJaguar(5, CANJaguar::kPercentVbus);
 
     handstilt = new CANJaguar(63, CANJaguar::kPercentVbus);
 
@@ -47,7 +43,7 @@ RERRobot::RERRobot(){
     jagFL->SetSpeedReference(CANJaguar::kSpeedRef_QuadEncoder);
     jagRR->SetSpeedReference(CANJaguar::kSpeedRef_QuadEncoder);
     jagRL->SetSpeedReference(CANJaguar::kSpeedRef_QuadEncoder);
-//    
+
     jagFR->ConfigEncoderCodesPerRev(1024);
     jagFL->ConfigEncoderCodesPerRev(1024);
     jagRR->ConfigEncoderCodesPerRev(1024);
@@ -83,7 +79,6 @@ RERRobot::~RERRobot(){
     delete handstilt;
 
     delete airsys;
-    //delete teststick;
 }
 
 void RERRobot::StartCompetition(){
@@ -255,21 +250,21 @@ void RERRobot::StartCompetition(){
 void RERRobot::setupSmartDashboard(){
     SD_PN("TEST_MODE", 3);
 
-    SD_PN("2P", 0.20);
+    SD_PN("2P", 0.200);
     SD_PN("2I", 0.001);
-    SD_PN("2D", 0.00);
+    SD_PN("2D", 0.000);
 
-    SD_PN("3P", 0.20);
+    SD_PN("3P", 0.200);
     SD_PN("3I", 0.001);
-    SD_PN("3D", 0.00);
+    SD_PN("3D", 0.000);
 
-    SD_PN("4P", 0.20);
+    SD_PN("4P", 0.200);
     SD_PN("4I", 0.001);
-    SD_PN("4D", 0.00);
+    SD_PN("4D", 0.000);
 
-    SD_PN("5P", 0.20);
+    SD_PN("5P", 0.200);
     SD_PN("5I", 0.001);
-    SD_PN("5D", 0.00);
+    SD_PN("5D", 0.000);
 
     SD_PN("3 SetSpeed", 50);
     SD_PN("4 SetSpeed", 50);

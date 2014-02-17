@@ -3,9 +3,9 @@
 
 #include "modebase.h"
 
-#include <fstream>
+#include "input/jsbase.h"
 
-#define abs(x) (x < 0 ? -x : x)
+#include <fstream>
 
 class ModeTeleoperated : public ModeBase {
 public:
@@ -16,8 +16,6 @@ public:
 	void run();
 	void end();
 private:
-	
-	bool use_proximity;
 	
 	std::ofstream *jaglog;
 	bool logEh; // Should we log?

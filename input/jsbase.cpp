@@ -49,18 +49,18 @@ bool JsBase::getButton(JsBase::Button b){
     case JsBase::BUTTON_LEFTJS:
         return getButton(9);
         break;
-//    case JsBase::BUTTON_DPAD_UP:
-//    	return getStick(DPad)[1] > 0.5;
-//        break;
-//    case JsBase::BUTTON_DPAD_DOWN:
-//    	return getStick(DPad)[1] < -0.5;
-//        break;
-//    case JsBase::BUTTON_D_DPAD_LEFT:
-//    	return getStick(DPad)[0] < -0.5;
-//        break;
-//    case JsBase::BUTTON_D_DPAD_RIGHT:
-//    	return getStick(DPad)[0] > 0.5;
-//        break;
+    case JsBase::BUTTON_DPAD_UP:
+    	return js->GetRawAxis(7) > 0.5;
+        break;
+    case JsBase::BUTTON_DPAD_DOWN:
+    	return js->GetRawAxis(7) < -0.5;
+        break;
+    case JsBase::BUTTON_D_DPAD_LEFT:
+    	return js->GetRawAxis(6) < -0.5;
+        break;
+    case JsBase::BUTTON_D_DPAD_RIGHT:
+    	return js->GetRawAxis(6) > 0.5;
+        break;
     default:
         return 0;
         break;
@@ -117,6 +117,9 @@ void JsBase::jsBaseTickAxis(){
 	
 	axis->rs_x = js->GetRawAxis(4);
 	axis->rs_y = js->GetRawAxis(5);
+	
+	axis->dpad_x = js->GetRawAxis(6);
+	axis->dpad_y = js->GetRawAxis(7);
 }
 
 // This assumes the RIGHT trigger is positive
