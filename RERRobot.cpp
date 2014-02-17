@@ -21,14 +21,14 @@ RERRobot::RERRobot(){
 
     cmp = new Relay(1, 5, Relay::kForwardOnly);
 
-//    jagFR = new CANJaguar(3, CANJaguar::kSpeed);
-//    jagFL = new CANJaguar(4, CANJaguar::kSpeed);
-//    jagRR = new CANJaguar(2, CANJaguar::kSpeed);
-//    jagRL = new CANJaguar(5, CANJaguar::kSpeed);
-    jagFR = new CANJaguar(3, CANJaguar::kPercentVbus);
-    jagFL = new CANJaguar(4, CANJaguar::kPercentVbus);
-    jagRR = new CANJaguar(2, CANJaguar::kPercentVbus);
-    jagRL = new CANJaguar(5, CANJaguar::kPercentVbus);
+    jagFR = new CANJaguar(3, CANJaguar::kSpeed);
+    jagFL = new CANJaguar(4, CANJaguar::kSpeed);
+    jagRR = new CANJaguar(2, CANJaguar::kSpeed);
+    jagRL = new CANJaguar(5, CANJaguar::kSpeed);
+//    jagFR = new CANJaguar(3, CANJaguar::kPercentVbus);
+//    jagFL = new CANJaguar(4, CANJaguar::kPercentVbus);
+//    jagRR = new CANJaguar(2, CANJaguar::kPercentVbus);
+//    jagRL = new CANJaguar(5, CANJaguar::kPercentVbus);
 
     handstilt = new CANJaguar(63, CANJaguar::kPercentVbus);
 
@@ -43,16 +43,22 @@ RERRobot::RERRobot(){
     jagRR->SetExpiration(0.1);
     jagRL->SetExpiration(0.1);
 
-//    jagFR->SetSpeedReference(CANJaguar::kSpeedRef_QuadEncoder);
-//    jagFL->SetSpeedReference(CANJaguar::kSpeedRef_QuadEncoder);
-//    jagRR->SetSpeedReference(CANJaguar::kSpeedRef_QuadEncoder);
-//    jagRL->SetSpeedReference(CANJaguar::kSpeedRef_QuadEncoder);
+    jagFR->SetSpeedReference(CANJaguar::kSpeedRef_QuadEncoder);
+    jagFL->SetSpeedReference(CANJaguar::kSpeedRef_QuadEncoder);
+    jagRR->SetSpeedReference(CANJaguar::kSpeedRef_QuadEncoder);
+    jagRL->SetSpeedReference(CANJaguar::kSpeedRef_QuadEncoder);
 //    
-//    jagFR->ConfigEncoderCodesPerRev(1024);
-//    jagFL->ConfigEncoderCodesPerRev(1024);
-//    jagRR->ConfigEncoderCodesPerRev(1024);
-//    jagRL->ConfigEncoderCodesPerRev(1024);
+    jagFR->ConfigEncoderCodesPerRev(1024);
+    jagFL->ConfigEncoderCodesPerRev(1024);
+    jagRR->ConfigEncoderCodesPerRev(1024);
+    jagRL->ConfigEncoderCodesPerRev(1024);
 
+
+    jagFR->SetPID(0.200, 0.001, 0.000);
+    jagFL->SetPID(0.200, 0.001, 0.000);
+    jagRR->SetPID(0.200, 0.001, 0.000);
+    jagRL->SetPID(0.200, 0.001, 0.000);
+    
     jagFR->EnableControl();
     jagFL->EnableControl();
     jagRR->EnableControl();

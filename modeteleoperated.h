@@ -16,8 +16,13 @@ public:
 	void run();
 	void end();
 private:
+	
 	bool use_proximity;
+	
 	std::ofstream *jaglog;
+	bool logEh; // Should we log?
+	
+	JsBase::JsAxis *axii;
 };
 
 #endif

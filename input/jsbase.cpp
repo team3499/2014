@@ -109,10 +109,11 @@ void JsBase::jsBaseTick(){
 }
 
 void JsBase::jsBaseTickAxis(){
+	// Standerdize ALL joysticks 
 	axis->trigger = getTrigger();
 	
 	axis->ls_x = js->GetRawAxis(1);
-	axis->ls_y = js->GetRawAxis(2);
+	axis->ls_y = -js->GetRawAxis(2);
 	
 	axis->rs_x = js->GetRawAxis(4);
 	axis->rs_y = js->GetRawAxis(5);
