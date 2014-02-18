@@ -84,7 +84,8 @@ bool TCPConnection::setNonBlocking(bool noBlockEh){
 
 int TCPConnection::send(char *str, int len){
 	if(runnableState){
-	    return ::send(fd, str, len, 0);
+		if(str != NULL)
+            return ::send(fd, str, len, 0);
 	}
 	return -1;
 }

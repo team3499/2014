@@ -1,38 +1,10 @@
 #ifndef TCPCONNECTION_H
 #define TCPCONNECTION_H
 
-#include <types.h>
-#include <net/mbuf.h>
-//#include <mbuf.h>
-#include <socket.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <netinet/ip.h>
-#include <net/socketvar.h>
-#include <netinet/in.h>
-#include <stdio.h>
-#include <sys/types.h>
-#include <netdb.h>
-#include <iostream>
-#include <stdlib.h>
-
-
-#include <socket.h>
 #include <sockLib.h>
-#include <stdlib.h>
-#include <sysLib.h>
-#include <logLib.h>
-#include <errno.h>
-#include <string.h>
-#include <stdio.h>
 
-#include <sys/types.h>
-#include <sys/socket.h> /*<winsock.h>*/
-#include <stdio.h>
-#include <string.h>
-#include <ioLib.h>
-#include <ioctl.h>
-#include <netLib.h>
+// If stuff needs to be included, try this list first
+//#include <errno.h>#include <ioctl.h>#include <ioLib.h>#include <iostream>#include <logLib.h>#include <net/mbuf.h>#include <net/socketvar.h>#include <netdb.h>#include <netinet/in.h>#include <netinet/ip.h>#include <netLib.h>#include <socket.h>#include <stdio.h>#include <stdlib.h>#include <string.h>#include <sys/socket.h>#include <sys/types.h>#include <sysLib.h>#include <types.h>
 
 class TCPConnection {
 public:
@@ -66,8 +38,6 @@ private:
     int fd;
 
     bool runnableState;
-
-    // queue
 };
 
 

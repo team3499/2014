@@ -140,13 +140,20 @@ void ModeTeleoperated::run(){
     
     mainLights->setFlat();
 
+    int pretcptime = GetFPGATime();
+//    char *tcpdata;
+//    sprintf(tcpdata, "Run lag %d %d %d\n", inputtime - starttime, jagtime - inputtime, pretcptime - jagtime);
+//    tcpc->send(tcpdata, strlen(tcpdata));
+    // This will crash the robot code.
+    
     int diff1 = inputtime - starttime;
     int diff2 = jagtime - inputtime;
-    int diff3 = GetFPGATime() - jagtime;
+    int diff3 = pretcptime - jagtime;
+    int diff4 = GetFPGATime() - pretcptime;
 //    if(diff1 > 55 || diff2 > 20000 || diff3 > 600){ // These are the low cutoffs
 //    if(diff1 > 200 || diff2 > 25000 || diff3 > 3700){ // These are the medium cutoffs aka the 'more than one other task have been scheduled during this time mark, or something went wrong...'
-    if(diff1 > 200 || diff2 > 25000 || diff3 > 3700){
-    	printf("Run lag %d %d %d\n", diff1, diff2, diff3);
+    if(diff1 > 200 || diff2 > 25000 || diff3 > 3700 || diff4 > 0){
+    	printf("Run lag %d %d %d %d\n", diff1, diff2, diff3, diff4);
     }
     
 }
