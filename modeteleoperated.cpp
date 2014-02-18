@@ -23,42 +23,7 @@ void ModeTeleoperated::begin(){
     OUT("Teleop Init");
     compressor->Start();
 
-    int runCount = 9000;
-
-    FILE *file = fopen("/counter", "r");
-    if(file == NULL){
-    	OUT("Could not open file!!!!!!!!!");
-    } else {
-        fscanf(file, "%d", &runCount);
-        fclose(file);
-    }
-
-    std::fstream *fileNumber = new std::fstream("/counter", std::ios_base::out | std::ios_base::trunc);
-    if(fileNumber == NULL){
-    	OUT("COULD NOT OPEN /counter TO WRITE");
-    } else {
-    	fileNumber->seekg(0, std::ios_base::beg);
-    	runCount++;
-    	*fileNumber << runCount;
-    	fileNumber->flush();
-    	delete fileNumber;
-    }
-    
-    char buffer[50];
-    std::string name;
-    try { name = SD_GS("JAG SPEED LOG EXT"); }
-    catch(std::exception e) { OUT("THE SMART DASHBOARD FIELD \"JAG SPEED LOG EXT\" DOES NOT EXIST"); OUT("CREATE IT NOW!!!"); }
-
-    sprintf(buffer, "/JAG_SPEED_%s_%d.log",name.c_str() , runCount);
-    printf("WRITING TO FILE: \"%s\"\n", buffer);
-    jaglog = new std::ofstream(buffer);
-    
-    if(jaglog->bad()){
-    	OUT("OPENING OF THE JAGUAR LOGGING FILE !!FAILED!!");
-    	logEh = false;
-    } else {
-    	logEh = true;
-    }
+    jaglog = new JagLog("teleop");
     
     axii = op->getAxisInstance();
 }
@@ -107,10 +72,7 @@ void ModeTeleoperated::run(){
 	jagRR->Set(rr);
 	jagRL->Set(rl);
 	
-	if(logEh){
-        *jaglog << GetTime() << " " << fr << " " << jagFR->GetSpeed() << " " << fl << " " << jagFL->GetSpeed() << " " << rr << " " << jagRR->GetSpeed() << " " << rl << " " << jagRL->GetSpeed() << std::endl;
-        jaglog->flush();
-	}
+	jaglog->log(fr, jagFR->GetSpeed(), fl, jagFL->GetSpeed(), rr, jagRR->GetSpeed(), rl, jagRL->GetSpeed());
 	
 	uint32_t jagtime = GetFPGATime();
 	
@@ -151,7 +113,6 @@ void ModeTeleoperated::run(){
     
 }
 void ModeTeleoperated::end(){
-	jaglog->close();
 	delete jaglog;
     compressor->Stop();
     

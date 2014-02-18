@@ -2,9 +2,9 @@
 #define MODETELEOPERATED_H
 
 #include "modebase.h"
-
 #include "input/jsbase.h"
 #include "tcpconnection.h"
+#include "jaglog.h"
 
 #include <fstream>
 
@@ -18,10 +18,8 @@ public:
 	void end();
 	
 	const char *typeString();
-private:
-	
-	std::ofstream *jaglog;
-	bool logEh; // Should we log?
+private:	
+	JagLog *jaglog;
 	
 	JsBase::JsAxis *axii;
 };

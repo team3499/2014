@@ -5,9 +5,7 @@
 
 class ArduinoControl : public PWM {
 public:
-    ArduinoControl(unsigned int pwmport):
-        PWM(pwmport)
-    {
+    ArduinoControl(unsigned int pwmport) : PWM(pwmport){
         SetBounds(20.0, 10.0, 10.0, 10.0, 0.0);
         SetPeriodMultiplier(kPeriodMultiplier_1X);
         SetRaw(m_centerPwm);

@@ -2,6 +2,9 @@
 #define MODEAUTONOMOUS_H
 
 #include "modebase.h"
+#include "jaglog.h"
+
+#include <Timer.h>
 
 class ModeAutonomous : public ModeBase {
 public:
@@ -13,6 +16,15 @@ public:
 	void end();
 	
 	const char *typeString();
+private:
+	int step;
+	Timer *drivetime;
+	JagLog *jaglog;
+	
+	float fr;
+	float fl;
+	float rr;
+	float rl;
 };
 
 #endif
