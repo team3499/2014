@@ -137,7 +137,6 @@ void ModeTeleoperated::run(){
     }
     
     SD_PN("Proximity Sensor", psensor->Get());
-    proximityLight->Set(psensor->Get());
     
     mainLights->setFlat();
 

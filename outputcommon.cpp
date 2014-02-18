@@ -1,38 +1,33 @@
 #include "outputcommon.h"
 
 DriverStationLCD *OutputCommon::dsLCD;
+TCPConnection *OutputCommon::tcpc;
 
-Compressor *OutputCommon::compressor; // Relay 2, Digital I/O 2
-DigitalOutput *OutputCommon::proximityLight; // Digital I/O 8
+Operator *OutputCommon::op; // oper8shunal
+
 DigitalInput *OutputCommon::psensor; // Digital I/O 5
+ArduinoControl *OutputCommon::mainLights;
 
 CANJaguar *OutputCommon::jagFR; // Jaguar #3
 CANJaguar *OutputCommon::jagFL; // Jaguar #4
 CANJaguar *OutputCommon::jagRR; // Jaguar #2
 CANJaguar *OutputCommon::jagRL; // Jaguar #5
 
-Relay *OutputCommon::cmp; // Relay 5
-
 CANJaguar *OutputCommon::handstilt; // For tilting the arm up and down. #63
 
+Compressor *OutputCommon::compressor; // Relay 2, Digital I/O 2
 SolenoidBreakout *OutputCommon::airsys; // Solenoids 1-8
-
-Joystick *OutputCommon::teststick; // Joystick 1
-Operator *OutputCommon::op; // oper8shunal
-
-ArduinoControl *OutputCommon::mainLights;
-
-TCPConnection *OutputCommon::tcpc;
+//Relay *OutputCommon::auxpwoer; // Relay 5
 
 void OutputCommon::initCommon(){
     // Initialize
     dsLCD = DriverStationLCD::GetInstance();
+    //tcpc = new TCPConnection();
 
-    compressor = new Compressor(2, 2);
-    proximityLight = new DigitalOutput(1, 8);
+    op = new Operator();
+    
     psensor = new DigitalInput(1, 5);
-
-    cmp = new Relay(1, 5, Relay::kForwardOnly);
+    mainLights  = new ArduinoControl(7);
 
     jagFR = new CANJaguar(2, CANJaguar::kSpeed);
     jagFL = new CANJaguar(5, CANJaguar::kSpeed);
@@ -41,25 +36,27 @@ void OutputCommon::initCommon(){
 
     handstilt = new CANJaguar(63, CANJaguar::kPercentVbus);
 
+    compressor = new Compressor(2, 2);
     airsys = new SolenoidBreakout();
-    teststick = new Joystick(3);
-
-    mainLights  = new ArduinoControl(7);
-    
-    op = new Operator();
+    //auxpwoer = new Relay(1, 5, Relay::kForwardOnly);
 }
 
 void OutputCommon::destroyCommon(){
-    delete compressor;
-    delete proximityLight;
+	delete dsLCD;
+	
+	delete op;
+	
     delete psensor;
+    delete mainLights;
 
     delete jagFR;
     delete jagFL;
     delete jagRR;
     delete jagRL;
-
+    
     delete handstilt;
-
-    delete airsys;	
+    
+    delete compressor;
+    delete airsys;
+    //delete auxpwoer;
 }

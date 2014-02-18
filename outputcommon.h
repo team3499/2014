@@ -38,28 +38,23 @@ protected:
 	void destroyCommon();
 	
     static DriverStationLCD *dsLCD;
+    static TCPConnection *tcpc;
 
-    static Compressor *compressor; // Relay 2, Digital I/O 2
-    static DigitalOutput *proximityLight; // Digital I/O 8
+    static Operator *op;
+    
     static DigitalInput *psensor; // Digital I/O 5
+    static ArduinoControl *mainLights;
 
     static CANJaguar *jagFR; // Jaguar #3
     static CANJaguar *jagFL; // Jaguar #4
     static CANJaguar *jagRR; // Jaguar #2
     static CANJaguar *jagRL; // Jaguar #5
-
-    static Relay *cmp; // Relay 5
     
     static CANJaguar *handstilt; // For tilting the arm up and down. #63
 
+    static Compressor *compressor; // Relay 2, Digital I/O 2
     static SolenoidBreakout *airsys; // Solenoids 1-8
-
-    static Joystick *teststick; // Joystick 1
-    static Operator *op;
-
-    static ArduinoControl *mainLights;
-    
-    static TCPConnection *tcpc;
+    //static Relay *auxpwoer; // Relay 5
 };
 
 #endif
