@@ -21,10 +21,10 @@ RERRobot::RERRobot(){
 
     cmp = new Relay(1, 5, Relay::kForwardOnly);
 
-    jagFR = new CANJaguar(3, CANJaguar::kSpeed);
-    jagFL = new CANJaguar(4, CANJaguar::kSpeed);
-    jagRR = new CANJaguar(2, CANJaguar::kSpeed);
-    jagRL = new CANJaguar(5, CANJaguar::kSpeed);
+    jagFR = new CANJaguar(2, CANJaguar::kSpeed);
+    jagFL = new CANJaguar(5, CANJaguar::kSpeed);
+    jagRR = new CANJaguar(3, CANJaguar::kSpeed);
+    jagRL = new CANJaguar(4, CANJaguar::kSpeed);
 
     handstilt = new CANJaguar(63, CANJaguar::kPercentVbus);
 
