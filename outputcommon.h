@@ -29,8 +29,8 @@
 #define SD_PS(n, x) SmartDashboard::PutString(n, x)
 #define SD_GS(n)    SmartDashboard::GetString(n)
 
-#define OUT(A) printf("$$FRC3499$$ - " A "\n"); \
-	           fflush(stdout);
+#define OUT(A) printf("$$FRC3499$$ - " A "\n"); fflush(stdout)
+#define VOUT(A) printf("$$FRC3499$$ - %s\n", A); fflush(stdout)
 
 class OutputCommon {
 protected:

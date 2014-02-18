@@ -139,7 +139,7 @@ void RERRobot::StartCompetition(){
 				} else if(mode == test){
 					enabledMode = new ModeTest(m_ds);
 				} else {
-					OUT("Warning: mode unknown")
+					OUT("Warning: mode unknown");
 				}
 				dsLCD->PrintfLine(DriverStationLCD::kUser_Line3, enabledMode->typeString());
 			}
@@ -194,6 +194,8 @@ void RERRobot::setupSmartDashboard(){
     SD_PB("EnabledEh() == ", IsEnabled());
 
     SD_PN("Proximity Sensor", 1337);
+    
+    SD_PS("JAGLOG_LABEL_OVERRIDE", "");
 }
 
 
