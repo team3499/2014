@@ -8,7 +8,6 @@
 
 ModeTest::ModeTest(DriverStation *ds) : ModeBase(ds){
 	OUT("Test Construct");
-	//dsLCD->PrintfLine(DriverStationLCD::kUser_Line3, "Test Mode");
 }
 ModeTest::~ModeTest(){
 	OUT("Test Destroy");
@@ -16,7 +15,6 @@ ModeTest::~ModeTest(){
 
 void ModeTest::begin(){
 	m_ds->InTest(true);
-	//dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "ENABLED");
     OUT("Test Init");
     compressor->Start();
     

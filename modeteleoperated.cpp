@@ -13,7 +13,6 @@
 
 ModeTeleoperated::ModeTeleoperated(DriverStation *ds) : ModeBase(ds){
 	OUT("Teleop Construct");
-	//dsLCD->PrintfLine(DriverStationLCD::kUser_Line3, "Teleop Mode");
 }
 ModeTeleoperated::~ModeTeleoperated(){
 	OUT("Teleop Destroy");
@@ -21,7 +20,6 @@ ModeTeleoperated::~ModeTeleoperated(){
 
 void ModeTeleoperated::begin(){
 	m_ds->InOperatorControl(true);
-	//dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "ENABLED");
     OUT("Teleop Init");
     compressor->Start();
 

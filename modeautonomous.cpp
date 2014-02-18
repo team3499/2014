@@ -4,7 +4,6 @@
 
 ModeAutonomous::ModeAutonomous(DriverStation *ds) : ModeBase(ds){
 	OUT("Autonomous Construct");
-	//dsLCD->PrintfLine(DriverStationLCD::kUser_Line3, "Autonomous Mode");
 }
 ModeAutonomous::~ModeAutonomous(){
 	OUT("Autonomous Destroy");
@@ -12,7 +11,6 @@ ModeAutonomous::~ModeAutonomous(){
 
 void ModeAutonomous::begin(){
 	m_ds->InAutonomous(true);
-	//dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "ENABLED");
     OUT("Autonomous Init");
     compressor->Start();
 }

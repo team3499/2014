@@ -4,7 +4,6 @@
 
 ModeDisabled::ModeDisabled(DriverStation *ds) : ModeBase(ds){
 	OUT("Disabled Construct");
-	//dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "DISABLED");
 }
 ModeDisabled::~ModeDisabled(){
 	OUT("Disabled Destroy");
