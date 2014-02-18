@@ -102,10 +102,10 @@ void ModeTeleoperated::run(){
 	rr = (abs(rr) > 30 ? rr : 0.0);
 	rl = (abs(rl) > 30 ? rl : 0.0);
 	
-	if(fr != 0.0) jagFR->Set(fr);
-	if(fl != 0.0) jagFL->Set(fl);
-	if(rr != 0.0) jagRR->Set(rr);
-	if(rl != 0.0) jagRL->Set(rl);
+	jagFR->Set(fr);
+	jagFL->Set(fl);
+	jagRR->Set(rr);
+	jagRL->Set(rl);
 	
 	if(logEh){
         *jaglog << GetTime() << " " << fr << " " << jagFR->GetSpeed() << " " << fl << " " << jagFL->GetSpeed() << " " << rr << " " << jagRR->GetSpeed() << " " << rl << " " << jagRL->GetSpeed() << std::endl;
