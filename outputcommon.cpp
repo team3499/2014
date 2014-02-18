@@ -23,3 +23,43 @@ Operator *OutputCommon::op; // oper8shunal
 ArduinoControl *OutputCommon::mainLights;
 
 TCPConnection *OutputCommon::tcpc;
+
+void OutputCommon::initCommon(){
+    // Initialize
+    dsLCD = DriverStationLCD::GetInstance();
+
+    compressor = new Compressor(2, 2);
+    proximityLight = new DigitalOutput(1, 8);
+    psensor = new DigitalInput(1, 5);
+
+    cmp = new Relay(1, 5, Relay::kForwardOnly);
+
+    jagFR = new CANJaguar(2, CANJaguar::kSpeed);
+    jagFL = new CANJaguar(5, CANJaguar::kSpeed);
+    jagRR = new CANJaguar(3, CANJaguar::kSpeed);
+    jagRL = new CANJaguar(4, CANJaguar::kSpeed);
+
+    handstilt = new CANJaguar(63, CANJaguar::kPercentVbus);
+
+    airsys = new SolenoidBreakout();
+    teststick = new Joystick(3);
+
+    mainLights  = new ArduinoControl(7);
+    
+    op = new Operator();
+}
+
+void OutputCommon::destroyCommon(){
+    delete compressor;
+    delete proximityLight;
+    delete psensor;
+
+    delete jagFR;
+    delete jagFL;
+    delete jagRR;
+    delete jagRL;
+
+    delete handstilt;
+
+    delete airsys;	
+}

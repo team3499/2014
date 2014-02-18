@@ -14,29 +14,26 @@
 
 #include <RobotBase.h>
 
-
 #ifndef BUILDING
     #include "generated.h"
 #else
     #include "gen_out.h"
 #endif
 
-#define SUICIDAL 2
-
 class RERRobot : public RobotBase, public OutputCommon {
 private:
     typedef enum {
-    	disable = 1,
-        test = 2,
-        teleop = 3,
-        autonomous = 4
+    	unknown = 0,
+        test = 1,
+        teleop = 2,
+        autonomous = 3
     } mode_type;
 
 public:
     RERRobot();
     ~RERRobot();
+    void setup();
     void StartCompetition(); // The entry point
-
     void setupSmartDashboard();
 
 private:

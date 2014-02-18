@@ -34,6 +34,9 @@
 
 class OutputCommon {
 protected:
+	void initCommon();
+	void destroyCommon();
+	
     static DriverStationLCD *dsLCD;
 
     static Compressor *compressor; // Relay 2, Digital I/O 2
