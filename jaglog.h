@@ -1,6 +1,7 @@
 #ifndef JAGLOG_H
 #define JAGLOG_H
 
+#include "outputcommon.h"
 #include <fstream>
 
 class JagLog {
@@ -40,14 +41,16 @@ public:
 	    name += str;
 	    name += ".log";
 
-	    char wrt[50];
-	    sprintf("WRITING TO FILE: \"%s\"\n", name.c_str());
-	    VOUT(wrt);
+//	    char wrt[256];
+//	    sprintf("JagLog file: \"%s\"\n", name.c_str());
+//	    VOUT(wrt);
+	    
+	    VOUT(name.c_str());
 	    
 	    jaglog = new std::ofstream(name.c_str());
 	    
 	    if(jaglog->bad()){
-	    	OUT("OPENING OF THE JAGUAR LOGGING FILE !!FAILED!!");
+	    	OUT("!! OPENING OF THE JAGUAR LOGGING FILE FAILED!");
 	    	logEh = false;
 	    } else {
 	    	logEh = true;
@@ -57,9 +60,16 @@ public:
 		jaglog->close();
 		delete jaglog;
 	}
-	void log(double frset, double fr, double flset, double fl, double rrset, double rr, double rlset, double rl){
+	
+	void logDrive(double frset, double fr, double flset, double fl, double rrset, double rr, double rlset, double rl){
 		if(logEh){
 			*jaglog << GetTime() << " " << frset << " " << fr << " " << flset << " " << fl << " " << rrset << " " << rr << " " << rlset << " " << rl << std::endl;
+			jaglog->flush();
+		}
+	}
+	void logArm(double set, double current){
+		if(logEh){
+			*jaglog << GetTime() << " " << set << " " << current << std::endl;
 			jaglog->flush();
 		}
 	}

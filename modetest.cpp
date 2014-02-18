@@ -21,58 +21,150 @@ void ModeTest::begin(){
     test_mode = (int)SD_GN("TEST_MODE");
     
     switch(test_mode){
-    case 3:
-    	jaglog = new std::ofstream("/jaguar_speed.log");
+    case 4:
+    	arm_step = 0;
+    	arm_count = 0;
+    	armtime = new Timer();
+    	armtime->Start();
+    	jaglog = new JagLog("armtest_01down_noball");
+    	OUT("starting noball test");
+    	armspeed = -0.8;
     	break;
     }
 }
 void ModeTest::run(){
     switch(test_mode){
-    case 1:
-        //proximityLight->Set(0);
-        sleep(1);
-        SD_PB("LED eh ", true);
-        //proximityLight->Set(1);
-        sleep(2);
-        break;
-
-    case 2:
-        SD_PN("3 Speed", jagFR->GetSpeed());
-        SD_PN("4 Speed", jagFL->GetSpeed());
-        SD_PN("2 Speed", jagRR->GetSpeed());
-        SD_PN("5 Speed", jagRL->GetSpeed());
-
-        jagFR->SetPID(SD_GN("3P"), SD_GN("3I"), SD_GN("3D"));
-        jagFL->SetPID(SD_GN("4P"), SD_GN("4I"), SD_GN("4D"));
-        jagRR->SetPID(SD_GN("2P"), SD_GN("2I"), SD_GN("2D"));
-        jagRL->SetPID(SD_GN("5P"), SD_GN("5I"), SD_GN("5D"));
-
-        jagFR->Set(SD_GN("3 SetSpeed"));
-        jagFL->Set(SD_GN("4 SetSpeed"));
-        jagRR->Set(SD_GN("2 SetSpeed"));
-        jagRL->Set(SD_GN("5 SetSpeed"));
-        break;
-    case 3:
-    {
-    	float speed = 10.0;
-    	jagFR->Set(speed);
-    	jagFL->Set(speed);
-    	jagRR->Set(speed);
-    	jagRL->Set(speed);
-    	
-        double rawsecs = (double)clock() / (double)CLOCKS_PER_SEC;
-        char buffer[20];
-        sprintf(buffer, "%d", (int)(rawsecs * 1000));
-    	*jaglog << buffer << " Set-" << speed << " FR-" << jagFR->GetSpeed() << " FL-" << jagFL->GetSpeed() << " RR-" << jagRR->GetSpeed() << " RL-" << jagRL->GetSpeed() << std::endl;
-    	jaglog->flush();
-    }
+    case 4:
+    	switch(arm_step){
+    	case 0:
+    		if(armtime->HasPeriodPassed(2)){
+    			armtime->Reset();
+				++arm_step;
+				delete jaglog;
+				jaglog = new JagLog("armtest_02up_noball");
+				armspeed = armspeed * -1;
+			}
+    		break;
+    	case 1:
+    		if(armtime->HasPeriodPassed(2)){
+    			armtime->Reset();
+				++arm_step;
+				delete jaglog;
+				jaglog = new JagLog("armtest_03down_noball");
+				armspeed = armspeed * -1;
+			}
+    		break;
+    	case 2:
+    		if(armtime->HasPeriodPassed(2)){
+    			armtime->Reset();
+				++arm_step;
+				delete jaglog;
+				jaglog = new JagLog("armtest_04up_noball");
+				armspeed = armspeed * -1;
+			}
+    		break;
+    	case 3:
+    		if(armtime->HasPeriodPassed(2)){
+    			armtime->Reset();
+				++arm_step;
+				delete jaglog;
+				jaglog = new JagLog("armtest_05down_noball");
+				armspeed = armspeed * -1;
+			}
+    		break;
+    	case 4:
+    		if(armtime->HasPeriodPassed(2)){
+    			armtime->Reset();
+				++arm_step;
+				delete jaglog;
+				jaglog = new JagLog("armtest_06up_noball");
+				armspeed = armspeed * -1;
+			}
+    		break;
+    	case 5:
+    		if(armtime->HasPeriodPassed(2)){
+    			armtime->Reset();
+				OUT("noball done, put ball in arm...");
+				armspeed = armspeed * -1;
+    		}
+    		break;
+    	case 6:
+    		if(armtime->HasPeriodPassed(10)){
+    			armtime->Reset();
+    			++arm_step;
+				delete jaglog;
+				jaglog = new JagLog("armtest_07down_ball");
+				OUT("starting ball test");
+				armspeed = armspeed * -1;
+    		}
+    		break;
+    	case 7:
+    		if(armtime->HasPeriodPassed(2)){
+    			armtime->Reset();
+				++arm_step;
+				delete jaglog;
+				jaglog = new JagLog("armtest_08up_ball");
+				armspeed = armspeed * -1;
+			}
+    		break;
+    	case 8:
+    		if(armtime->HasPeriodPassed(2)){
+    			armtime->Reset();
+				++arm_step;
+				delete jaglog;
+				jaglog = new JagLog("armtest_09down_ball");
+				armspeed = armspeed * -1;
+			}
+    		break;
+    	case 9:
+    		if(armtime->HasPeriodPassed(2)){
+    			armtime->Reset();
+				++arm_step;
+				delete jaglog;
+				jaglog = new JagLog("armtest_10up_ball");
+				armspeed = armspeed * -1;
+			}
+    		break;
+    	case 10:
+    		if(armtime->HasPeriodPassed(2)){
+    			armtime->Reset();
+				++arm_step;
+				delete jaglog;
+				jaglog = new JagLog("armtest_11down_ball");
+				armspeed = armspeed * -1;
+			}
+    		break;
+    	case 11:
+    		if(armtime->HasPeriodPassed(2)){
+    			armtime->Reset();
+				++arm_step;
+				delete jaglog;
+				jaglog = new JagLog("armtest_12up_ball");
+				armspeed = armspeed * -1;
+			}
+    		break;
+    	case 12:
+    		if(armtime->HasPeriodPassed(2)){
+    			armtime->Reset();
+				++arm_step;
+				armspeed = 0;
+				OUT("ball done");
+			}
+    		break;
+    	}
     	break;
     }
+    
+    handstilt->Set(armspeed);
+    
+	if(arm_step < 13){
+		jaglog->logArm(armspeed, handstilt->GetOutputCurrent());
+	}
 }
 void ModeTest::end(){
     switch(test_mode){
-    case 3:
-    	jaglog->close();
+    case 4:
+    	delete armtime;
     	delete jaglog;
     	break;
     }

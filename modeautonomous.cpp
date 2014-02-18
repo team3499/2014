@@ -51,7 +51,7 @@ void ModeAutonomous::run(){
 		break;
 	}
 	if(step < 2)
-		jaglog->log(fr, jagFR->GetSpeed(), fl, jagFL->GetSpeed(), rr, jagRR->GetSpeed(), rl, jagRL->GetSpeed());
+		jaglog->logDrive(fr, jagFR->GetSpeed(), fl, jagFL->GetSpeed(), rr, jagRR->GetSpeed(), rl, jagRL->GetSpeed());
 }
 void ModeAutonomous::end(){
     compressor->Stop();

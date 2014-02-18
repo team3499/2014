@@ -72,7 +72,7 @@ void ModeTeleoperated::run(){
 	jagRR->Set(-rr);
 	jagRL->Set( rl);
 	
-	jaglog->log(fr, jagFR->GetSpeed(), fl, jagFL->GetSpeed(), rr, jagRR->GetSpeed(), rl, jagRL->GetSpeed());
+	jaglog->logDrive(fr, jagFR->GetSpeed(), fl, jagFL->GetSpeed(), rr, jagRR->GetSpeed(), rl, jagRL->GetSpeed());
 	
 	uint32_t jagtime = GetFPGATime();
 	
