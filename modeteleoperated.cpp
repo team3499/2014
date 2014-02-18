@@ -24,7 +24,7 @@ void ModeTeleoperated::init(){
     compressor->Start();
 
     int runCount = 9000;
-    
+
     FILE *file = fopen("/counter", "r");
     if(file == NULL){
     	OUT("Could not open file!!!!!!!!!");
@@ -32,16 +32,23 @@ void ModeTeleoperated::init(){
         fscanf(file, "%d", &runCount);
         fclose(file);
     }
-    
+
     std::fstream *fileNumber = new std::fstream("/counter", std::ios_base::out | std::ios_base::trunc);
-    fileNumber->seekg(0, std::ios_base::beg);
-    runCount++;
-    *fileNumber << runCount;
-    fileNumber->flush();
-    delete fileNumber;
+    if(fileNumber == NULL){
+    	OUT("COULD NOT OPEN /counter TO WRITE");
+    } else {
+    	fileNumber->seekg(0, std::ios_base::beg);
+    	runCount++;
+    	*fileNumber << runCount;
+    	fileNumber->flush();
+    	delete fileNumber;
+    }
     
     char buffer[50];
-    std::string name = SD_GS("JAG SPEED LOG EXT");
+    std::string name;
+    try { name = SD_GS("JAG SPEED LOG EXT"); }
+    catch(std::exception e) { OUT("THE SMART DASHBOARD FIELD \"JAG SPEED LOG EXT\" DOES NOT EXIST"); OUT("CREATE IT NOW!!!"); }
+
     sprintf(buffer, "/JAG_SPEED_%s_%d.log",name.c_str() , runCount);
     printf("WRITING TO FILE: \"%s\"\n", buffer);
     jaglog = new std::ofstream(buffer);

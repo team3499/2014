@@ -6,7 +6,7 @@
 class ArduinoControl : public PWM {
 public:
     ArduinoControl(unsigned int pwmport):
-        PWM(pwmport) 
+        PWM(pwmport)
     {
         SetBounds(20.0, 10.0, 10.0, 10.0, 0.0);
         SetPeriodMultiplier(kPeriodMultiplier_1X);

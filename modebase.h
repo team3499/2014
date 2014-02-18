@@ -18,6 +18,8 @@ private:
 	bool isrun;
 protected:
 	DriverStation *m_ds;
+
+	TCPConnection *tcpc;
 };
 
 #endif

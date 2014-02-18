@@ -21,3 +21,5 @@ Joystick *OutputCommon::teststick; // Joystick 1
 Operator *OutputCommon::op; // oper8shunal
 
 ArduinoControl *OutputCommon::mainLights;
+
+TCPConnection *OutputCommon::tcpc;

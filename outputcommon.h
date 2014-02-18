@@ -17,6 +17,7 @@
 #include "solenoidbreakout.h"
 #include "arduino.h"
 #include "input/operator.h"
+#include "tcpconnection.h"
 
 // SmartDashboard macros: n = name, x = value
 #define SD_PN(n, x) SmartDashboard::PutNumber(n, x)
@@ -28,7 +29,8 @@
 #define SD_PS(n, x) SmartDashboard::PutString(n, x)
 #define SD_GS(n)    SmartDashboard::GetString(n)
 
-#define OUT(A) printf("$$FRC3499$$ - " A "\n");
+#define OUT(A) printf("$$FRC3499$$ - " A "\n"); \
+	           fflush(stdout);
 
 class OutputCommon {
 protected:
@@ -53,6 +55,8 @@ protected:
     static Operator *op;
 
     static ArduinoControl *mainLights;
+    
+    static TCPConnection *tcpc;
 };
 
 #endif
