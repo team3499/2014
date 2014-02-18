@@ -93,6 +93,7 @@ void RERRobot::StartCompetition(){
     // Init stuff
     dsLCD->Clear();
     dsLCD->PrintfLine(DriverStationLCD::kUser_Line1, "BD: "BUILD_DATE);
+    dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "INIT");
     dsLCD->UpdateLCD();
     
     m_watchdog.SetEnabled(true);
@@ -101,8 +102,6 @@ void RERRobot::StartCompetition(){
     setupSmartDashboard();
 
     compressor->Stop();
-    
-    disabled = false;
     
     try {
         	
@@ -149,21 +148,21 @@ void RERRobot::StartCompetition(){
                 if(newmode == disable){
                     dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "DISABLED");
                     enabledMode = new ModeDisabled(m_ds);
-                    enabledMode->init();
+                    enabledMode->begin();
                 } else {
                     dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "ENABLED");
                     if(mode == teleop){
                         dsLCD->PrintfLine(DriverStationLCD::kUser_Line3, "Teleop Mode");
                         enabledMode = new ModeTeleoperated(m_ds);
-                        enabledMode->init();
+                        enabledMode->begin();
                     } else if(mode == autonomous){
                         dsLCD->PrintfLine(DriverStationLCD::kUser_Line3, "Autonomous Mode");
                         enabledMode = new ModeAutonomous(m_ds);
-                        enabledMode->init();
+                        enabledMode->begin();
                     } else if(mode == test){
                         dsLCD->PrintfLine(DriverStationLCD::kUser_Line3, "Test Mode");
                         enabledMode = new ModeTest(m_ds);
-                        enabledMode->init();
+                        enabledMode->begin();
                     }
                 }
             }
@@ -175,21 +174,38 @@ void RERRobot::StartCompetition(){
             dsLCD->UpdateLCD();
         }
 #elif SUICIDAL == 2
-        enabledMode = new ModeTeleoperated(m_ds);
-        disabledMode = new ModeDisabled(m_ds);
+        disabled = false;
+        enabledMode = NULL;
+        disabledMode = NULL;
         
 		while(true){
 			if(IsDisabled() != disabled){
 				disabled = IsDisabled();
 				if(disabled){
-					enabledMode->stop();
-					dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "DISABLED");
+					if(enabledMode != NULL){
+						enabledMode->stop();
+					} else {
+						OUT("Warning: NULL enabledMode on stop()");
+					}
 					disabledMode = new ModeDisabled(m_ds);
 					disabledMode->start();
+					dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "DISABLED");
 				} else {
-					disabledMode->stop();
-					delete disabledMode;
-					enabledMode->start();
+					if(disabledMode != NULL){
+						disabledMode->stop();
+						delete disabledMode;
+						disabledMode = NULL;
+						OUT("delete disabledMode");
+					} else {
+						OUT("Warning: NULL disabledMode on stop() and delete");
+					}
+					if(enabledMode != NULL){
+						enabledMode->start();
+						OUT("start disabledMode");
+					} else {
+						OUT("Warning: NULL enabledMode on start()");
+					}
+					dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, " ENABLED");
 				}
 			}
 			
@@ -205,37 +221,35 @@ void RERRobot::StartCompetition(){
 			}
 			
 			if(mode != newmode){
-				//enabledMode->stop();
-				delete enabledMode;
-				
+				if(enabledMode != NULL){
+					//enabledMode->stop();
+					delete enabledMode;
+					enabledMode = NULL;
+				} else {
+					OUT("Warning: NULL enabledMode on delete");
+				}
 				mode = newmode;
-	
-				dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "ENABLED");
 				if(mode == teleop){
 					enabledMode = new ModeTeleoperated(m_ds);
-					dsLCD->PrintfLine(DriverStationLCD::kUser_Line3, "Teleop Mode");
 				} else if(mode == autonomous){
 					enabledMode = new ModeAutonomous(m_ds);
-					dsLCD->PrintfLine(DriverStationLCD::kUser_Line3, "Autonomous Mode");
 				} else if(mode == test){
 					enabledMode = new ModeTest(m_ds);
-					dsLCD->PrintfLine(DriverStationLCD::kUser_Line3, "Test Mode");
 				}
-				
-				//enabledMode->start();
+				dsLCD->PrintfLine(DriverStationLCD::kUser_Line3, enabledMode->typeString());
 			}
 	
 			if(disabled){
-				disabledMode->run();
+				if(disabledMode != NULL){
+					disabledMode->run();
+				}
 			} else {
-				enabledMode->run();
+				if(enabledMode != NULL){
+					enabledMode->run();
+				}
 			}
 			
-			dsLCD->PrintfLine(DriverStationLCD::kUser_Line5, "%d %d %d %d", IsDisabled(), IsOperatorControl(), IsAutonomous(), IsTest());
-			
-			// Update Driver Station LCD
 			dsLCD->UpdateLCD();
-			
 			m_watchdog.Feed();
 		}
 #else

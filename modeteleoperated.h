@@ -12,9 +12,11 @@ public:
 	ModeTeleoperated(DriverStation *ds);
 	~ModeTeleoperated();
 	
-	void init();
+	void begin();
 	void run();
 	void end();
+	
+	const char *typeString();
 private:
 	
 	std::ofstream *jaglog;

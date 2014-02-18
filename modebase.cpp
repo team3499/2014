@@ -9,7 +9,7 @@ ModeBase::~ModeBase(){
 
 void ModeBase::start(){
 	if(!isrun){
-		init();
+		begin();
 		isrun = true;
 	}
 }
@@ -20,12 +20,17 @@ void ModeBase::stop(){
 	}	
 }
 
-void ModeBase::init(){
-	OUT("ERROR DEFAULT INIT");
+void ModeBase::begin(){
+	OUT("ERROR DEFAULT BEGIN");
 }
 void ModeBase::run(){
 	OUT("ERROR DEFAULT RUN");
 }
 void ModeBase::end(){
 	OUT("ERROR DEFAULT END");
+}
+
+const char *ModeBase::typeString(){
+	OUT("ERROR DEFAULT TYPESTRING");
+	return "Base!";
 }

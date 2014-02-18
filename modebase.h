@@ -11,9 +11,11 @@ public:
 	void start();
 	void stop();
 	
-	virtual void init();
+	virtual void begin();
 	virtual void run();
 	virtual void end();
+	
+	virtual const char *typeString();
 private:
 	bool isrun;
 protected:

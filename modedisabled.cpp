@@ -4,12 +4,13 @@
 
 ModeDisabled::ModeDisabled(DriverStation *ds) : ModeBase(ds){
 	OUT("Disabled Construct");
+	//dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "DISABLED");
 }
 ModeDisabled::~ModeDisabled(){
 	OUT("Disabled Destroy");
 }
 
-void ModeDisabled::init(){
+void ModeDisabled::begin(){
 	m_ds->InDisabled(true);
     OUT("Disabled Init");
     compressor->Stop();

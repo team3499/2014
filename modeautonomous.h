@@ -8,9 +8,11 @@ public:
 	ModeAutonomous(DriverStation *ds);
 	~ModeAutonomous();
 	
-	void init();
+	void begin();
 	void run();
 	void end();
+	
+	const char *typeString();
 };
 
 #endif

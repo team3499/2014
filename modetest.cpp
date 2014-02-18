@@ -8,13 +8,15 @@
 
 ModeTest::ModeTest(DriverStation *ds) : ModeBase(ds){
 	OUT("Test Construct");
+	//dsLCD->PrintfLine(DriverStationLCD::kUser_Line3, "Test Mode");
 }
 ModeTest::~ModeTest(){
 	OUT("Test Destroy");
 }
 
-void ModeTest::init(){
+void ModeTest::begin(){
 	m_ds->InTest(true);
+	//dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "ENABLED");
     OUT("Test Init");
     compressor->Start();
     
@@ -79,4 +81,8 @@ void ModeTest::end(){
     compressor->Stop();
     OUT("Test End");
     m_ds->InTest(false);
+}
+
+const char *ModeTest::typeString(){
+	return "Test";
 }

@@ -8,7 +8,7 @@ public:
 	ModeDisabled(DriverStation *ds);
 	~ModeDisabled();
 	
-	void init();
+	void begin();
 	void run();
 	void end();
 };
