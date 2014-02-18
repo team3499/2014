@@ -10,9 +10,11 @@ public:
 	ModeTest(DriverStation *ds);
 	~ModeTest();
 	
-	void init();
+	void begin();
 	void run();
 	void end();
+	
+	const char *typeString();
 private:
 	int test_mode;
 	std::ofstream *jaglog;

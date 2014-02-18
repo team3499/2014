@@ -9,7 +9,7 @@ ModeAutonomous::~ModeAutonomous(){
 	OUT("Autonomous Destroy");
 }
 
-void ModeAutonomous::init(){
+void ModeAutonomous::begin(){
 	m_ds->InAutonomous(true);
     OUT("Autonomous Init");
     compressor->Start();
@@ -21,4 +21,8 @@ void ModeAutonomous::end(){
     compressor->Stop();
     OUT("Autonomous End");
     m_ds->InAutonomous(false);
+}
+
+const char *ModeAutonomous::typeString(){
+	return "Autonomous";
 }

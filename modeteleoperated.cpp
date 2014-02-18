@@ -18,7 +18,7 @@ ModeTeleoperated::~ModeTeleoperated(){
 	OUT("Teleop Destroy");
 }
 
-void ModeTeleoperated::init(){
+void ModeTeleoperated::begin(){
 	m_ds->InOperatorControl(true);
     OUT("Teleop Init");
     compressor->Start();
@@ -166,4 +166,8 @@ void ModeTeleoperated::end(){
     
     OUT("Teleop End");
     m_ds->InOperatorControl(false);
+}
+
+const char *ModeTeleoperated::typeString(){
+	return "Teleoperated";
 }
