@@ -12,27 +12,16 @@
 RERRobot::RERRobot(){
 	OUT("Initializing 2014 Robot Code");
 	
-    // Initialize all of the members
-    dsLCD = DriverStationLCD::GetInstance();
+	// Initialize class members
+	mode = unknown;
+    disabled = false;
+    enabledMode = NULL;
+    disabledMode = new ModeDisabled(m_ds);
+    
+    initCommon();
+}
 
-    compressor = new Compressor(2, 2);
-    proximityLight = new DigitalOutput(1, 8);
-    psensor = new DigitalInput(1, 5);
-
-    cmp = new Relay(1, 5, Relay::kForwardOnly);
-
-    jagFR = new CANJaguar(2, CANJaguar::kSpeed);
-    jagFL = new CANJaguar(5, CANJaguar::kSpeed);
-    jagRR = new CANJaguar(3, CANJaguar::kSpeed);
-    jagRL = new CANJaguar(4, CANJaguar::kSpeed);
-
-    handstilt = new CANJaguar(63, CANJaguar::kPercentVbus);
-
-    airsys = new SolenoidBreakout();
-    teststick = new Joystick(3);
-
-    mainLights  = new ArduinoControl(7);
-
+void RERRobot::setup(){
     // Set up the members
     jagFR->SetExpiration(0.1);
     jagFL->SetExpiration(0.1);
@@ -49,7 +38,6 @@ RERRobot::RERRobot(){
     jagRR->ConfigEncoderCodesPerRev(1024);
     jagRL->ConfigEncoderCodesPerRev(1024);
 
-
     jagFR->SetPID(0.200, 0.001, 0.000);
     jagFL->SetPID(0.200, 0.001, 0.000);
     jagRR->SetPID(0.200, 0.001, 0.000);
@@ -63,22 +51,13 @@ RERRobot::RERRobot(){
     handstilt->SetExpiration(0.1);
     handstilt->EnableControl();
     
-    op = new Operator();
+    compressor->Stop();
 }
 
 RERRobot::~RERRobot(){
-    delete compressor;
-    delete proximityLight;
-    delete psensor;
-
-    delete jagFR;
-    delete jagFL;
-    delete jagRR;
-    delete jagRL;
-
-    delete handstilt;
-
-    delete airsys;
+	delete disabledMode;
+	delete enabledMode;
+	destroyCommon();
 }
 
 void RERRobot::StartCompetition(){
@@ -90,94 +69,20 @@ void RERRobot::StartCompetition(){
     NetworkTable::GetTable("LiveWindow")->GetSubTable("~STATUS~")->PutBoolean("LW Enabled", false);
     lw->SetEnabled(false);
 
-    // Init stuff
+    setup();
+    
+    // Init output stuff
     dsLCD->Clear();
     dsLCD->PrintfLine(DriverStationLCD::kUser_Line1, "BD: "BUILD_DATE);
     dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "INIT");
     dsLCD->UpdateLCD();
     
+    setupSmartDashboard();
+    
     m_watchdog.SetEnabled(true);
     m_watchdog.SetExpiration(1);
-
-    setupSmartDashboard();
-
-    compressor->Stop();
     
     try {
-        	
-#if SUICIDAL == 1
-    	enabledMode = new ModeDisabled(m_ds);
-    	
-        while(true){
-            // Determine mode
-            mode_type newmode;
-            if(IsDisabled()){
-                newmode = disable;
-            } else if(IsTest()){
-                newmode = test;
-            } else if(IsOperatorControl()){
-                newmode = teleop;
-            } else if(IsAutonomous()){
-                newmode = autonomous;
-            } else {
-                // Report problem...
-                m_ds->WaitForData();
-            }
-
-            // Run end / init mode functions
-            if(mode != newmode){
-                if(mode == disable){
-                	enabledMode->end();
-                	delete enabledMode;
-                } else {
-                    if(mode == teleop){
-                    	enabledMode->end();
-                    	delete enabledMode;
-                        m_ds->WaitForData();
-                    } else if(mode == autonomous){
-                    	enabledMode->end();
-                    	delete enabledMode;
-                        m_ds->WaitForData();
-                    } else if(mode == test){
-                    	enabledMode->end();
-                    	delete enabledMode;
-                        m_ds->WaitForData();
-                    }
-                }
-                mode = newmode;
-                if(newmode == disable){
-                    dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "DISABLED");
-                    enabledMode = new ModeDisabled(m_ds);
-                    enabledMode->begin();
-                } else {
-                    dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "ENABLED");
-                    if(mode == teleop){
-                        dsLCD->PrintfLine(DriverStationLCD::kUser_Line3, "Teleop Mode");
-                        enabledMode = new ModeTeleoperated(m_ds);
-                        enabledMode->begin();
-                    } else if(mode == autonomous){
-                        dsLCD->PrintfLine(DriverStationLCD::kUser_Line3, "Autonomous Mode");
-                        enabledMode = new ModeAutonomous(m_ds);
-                        enabledMode->begin();
-                    } else if(mode == test){
-                        dsLCD->PrintfLine(DriverStationLCD::kUser_Line3, "Test Mode");
-                        enabledMode = new ModeTest(m_ds);
-                        enabledMode->begin();
-                    }
-                }
-            }
-
-            // Run mode loop function
-            enabledMode->run();
-            
-            // Update Driver Station LCD
-            dsLCD->UpdateLCD();
-        }
-#elif SUICIDAL == 2
-        disabled = false;
-        enabledMode = NULL;
-        disabledMode = NULL;
-        
 		while(true){
 			if(IsDisabled() != disabled){
 				disabled = IsDisabled();
@@ -187,21 +92,20 @@ void RERRobot::StartCompetition(){
 					} else {
 						OUT("Warning: NULL enabledMode on stop()");
 					}
-					disabledMode = new ModeDisabled(m_ds);
-					disabledMode->start();
+					if(disabledMode != NULL){
+						disabledMode->start();
+					} else {
+						OUT("Warning: NULL disabledMode on start()");
+					}
 					dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "DISABLED");
 				} else {
 					if(disabledMode != NULL){
 						disabledMode->stop();
-						delete disabledMode;
-						disabledMode = NULL;
-						OUT("delete disabledMode");
 					} else {
-						OUT("Warning: NULL disabledMode on stop() and delete");
+						OUT("Warning: NULL disabledMode on stop()");
 					}
 					if(enabledMode != NULL){
 						enabledMode->start();
-						OUT("start disabledMode");
 					} else {
 						OUT("Warning: NULL enabledMode on start()");
 					}
@@ -221,20 +125,21 @@ void RERRobot::StartCompetition(){
 			}
 			
 			if(mode != newmode){
+				mode = newmode;
 				if(enabledMode != NULL){
-					//enabledMode->stop();
 					delete enabledMode;
 					enabledMode = NULL;
 				} else {
 					OUT("Warning: NULL enabledMode on delete");
 				}
-				mode = newmode;
 				if(mode == teleop){
 					enabledMode = new ModeTeleoperated(m_ds);
 				} else if(mode == autonomous){
 					enabledMode = new ModeAutonomous(m_ds);
 				} else if(mode == test){
 					enabledMode = new ModeTest(m_ds);
+				} else {
+					OUT("Warning: mode unknown")
 				}
 				dsLCD->PrintfLine(DriverStationLCD::kUser_Line3, enabledMode->typeString());
 			}
@@ -242,20 +147,20 @@ void RERRobot::StartCompetition(){
 			if(disabled){
 				if(disabledMode != NULL){
 					disabledMode->run();
+				} else {
+					OUT("Warning: NULL disabledMode on run()");
 				}
 			} else {
 				if(enabledMode != NULL){
 					enabledMode->run();
+				} else {
+					OUT("Warning: NULL enabledMode on run()");
 				}
 			}
 			
 			dsLCD->UpdateLCD();
 			m_watchdog.Feed();
 		}
-#else
-	#error Enter a valid SUICIDAL level
-#endif
-    
     } catch(std::exception e){
     	printf("ERROR: %s\n", e.what());
     }

@@ -29,10 +29,10 @@ void ModeTest::begin(){
 void ModeTest::run(){
     switch(test_mode){
     case 1:
-        proximityLight->Set(0);
+        //proximityLight->Set(0);
         sleep(1);
         SD_PB("LED eh ", true);
-        proximityLight->Set(1);
+        //proximityLight->Set(1);
         sleep(2);
         break;
 

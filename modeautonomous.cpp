@@ -15,7 +15,7 @@ void ModeAutonomous::begin(){
     compressor->Start();
 }
 void ModeAutonomous::run(){
-    Wait(0.005);
+    
 }
 void ModeAutonomous::end(){
     compressor->Stop();
