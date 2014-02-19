@@ -13,4 +13,4 @@ public:
 	void end();
 };
 
-#endif
+#endif // MODEDISABLED_H

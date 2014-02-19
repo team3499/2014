@@ -24,4 +24,4 @@ private:
 	JsBase::JsAxis *axii;
 };
 
-#endif
+#endif // MODETELEOPERATED_H

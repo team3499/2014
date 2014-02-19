@@ -57,4 +57,4 @@ protected:
     //static Relay *auxpwoer; // Relay 5
 };
 
-#endif
+#endif // OUTPUTCOMMON_H

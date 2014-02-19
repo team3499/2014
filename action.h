@@ -4,8 +4,7 @@
 #include <stdlib.h>
 #include <Utility.h>
 
-class Action
-{
+class Action {
 public:
     Action();
     ~Action();

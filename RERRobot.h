@@ -44,4 +44,4 @@ private:
     ModeBase *disabledMode;
 };
 
-#endif
+#endif // RERROBOT_H

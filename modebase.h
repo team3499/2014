@@ -24,4 +24,4 @@ protected:
 	TCPConnection *tcpc;
 };
 
-#endif
+#endif // MODEBASE_H
