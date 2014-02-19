@@ -6,20 +6,6 @@
 #include <fstream>
 #include <Timer.h>
 
-//#ifndef SD_PN
-//  #define SD_PN(n, x) SmartDashboard::PutNumber(n, x)
-//  #define SD_GN(n)    SmartDashboard::GetNumber(n)
-//
-//  #define SD_PB(n, x) SmartDashboard::PutBoolean(n, x)
-//  #define SD_GB(n)    SmartDashboard::GetBoolean(n)
-//
-//  #define SD_PS(n, x) SmartDashboard::PutString(n, x)
-//  #define SD_GS(n)    SmartDashboard::GetString(n)
-//
-//  #define OUT(A) printf("$$FRC3499$$ - " A "\n"); fflush(stdout)
-//  #define VOUT(A) printf("$$FRC3499$$ - %s\n", A); fflush(stdout)
-//#endif
-
 class JagLog {
 public:
 	JagLog(const char *loglabel);

@@ -1,11 +1,8 @@
 #ifndef OPERATOR_H
 #define OPERATOR_H
 
-#include <DriverStation.h>
-#include <Joystick.h>
 #include <Timer.h>
 
-#include <stdlib.h>
 #include "input/jsbase.h"
 
 
