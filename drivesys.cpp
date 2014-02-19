@@ -61,8 +61,8 @@ void DriveSys::vroomvrum(){
 
 	float jx = axii->leftStick.x;
 	float jy = axii->leftStick.y;
-	float dx = axii->dpad_x;
-	float dy = axii->dpad_y;
+	float dx = axii->dpad_x * .707;
+	float dy = axii->dpad_y * .707;
 
 	float fr = jy - jx - dx + dy;
 	float fl = jy + jx + dx + dy;

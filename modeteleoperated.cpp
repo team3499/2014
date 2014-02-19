@@ -21,7 +21,9 @@ void ModeTeleoperated::begin(){
     compressor->Start();
     
     axii = op->getAxisInstance();
+    btns = op->getButtonsInstance();
 }
+
 void ModeTeleoperated::run(){
 	uint32_t starttime = GetFPGATime();
 	
@@ -34,24 +36,23 @@ void ModeTeleoperated::run(){
 	
 	uint32_t jagtime = GetFPGATime();
 	
-	JsBase::JsButtons *btns = op->getButtonsInstance();
 	if(axii->trigger >= 0.5){
 		airsys->shootBall();
 	} else {
-		if(btns->button2){
+		if(btns->button6){
 			airsys->shootCenter();
 		} else {
 			airsys->unShootBall();
 		}
 	}
-    if(btns->button3){
+    if(btns->button5){
     	airsys->openArm();
     } else {
     	airsys->closeArm();
     }
     
     if(absf(axii->rightStick.y) > 0.1){
-		handstilt->Set(axii->rightStick.y * axii->rightStick.y * (axii->rightStick.y < 0 ? 1 : -1));
+		handstilt->Set(axii->rightStick.y * axii->rightStick.y * (axii->rightStick.y > 0 ? 1 : -1));
     } else {
     	handstilt->Set(0);
     }

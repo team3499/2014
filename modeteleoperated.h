@@ -22,6 +22,7 @@ private:
 	JagLog *jaglog;
 	
 	JsBase::JsAxis *axii;
+	JsBase::JsButtons *btns;
 };
 
 #endif // MODETELEOPERATED_H
