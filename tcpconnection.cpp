@@ -59,11 +59,11 @@ TCPConnection::~TCPConnection(){
 // Scheduled accepter
 bool TCPConnection::connect(){
     // This IS blocking! need to fix!
-    sockaddr *addr;
-    int *addrlen;
+    sockaddr addr;
+    int addrlen;
     
     // accept the connection to fd
-    fd = accept(sock, addr, addrlen);
+    fd = accept(sock, &addr, &addrlen);
     
     if(fd > 0) return true;
     return false;

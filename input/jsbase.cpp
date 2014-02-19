@@ -119,7 +119,7 @@ void JsBase::jsBaseTickAxis(){
 	axis->rs_y = js->GetRawAxis(5);
 	
 	axis->dpad_x = js->GetRawAxis(6);
-//	axis->dpad_y = js->GetRawAxis(7);
+//	axis->dpad_y = js->GetRawAxis(0);
 	axis->dpad_y = 0.0;
 }
 

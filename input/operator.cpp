@@ -88,10 +88,3 @@ void Operator::call(void (*function)()){
 	}
 }
 
-
-
-
-
-
-
-
