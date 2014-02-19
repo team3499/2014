@@ -2,6 +2,7 @@
 #define MODETEST_H
 
 #include "modebase.h"
+#include "jaglog.h"
 
 #include <fstream>
 
@@ -17,7 +18,12 @@ public:
 	const char *typeString();
 private:
 	int test_mode;
-	std::ofstream *jaglog;
+	JagLog *jaglog;
+	
+	int arm_step;
+	Timer *armtime;
+	int arm_count;
+	float armspeed;
 };
 
 #endif

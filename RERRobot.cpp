@@ -132,6 +132,8 @@ void RERRobot::StartCompetition(){
 				}
 			}
 			
+			dsLCD->PrintfLine(DriverStationLCD::kUser_Line5, "%d %d", handstilt->GetForwardLimitOK(), handstilt->GetReverseLimitOK());
+			
 			dsLCD->UpdateLCD();
 			m_watchdog.Feed();
 		}
@@ -141,7 +143,7 @@ void RERRobot::StartCompetition(){
 }
 
 void RERRobot::setupSmartDashboard(){
-    SD_PN("TEST_MODE", 3);
+    SD_PN("TEST_MODE", 4);
 
     SD_PN("2P", 0.200);
     SD_PN("2I", 0.001);

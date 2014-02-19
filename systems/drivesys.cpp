@@ -100,7 +100,7 @@ void DriveSys::vroomvrum(){
 	this->rl->Set( rl);
 
 	if(logEh && ableToLog)
-        lg->log(fr, this->fr->GetSpeed(), fl, this->fl->GetSpeed(), rr, this->rr->GetSpeed(), rl, this->rl->GetSpeed());
+        lg->logDrive(fr, this->fr->GetSpeed(), fl, this->fl->GetSpeed(), rr, this->rr->GetSpeed(), rl, this->rl->GetSpeed());
 }
 
 void DriveSys::drive(){
