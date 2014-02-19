@@ -22,8 +22,6 @@ void ModeTeleoperated::begin(){
 	m_ds->InOperatorControl(true);
     OUT("Teleop Init");
     compressor->Start();
-
-    jaglog = new JagLog("teleop");
     
     axii = op->getAxisInstance();
 }
@@ -35,44 +33,7 @@ void ModeTeleoperated::run(){
 	
 	uint32_t inputtime = GetFPGATime();
 	
-	float jx = axii->leftStick.x;
-	float jy = axii->leftStick.y;
-	float dx = axii->dpad_x;
-	float dy = axii->dpad_y;
-	
-	float fr = jy - jx - dx + dy;
-	float fl = jy + jx + dx + dy;
-	float rr = jy - jx + dx + dy;
-	float rl = jy + jx - dx + dy;
-
-	float mx = max( 1.000, max(max(fr, fl), max(rr, rl)));
-	
-	fr /= mx;
-	fl /= mx;
-	rr /= mx;
-	rl /= mx;
-	
-	fr = fr * fr * (fr > 0 ? 1 : -1);
-	fl = fl * fl * (fl > 0 ? 1 : -1);
-	rr = rr * rr * (rr > 0 ? 1 : -1);
-	rl = rl * rl * (rl > 0 ? 1 : -1);
-
-	fr *= 600; // multiply by wheel constant
-	fl *= 600; // multiply by wheel constant
-	rr *= 600; // multiply by wheel constant
-	rl *= 600; // multiply by wheel constant
-
-	fr = (abs(fr) > 30 ? fr : 0.0);
-	fl = (abs(fl) > 30 ? fl : 0.0);
-	rr = (abs(rr) > 30 ? rr : 0.0);
-	rl = (abs(rl) > 30 ? rl : 0.0);
-	
-	jagFR->Set(-fr);
-	jagFL->Set( fl);
-	jagRR->Set(-rr);
-	jagRL->Set( rl);
-	
-	jaglog->log(fr, jagFR->GetSpeed(), fl, jagFL->GetSpeed(), rr, jagRR->GetSpeed(), rl, jagRL->GetSpeed());
+	drivesys->vroomvrum();
 	
 	uint32_t jagtime = GetFPGATime();
 	
@@ -124,10 +85,7 @@ void ModeTeleoperated::end(){
     compressor->Stop();
     
     // clear output to other things
-    jagFR->Set(0.0);
-    jagFL->Set(0.0);
-    jagRR->Set(0.0);
-    jagRL->Set(0.0);
+    drivesys->tchunk();
     
     handstilt->Set(0.0);
     

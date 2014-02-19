@@ -19,12 +19,7 @@ public:
 private:
 	int step;
 	Timer *drivetime;
-	JagLog *jaglog;
-	
-	float fr;
-	float fl;
-	float rr;
-	float rl;
+
 };
 
 #endif

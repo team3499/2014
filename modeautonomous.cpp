@@ -13,18 +13,10 @@ void ModeAutonomous::begin(){
 	m_ds->InAutonomous(true);
     OUT("Autonomous Init");
     compressor->Start();
-    jaglog = new JagLog("auto");
     step = 0;
     drivetime = new Timer();
     drivetime->Start();
-    fr = -400;
-    fl = 400;
-    rr = -400;
-    rl = 400;
-	jagFR->Set(fr);
-	jagFL->Set(fl);
-	jagRR->Set(rr);
-	jagRL->Set(rl);
+    drivesys->setOutputs(-400.0, 400.0, 400.0, -400.0);
 	OUT("Autonomous start");
 }
 void ModeAutonomous::run(){
@@ -32,14 +24,7 @@ void ModeAutonomous::run(){
 	case 0:
 		if(drivetime->HasPeriodPassed(1.0)){
 			OUT("Autonomous step 0 done");
-		    fr = 0;
-		    fl = 0;
-		    rr = 0;
-		    rl = 0;
-			jagFR->Set(fr);
-			jagFL->Set(fl);
-			jagRR->Set(rr);
-			jagRL->Set(rl);
+		    drivesys->setOutputs(0, 0, 0, 0);
 			++step;
 			drivetime->Reset();
 			drivetime->Start();
@@ -50,8 +35,6 @@ void ModeAutonomous::run(){
 		++step;
 		break;
 	}
-	if(step < 2)
-		jaglog->log(fr, jagFR->GetSpeed(), fl, jagFL->GetSpeed(), rr, jagRR->GetSpeed(), rl, jagRL->GetSpeed());
 }
 void ModeAutonomous::end(){
     compressor->Stop();

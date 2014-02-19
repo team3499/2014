@@ -8,10 +8,7 @@ Operator *OutputCommon::op; // oper8shunal
 DigitalInput *OutputCommon::psensor; // Digital I/O 5
 ArduinoControl *OutputCommon::mainLights;
 
-CANJaguar *OutputCommon::jagFR; // Jaguar #3
-CANJaguar *OutputCommon::jagFL; // Jaguar #4
-CANJaguar *OutputCommon::jagRR; // Jaguar #2
-CANJaguar *OutputCommon::jagRL; // Jaguar #5
+DriveSys *OutputCommon::drivesys;
 
 CANJaguar *OutputCommon::handstilt; // For tilting the arm up and down. #63
 
@@ -28,11 +25,8 @@ void OutputCommon::initCommon(){
     
     psensor = new DigitalInput(1, 5);
     mainLights  = new ArduinoControl(7);
-
-    jagFR = new CANJaguar(2, CANJaguar::kSpeed);
-    jagFL = new CANJaguar(5, CANJaguar::kSpeed);
-    jagRR = new CANJaguar(3, CANJaguar::kSpeed);
-    jagRL = new CANJaguar(4, CANJaguar::kSpeed);
+    
+    drivesys = new DriveSys(op);
 
     handstilt = new CANJaguar(63, CANJaguar::kPercentVbus);
 
@@ -49,10 +43,7 @@ void OutputCommon::destroyCommon(){
     delete psensor;
     delete mainLights;
 
-    delete jagFR;
-    delete jagFL;
-    delete jagRR;
-    delete jagRL;
+    delete drivesys;
     
     delete handstilt;
     

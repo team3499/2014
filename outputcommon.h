@@ -14,9 +14,10 @@
 #include <SmartDashboard/SmartDashboard.h>
 #include <Solenoid.h>
 
-#include "solenoidbreakout.h"
 #include "arduino.h"
+#include "systems/drivesys.h"
 #include "input/operator.h"
+#include "solenoidbreakout.h"
 #include "tcpconnection.h"
 
 // SmartDashboard macros: n = name, x = value
@@ -32,6 +33,8 @@
 #define OUT(A) printf("$$FRC3499$$ - " A "\n"); fflush(stdout)
 #define VOUT(A) printf("$$FRC3499$$ - %s\n", A); fflush(stdout)
 
+class DriveSys;
+
 class OutputCommon {
 protected:
 	void initCommon();
@@ -45,10 +48,7 @@ protected:
     static DigitalInput *psensor; // Digital I/O 5
     static ArduinoControl *mainLights;
 
-    static CANJaguar *jagFR; // Jaguar #3
-    static CANJaguar *jagFL; // Jaguar #4
-    static CANJaguar *jagRR; // Jaguar #2
-    static CANJaguar *jagRL; // Jaguar #5
+    static DriveSys *drivesys;
     
     static CANJaguar *handstilt; // For tilting the arm up and down. #63
 

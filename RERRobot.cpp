@@ -22,32 +22,6 @@ RERRobot::RERRobot(){
 }
 
 void RERRobot::setup(){
-    // Set up the members
-    jagFR->SetExpiration(0.1);
-    jagFL->SetExpiration(0.1);
-    jagRR->SetExpiration(0.1);
-    jagRL->SetExpiration(0.1);
-
-    jagFR->SetSpeedReference(CANJaguar::kSpeedRef_QuadEncoder);
-    jagFL->SetSpeedReference(CANJaguar::kSpeedRef_QuadEncoder);
-    jagRR->SetSpeedReference(CANJaguar::kSpeedRef_QuadEncoder);
-    jagRL->SetSpeedReference(CANJaguar::kSpeedRef_QuadEncoder);
-
-    jagFR->ConfigEncoderCodesPerRev(1024);
-    jagFL->ConfigEncoderCodesPerRev(1024);
-    jagRR->ConfigEncoderCodesPerRev(1024);
-    jagRL->ConfigEncoderCodesPerRev(1024);
-
-    jagFR->SetPID(0.200, 0.001, 0.000);
-    jagFL->SetPID(0.200, 0.001, 0.000);
-    jagRR->SetPID(0.200, 0.001, 0.000);
-    jagRL->SetPID(0.200, 0.001, 0.000);
-    
-    jagFR->EnableControl();
-    jagFL->EnableControl();
-    jagRR->EnableControl();
-    jagRL->EnableControl();
-
     handstilt->SetExpiration(0.1);
     handstilt->EnableControl();
     

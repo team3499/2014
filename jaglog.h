@@ -1,7 +1,24 @@
 #ifndef JAGLOG_H
 #define JAGLOG_H
 
+#include "outputcommon.h"
+
+#ifndef SD_PN
+  #define SD_PN(n, x) SmartDashboard::PutNumber(n, x)
+  #define SD_GN(n)    SmartDashboard::GetNumber(n)
+
+  #define SD_PB(n, x) SmartDashboard::PutBoolean(n, x)
+  #define SD_GB(n)    SmartDashboard::GetBoolean(n)
+
+  #define SD_PS(n, x) SmartDashboard::PutString(n, x)
+  #define SD_GS(n)    SmartDashboard::GetString(n)
+
+  #define OUT(A) printf("$$FRC3499$$ - " A "\n"); fflush(stdout)
+  #define VOUT(A) printf("$$FRC3499$$ - %s\n", A); fflush(stdout)
+#endif
+
 #include <fstream>
+#include <Timer.h>
 
 class JagLog {
 public:
@@ -30,7 +47,7 @@ public:
 
 	    std::string sd_label = SD_GS("JAGLOG_LABEL_OVERRIDE");
 	    if(!sd_label.empty())
-	    	label = sd_label;
+	    	label += sd_label;
 
 	    std::string name = "/jaglog/JAG_SPEED_";
 	    char str[6];
@@ -62,6 +79,10 @@ public:
 			*jaglog << GetTime() << " " << frset << " " << fr << " " << flset << " " << fl << " " << rrset << " " << rr << " " << rlset << " " << rl << std::endl;
 			jaglog->flush();
 		}
+	}
+	
+	bool canLog(){
+		return logEh;
 	}
 private:
 	std::ofstream *jaglog;
