@@ -16,7 +16,7 @@ public:
 	void logDrive(double frset, double fr, double flset, double fl, double rrset, double rr, double rlset, double rl);
 	void logArm(double set, double current);
 private:
-	std::ofstream *jaglog;
+	std::ofstream jaglog;
 	bool logEh;
 };
 

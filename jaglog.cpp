@@ -41,9 +41,9 @@ JagLog::JagLog(const char *loglabel){
 	
 	VOUT(name.c_str());
 	
-	jaglog = new std::ofstream(name.c_str());
+	jaglog.open(name.c_str());
 	
-	if(jaglog->bad()){
+	if(jaglog.bad()){
 		OUT("!! OPENING OF THE JAGUAR LOGGING FILE FAILED!");
 		logEh = false;
 	} else {
@@ -51,8 +51,7 @@ JagLog::JagLog(const char *loglabel){
 	}
 }
 JagLog::~JagLog(){
-	//jaglog->close();
-	//delete jaglog;
+	jaglog.close();
 }
 
 bool JagLog::canLog(){
@@ -61,14 +60,14 @@ bool JagLog::canLog(){
 
 void JagLog::logDrive(double frset, double fr, double flset, double fl, double rrset, double rr, double rlset, double rl){
 	if(logEh){
-		*jaglog << GetTime() << " " << frset << " " << fr << " " << flset << " " << fl << " " << rrset << " " << rr << " " << rlset << " " << rl << std::endl;
-		jaglog->flush();
+		jaglog << GetTime() << " " << frset << " " << fr << " " << flset << " " << fl << " " << rrset << " " << rr << " " << rlset << " " << rl << std::endl;
+		jaglog.flush();
 	}
 }
 
 void JagLog::logArm(double set, double current){
 	if(logEh){
-		*jaglog << GetTime() << " " << set << " " << current << std::endl;
-		jaglog->flush();
+		jaglog << GetTime() << " " << set << " " << current << std::endl;
+		jaglog.flush();
 	}
 }
