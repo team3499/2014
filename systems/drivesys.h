@@ -1,8 +1,9 @@
 #ifndef DRIVESYS_H
 #define DRIVESYS_H
 
-#include "../jaglog.h"
+#include "../const.h"
 #include "../input/operator.h"
+#include "../jaglog.h"
 
 #include <CANJaguar.h>
 

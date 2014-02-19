@@ -1,7 +1,10 @@
 #ifndef JAGLOG_H
 #define JAGLOG_H
 
-#include "outputcommon.h"
+#include "const.h"
+
+#include <fstream>
+#include <Timer.h>
 
 //#ifndef SD_PN
 //  #define SD_PN(n, x) SmartDashboard::PutNumber(n, x)
@@ -16,9 +19,6 @@
 //  #define OUT(A) printf("$$FRC3499$$ - " A "\n"); fflush(stdout)
 //  #define VOUT(A) printf("$$FRC3499$$ - %s\n", A); fflush(stdout)
 //#endif
-
-#include <fstream>
-#include <Timer.h>
 
 class JagLog {
 public:

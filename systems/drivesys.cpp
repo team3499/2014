@@ -1,8 +1,5 @@
 #include "drivesys.h"
 
-#define abs(x)    (x > 0 ? x : -x)
-#define max(x, y) (x > y ? x : y)
-
 DriveSys::DriveSys(Operator *op){
 	this->op = op;
 	this->axii = this->op->getAxisInstance();
@@ -72,7 +69,7 @@ void DriveSys::vroomvrum(){
 	float rr = jy - jx + dx + dy;
 	float rl = jy + jx - dx + dy;
 
-	float mx = max( 1.000, max(max(fr, fl), max(rr, rl)));
+	float mx = maxf( 1.000, maxf(maxf(fr, fl), maxf(rr, rl)));
 
 	fr /= mx;
 	fl /= mx;
@@ -89,10 +86,10 @@ void DriveSys::vroomvrum(){
 	rr *= 400; // multiply by wheel constant
 	rl *= 400; // multiply by wheel constant
 
-	fr = (abs(fr) > 30 ? fr : 0.0);
-	fl = (abs(fl) > 30 ? fl : 0.0);
-	rr = (abs(rr) > 30 ? rr : 0.0);
-	rl = (abs(rl) > 30 ? rl : 0.0);
+	fr = (absf(fr) > 30 ? fr : 0.0);
+	fl = (absf(fl) > 30 ? fl : 0.0);
+	rr = (absf(rr) > 30 ? rr : 0.0);
+	rl = (absf(rl) > 30 ? rl : 0.0);
 
 	this->fr->Set(-fr);
 	this->fl->Set( fl);

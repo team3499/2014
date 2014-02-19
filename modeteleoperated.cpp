@@ -8,9 +8,6 @@
 #include <unistd.h>
 #include <stdio.h>
 
-#define abs(x)    ((x > 0.0) ? x : -x)
-#define max(x, y) ((abs(x) > abs(y)) ? abs(x): abs(y))
-
 ModeTeleoperated::ModeTeleoperated(DriverStation *ds) : ModeBase(ds){
 	OUT("Teleop Construct");
 }
@@ -53,7 +50,7 @@ void ModeTeleoperated::run(){
     	airsys->closeArm();
     }
     
-    if(abs(axii->rightStick.y) > 0.1){
+    if(absf(axii->rightStick.y) > 0.1){
 		handstilt->Set(axii->rightStick.y * axii->rightStick.y * (axii->rightStick.y < 0 ? 1 : -1));
     } else {
     	handstilt->Set(0);

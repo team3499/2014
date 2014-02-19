@@ -23,9 +23,9 @@ JagLog::JagLog(const char *loglabel){
 		delete fileNumber;
 	}
 
-	std::string sd_label = SD_GS("JAGLOG_LABEL_OVERRIDE");
-	if(!sd_label.empty())
-		label += sd_label;
+//	std::string sd_label = SD_GS("JAGLOG_LABEL_OVERRIDE");
+//	if(!sd_label.empty())
+//		label += sd_label;
 
 	std::string name = "/jaglog/JAG_SPEED_";
 	char str[6];
