@@ -51,8 +51,8 @@ JagLog::JagLog(const char *loglabel){
 	}
 }
 JagLog::~JagLog(){
-	jaglog->close();
-	delete jaglog;
+	//jaglog->close();
+	//delete jaglog;
 }
 
 bool JagLog::canLog(){

@@ -132,8 +132,6 @@ void RERRobot::StartCompetition(){
 				}
 			}
 			
-			dsLCD->PrintfLine(DriverStationLCD::kUser_Line5, "%d %d", handstilt->GetForwardLimitOK(), handstilt->GetReverseLimitOK());
-			
 			dsLCD->UpdateLCD();
 			m_watchdog.Feed();
 		}

@@ -22,8 +22,6 @@
 
 #include "const.h"
 
-class DriveSys;
-
 class OutputCommon {
 protected:
 	void initCommon();
