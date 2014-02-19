@@ -18,9 +18,7 @@ public:
 	void end();
 	
 	const char *typeString();
-private:	
-	JagLog *jaglog;
-	
+private:
 	JsBase::JsAxis *axii;
 	JsBase::JsButtons *btns;
 };

@@ -45,16 +45,22 @@ void ModeTeleoperated::run(){
 			airsys->unShootBall();
 		}
 	}
+	
     if(btns->button5){
     	airsys->openArm();
     } else {
-    	if(btns->button5 && psensor->Get() == 0){
-    		airsys->openArm();
+    	if(btns->button3){
+    		if(psensor->Get() == 0){
+    			dsLCD->PrintfLine(DriverStationLCD::kUser_Line6, "p detect");
+    			airsys->closeArm();
+    		} else {
+    			dsLCD->PrintfLine(DriverStationLCD::kUser_Line6, "p none");
+    			airsys->openArm();
+    		}
     	} else {
     		airsys->closeArm();
     	}
     }
-    
     
     if(absf(axii->rightStick.y) > 0.1){
 		handstilt->Set(axii->rightStick.y * axii->rightStick.y * (axii->rightStick.y > 0 ? 1 : -1));
@@ -84,10 +90,7 @@ void ModeTeleoperated::run(){
     
 }
 void ModeTeleoperated::end(){
-	OUT("deleteing...");
-	delete jaglog;
     compressor->Stop();
-    OUT("clearing...");
     // clear output to other things
     drivesys->tchunk();
     handstilt->Set(0.0);
