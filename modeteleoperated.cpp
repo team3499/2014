@@ -44,11 +44,17 @@ void ModeTeleoperated::run(){
 			airsys->unShootBall();
 		}
 	}
-    if(btns->button3){
+    if(btns->button5){
     	airsys->openArm();
     } else {
-    	if(btns->button5 && psensor->Get() == 0){
-    		airsys->openArm();
+    	if(btns->button3){
+    		if(psensor->Get() == 0){
+    			dsLCD->PrintfLine(DriverStationLCD::kUser_Line6, "p detect");
+    			airsys->closeArm();
+    		} else {
+    			dsLCD->PrintfLine(DriverStationLCD::kUser_Line6, "p none");
+    			airsys->openArm();
+    		}
     	} else {
     		airsys->closeArm();
     	}
