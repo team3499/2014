@@ -1,5 +1,5 @@
-#ifndef ARDUINO_CNTL_H
-#define ARDUINO_CNTL_H
+#ifndef ARDUINO_H
+#define ARDUINO_H
 
 #include <PWM.h>
 
@@ -32,4 +32,4 @@ private:
 };
 
 
-#endif // #ifndef ARDUINO_CNTL_H
+#endif // ARDUINO_H

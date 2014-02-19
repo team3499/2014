@@ -15,7 +15,7 @@
 #include <Solenoid.h>
 
 #include "arduino.h"
-#include "systems/drivesys.h"
+#include "drivesys.h"
 #include "input/operator.h"
 #include "solenoidbreakout.h"
 #include "tcpconnection.h"
@@ -57,4 +57,4 @@ protected:
     //static Relay *auxpwoer; // Relay 5
 };
 
-#endif
+#endif // OUTPUTCOMMON_H

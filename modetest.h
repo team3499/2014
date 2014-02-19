@@ -26,4 +26,4 @@ private:
 	float armspeed;
 };
 
-#endif
+#endif // MODETEST_H

@@ -1,8 +1,8 @@
-#ifndef DRIVESYS_INCLUDED
-#define DRIVESYS_INCLUDED
+#ifndef DRIVESYS_H
+#define DRIVESYS_H
 
-#include "../jaglog.h"
-#include "../input/operator.h"
+#include "jaglog.h"
+#include "input/operator.h"
 
 #include <CANJaguar.h>
 
@@ -14,14 +14,14 @@ public:
 	void setLogging(bool logEh);
 	bool loggingEh();  bool isLogging();
 	
-	void vroomvrum(); /* AKA drive */                                                                                                void drive();
-	void tchunk();    /* AKA stop  */                                                                                                void stop();
+	void vroomvrum(); /* AKA drive */                                                                    																				                    	  void drive();
+	void tchunk();    /* AKA stop  */                                                                                  																				              void stop();
 	
 	void setPID(double p, double i, double d);
 
 	void setOutputs(float fl, float fr, float rl, float rr);
-private:
 	
+private:
 	bool ableToLog; // basically if we opened the file ok
 	bool logEh;     // what we want to be doing
 	
@@ -33,5 +33,4 @@ private:
 };
 
 
-#endif /* #ifndef DRIVESYS_INCLUDED */
-
+#endif // DRIVESYS_H
