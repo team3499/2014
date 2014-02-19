@@ -20,6 +20,8 @@ void ModeTeleoperated::begin(){
     OUT("Teleop Init");
     compressor->Start();
     
+    lockarms = false;
+    
     axii = op->getAxisInstance();
     btns = op->getButtonsInstance();
 }
@@ -47,18 +49,19 @@ void ModeTeleoperated::run(){
 	}
 	
     if(btns->button5){
-    	airsys->openArm();
+		airsys->openArm();
+		lockarms = false;
     } else {
     	if(btns->button3){
-    		if(psensor->Get() == 0){
-    			dsLCD->PrintfLine(DriverStationLCD::kUser_Line6, "p detect");
+    		if(lockarms || psensor->Get() == 0){
     			airsys->closeArm();
+    			lockarms = true;
     		} else {
-    			dsLCD->PrintfLine(DriverStationLCD::kUser_Line6, "p none");
     			airsys->openArm();
     		}
     	} else {
     		airsys->closeArm();
+    		lockarms = false;
     	}
     }
     
@@ -84,17 +87,17 @@ void ModeTeleoperated::run(){
     int diff4 = GetFPGATime() - pretcptime;
 //    if(diff1 > 55 || diff2 > 20000 || diff3 > 600){ // These are the low cutoffs
 //    if(diff1 > 200 || diff2 > 25000 || diff3 > 3700){ // These are the medium cutoffs aka the 'more than one other task have been scheduled during this time mark, or something went wrong...'
-    if(diff1 > 200 || diff2 > 25000 || diff3 > 3700 || diff4 > 0){
+    if(diff1 > 200 || diff2 > 25000 || diff3 > 3700 || diff4 > 40){
     	printf("Run lag %d %d %d %d\n", diff1, diff2, diff3, diff4);
     }
     
 }
 void ModeTeleoperated::end(){
-    compressor->Stop();
     // clear output to other things
     drivesys->tchunk();
     handstilt->Set(0.0);
-    
+	
+    compressor->Stop();
     OUT("Teleop End");
     m_ds->InOperatorControl(false);
 }

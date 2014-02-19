@@ -21,6 +21,8 @@ public:
 private:
 	JsBase::JsAxis *axii;
 	JsBase::JsButtons *btns;
+	
+	bool lockarms;
 };
 
 #endif // MODETELEOPERATED_H
