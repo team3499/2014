@@ -8,8 +8,10 @@
 #include <unistd.h>
 #include <stdio.h>
 
-#define abs(x)    ((x > 0.0) ? x : -x)
-#define max(x, y) ((abs(x) > abs(y)) ? abs(x): abs(y))
+#ifndef abs
+  #define abs(x)    ((x > 0.0) ? x : -x)
+  #define max(x, y) ((abs(x) > abs(y)) ? abs(x): abs(y))
+#endif
 
 ModeTeleoperated::ModeTeleoperated(DriverStation *ds) : ModeBase(ds){
 	OUT("Teleop Construct");

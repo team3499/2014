@@ -1,7 +1,9 @@
 #include "drivesys.h"
 
-#define abs(x)    (x > 0 ? x : -x)
-#define max(x, y) (x > y ? x : y)
+#ifndef abs
+  #define abs(x)    (x > 0 ? x : -x)
+  #define max(x, y) (x > y ? x : y)
+#endif
 
 DriveSys::DriveSys(Operator *op){
 	this->op = op;
