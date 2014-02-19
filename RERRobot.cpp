@@ -142,6 +142,7 @@ void RERRobot::StartCompetition(){
 
 void RERRobot::setupSmartDashboard(){
     SD_PN("TEST_MODE", 4);
+    SD_PN("TEST_SUB_MODE", 0);
 
     SD_PN("Proximity Sensor", 1337);
 }
