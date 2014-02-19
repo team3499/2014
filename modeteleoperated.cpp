@@ -47,8 +47,13 @@ void ModeTeleoperated::run(){
     if(btns->button3){
     	airsys->openArm();
     } else {
-    	airsys->closeArm();
+    	if(btns->button5 && psensor->Get() == 0){
+    		airsys->openArm();
+    	} else {
+    		airsys->closeArm();
+    	}
     }
+    
     
     if(absf(axii->rightStick.y) > 0.1){
 		handstilt->Set(axii->rightStick.y * axii->rightStick.y * (axii->rightStick.y < 0 ? 1 : -1));
@@ -78,12 +83,12 @@ void ModeTeleoperated::run(){
     
 }
 void ModeTeleoperated::end(){
+	OUT("deleteing...");
 	delete jaglog;
     compressor->Stop();
-    
+    OUT("clearing...");
     // clear output to other things
     drivesys->tchunk();
-    
     handstilt->Set(0.0);
     
     OUT("Teleop End");
