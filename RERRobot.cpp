@@ -159,7 +159,7 @@ void RERRobot::setupSmartDashboard(){
     SD_PB("SHOW_LAG_OUTPUT", false);
     //SD_PB("DISABLE_DA_JAGS", false);
     
-    SD_PN("SHOOTER_DELAY", 0.250);
+    SD_PN("SHOOTER_DELAY", 0.080);
 
     //SD_PN("Proximity Sensor", 1337);
 }
