@@ -8,7 +8,7 @@
 #include <unistd.h>
 #include <stdio.h>
 
-ModeTeleoperated::ModeTeleoperated(DriverStation *ds) : ModeBase(ds){
+ModeTeleoperated::ModeTeleoperated(DriverStation *ds) : ModeBase(ds), lockarms(false), showlag(false){
 	OUT("Teleop Construct");
 }
 ModeTeleoperated::~ModeTeleoperated(){
@@ -22,6 +22,12 @@ void ModeTeleoperated::begin(){
     
     lockarms = false;
     
+    drivesys->checkDead();
+    
+    showlag = SD_GB("SHOW_LAG_OUTPUT");
+    shooter_delay = SD_GN("SHOOTER_DELAY");
+    timeout_started = false;
+    
     axii = op->getAxisInstance();
     btns = op->getButtonsInstance();
 }
@@ -34,44 +40,104 @@ void ModeTeleoperated::run(){
 	
 	uint32_t inputtime = GetFPGATime();
 	
+	// Drive
 	drivesys->vroomvrum();
 	
 	uint32_t jagtime = GetFPGATime();
 	
-	if(axii->trigger >= 0.5){
-		airsys->shootBall();
-	} else {
-		if(btns->button6){
-			airsys->shootCenter();
-		} else {
-			airsys->unShootBall();
-		}
-	}
-	
+	// Reset
+	//openarms = false;
+	//shootball = false;
+	//passball = false;
+		
+	// Arm open/close/latch
     if(btns->button5){
-		airsys->openArm();
+		openarms = true;
 		lockarms = false;
     } else {
     	if(btns->button3){
     		if(lockarms || psensor->Get() == 0){
-    			airsys->closeArm();
+    			openarms = false;
     			lockarms = true;
     		} else {
-    			airsys->openArm();
+    			openarms = true;
     		}
     	} else {
-    		airsys->closeArm();
+    		openarms = false;
     		lockarms = false;
     	}
     }
-    
-    if(absf(axii->rightStick.y) > 0.1){
-		handstilt->Set(axii->rightStick.y * axii->rightStick.y * (axii->rightStick.y > 0 ? 1 : -1));
-    } else {
-    	handstilt->Set(0);
+	
+	// Piston shoot/pass/delay
+	if(btns->button4){
+		shootball = true;
+		passball = false;
+		
+		// cancel any timeout
+		shooter_timeout.Stop();
+		timeout_started = false;
+	} else if(btns->button6){
+		passball = true;
+		shootball = false;
+		
+		shooter_timeout.Stop();
+		timeout_started = false;
+	} else {
+		
+		// Shooter timeout logic
+		if(axii->trigger >= 0.5){
+			openarms = true;
+			// Check if timeout has started
+			if(timeout_started){
+				// Check if timeout has passed
+				if(shooter_timeout.HasPeriodPassed(shooter_delay)){
+					OUT("Shoot!");
+					// Shoot ball
+					shootball = true;
+					passball = false;
+				}
+			} else {
+				OUT("Wait to shoot...");
+				// Start timeout
+				shooter_timeout.Reset();
+				shooter_timeout.Start();
+				timeout_started = true;
+			}
+		} else {
+			if(timeout_started){
+				OUT("Stop Wait");
+				shooter_timeout.Stop();
+				timeout_started = false;
+			}
+			//openarms = false;
+			shootball = false;
+			passball = false;
+		}
+	}
+	
+    // Publish control logic
+	if(openarms)
+		airsys->openArm();
+	else
+		airsys->closeArm();
+	
+	if(shootball)
+		airsys->shootBall();
+	else if(passball)
+		airsys->shootCenter();
+	else
+		airsys->unShootBall();
+		
+    // Arm tilt
+    if(drivesys->isNotDead()){
+		if(absf(axii->rightStick.y) > 0.1){
+			handstilt->Set(axii->rightStick.y * axii->rightStick.y * (axii->rightStick.y > 0 ? 1 : -1));
+		} else {
+			handstilt->Set(0);
+		}
     }
     
-    SD_PN("Proximity Sensor", psensor->Get());
+    //SD_PN("Proximity Sensor", psensor->Get());
     
     mainLights->setFlat();
 
@@ -81,21 +147,24 @@ void ModeTeleoperated::run(){
 //    tcpc->send(tcpdata, strlen(tcpdata));
     // This will crash the robot code.
     
-    int diff1 = inputtime - starttime;
-    int diff2 = jagtime - inputtime;
-    int diff3 = pretcptime - jagtime;
-    int diff4 = GetFPGATime() - pretcptime;
+    uint32_t diff1 = inputtime - starttime;
+    uint32_t diff2 = jagtime - inputtime;
+    uint32_t diff3 = pretcptime - jagtime;
+    uint32_t diff4 = GetFPGATime() - pretcptime;
 //    if(diff1 > 55 || diff2 > 20000 || diff3 > 600){ // These are the low cutoffs
 //    if(diff1 > 200 || diff2 > 25000 || diff3 > 3700){ // These are the medium cutoffs aka the 'more than one other task have been scheduled during this time mark, or something went wrong...'
     if(diff1 > 200 || diff2 > 25000 || diff3 > 3700 || diff4 > 40){
-    	printf("Run lag %d %d %d %d\n", diff1, diff2, diff3, diff4);
+    	if(showlag)
+    		printf("Run lag %d %d %d %d\n", (int)diff1, (int)diff2, (int)diff3, (int)diff4);
     }
     
 }
 void ModeTeleoperated::end(){
     // clear output to other things
     drivesys->tchunk();
-    handstilt->Set(0.0);
+    
+    if(drivesys->isNotDead())
+    	handstilt->Set(0.0);
 	
     compressor->Stop();
     OUT("Teleop End");

@@ -56,95 +56,112 @@ void RERRobot::StartCompetition(){
     m_watchdog.SetEnabled(true);
     m_watchdog.SetExpiration(1);
     
-    try {
-		while(true){
-			if(IsDisabled() != disabled){
-				disabled = IsDisabled();
+    lastcycle = GetFPGATime();
+    cyclecounter = 0;
+    
+    while(true){
+		try {
+			while(true){
+				compound = (compound * cyclecounter) + (Timer::GetPPCTimestamp() - lastcycle);
+				++cyclecounter;
+				compound /= cyclecounter;
+				lastcycle = Timer::GetPPCTimestamp();
+				
+				if(cyclecounter > 5000){
+					if(compound > 0.010)
+						printf("Tick Avg: %f\n", compound);
+					cyclecounter = 0;
+				}
+				
+				if(IsDisabled() != disabled){
+					disabled = IsDisabled();
+					if(disabled){
+						if(enabledMode != NULL){
+							enabledMode->stop();
+						} else {
+							OUT("Warning: NULL enabledMode on stop()");
+						}
+						if(disabledMode != NULL){
+							disabledMode->start();
+						} else {
+							OUT("Warning: NULL disabledMode on start()");
+						}
+						dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "DISABLED");
+					} else {
+						if(disabledMode != NULL){
+							disabledMode->stop();
+						} else {
+							OUT("Warning: NULL disabledMode on stop()");
+						}
+						if(enabledMode != NULL){
+							enabledMode->start();
+						} else {
+							OUT("Warning: NULL enabledMode on start()");
+						}
+						dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, " ENABLED");
+					}
+				}
+				
+				mode_type newmode;
+				if(IsTest()){
+					newmode = test;
+				} else if(IsOperatorControl()){
+					newmode = teleop;
+				} else if(IsAutonomous()){
+					newmode = autonomous;
+				} else {
+					m_ds->WaitForData();
+				}
+				
+				if(mode != newmode){
+					mode = newmode;
+					if(enabledMode != NULL){
+						delete enabledMode;
+						enabledMode = NULL;
+					} else {
+						OUT("Warning: NULL enabledMode on delete");
+					}
+					if(mode == teleop){
+						enabledMode = new ModeTeleoperated(m_ds);
+					} else if(mode == autonomous){
+						enabledMode = new ModeAutonomous(m_ds);
+					} else if(mode == test){
+						enabledMode = new ModeTest(m_ds);
+					} else {
+						OUT("Warning: mode unknown");
+					}
+					dsLCD->PrintfLine(DriverStationLCD::kUser_Line3, enabledMode->typeString());
+				}
+		
 				if(disabled){
-					if(enabledMode != NULL){
-						enabledMode->stop();
-					} else {
-						OUT("Warning: NULL enabledMode on stop()");
-					}
 					if(disabledMode != NULL){
-						disabledMode->start();
-					} else {
-						OUT("Warning: NULL disabledMode on start()");
+						disabledMode->run();
 					}
-					dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "DISABLED");
 				} else {
-					if(disabledMode != NULL){
-						disabledMode->stop();
-					} else {
-						OUT("Warning: NULL disabledMode on stop()");
-					}
 					if(enabledMode != NULL){
-						enabledMode->start();
-					} else {
-						OUT("Warning: NULL enabledMode on start()");
+						enabledMode->run();
 					}
-					dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, " ENABLED");
 				}
+				
+				dsLCD->UpdateLCD();
+				m_watchdog.Feed();
 			}
-			
-			mode_type newmode;
-			if(IsTest()){
-				newmode = test;
-			} else if(IsOperatorControl()){
-				newmode = teleop;
-			} else if(IsAutonomous()){
-				newmode = autonomous;
-			} else {
-				m_ds->WaitForData();
-			}
-			
-			if(mode != newmode){
-				mode = newmode;
-				if(enabledMode != NULL){
-					delete enabledMode;
-					enabledMode = NULL;
-				} else {
-					OUT("Warning: NULL enabledMode on delete");
-				}
-				if(mode == teleop){
-					enabledMode = new ModeTeleoperated(m_ds);
-				} else if(mode == autonomous){
-					enabledMode = new ModeAutonomous(m_ds);
-				} else if(mode == test){
-					enabledMode = new ModeTest(m_ds);
-				} else {
-					OUT("Warning: mode unknown");
-				}
-				dsLCD->PrintfLine(DriverStationLCD::kUser_Line3, enabledMode->typeString());
-			}
-	
-			if(disabled){
-				if(disabledMode != NULL){
-					disabledMode->run();
-				} else {
-					OUT("Warning: NULL disabledMode on run()");
-				}
-			} else {
-				if(enabledMode != NULL){
-					enabledMode->run();
-				} else {
-					OUT("Warning: NULL enabledMode on run()");
-				}
-			}
-			
-			dsLCD->UpdateLCD();
-			m_watchdog.Feed();
+		} catch(std::exception e){
+			printf("ERROR: %s\n", e.what());
 		}
-    } catch(std::exception e){
-    	printf("ERROR: %s\n", e.what());
     }
 }
 
 void RERRobot::setupSmartDashboard(){
     SD_PN("TEST_MODE", 4);
     SD_PN("TEST_SUB_MODE", 0);
+    
+    SD_PB("SHOW_LAG_OUTPUT", false);
+    //SD_PB("DISABLE_DA_JAGS", false);
+    
+    SD_PN("SHOOTER_DELAY", 0.250);
 
-    SD_PN("Proximity Sensor", 1337);
+    //SD_PN("Proximity Sensor", 1337);
 }
 
 

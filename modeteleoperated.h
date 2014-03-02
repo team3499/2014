@@ -23,6 +23,15 @@ private:
 	JsBase::JsButtons *btns;
 	
 	bool lockarms;
+	bool showlag;
+	
+	Timer shooter_timeout;
+	bool timeout_started;
+	float shooter_delay;
+	
+	bool openarms;
+	bool shootball;
+	bool passball;
 };
 
 #endif // MODETELEOPERATED_H

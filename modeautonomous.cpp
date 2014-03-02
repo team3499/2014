@@ -17,6 +17,7 @@ void ModeAutonomous::begin(){
     drivetime = new Timer();
     drivetime->Start();
     drivesys->setOutputs(-400.0, 400.0, 400.0, -400.0);
+    drivesys->checkDead();
 	OUT("Autonomous start");
 }
 void ModeAutonomous::run(){

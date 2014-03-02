@@ -42,6 +42,10 @@ private:
 
     ModeBase *enabledMode;
     ModeBase *disabledMode;
+    
+    int cyclecounter;
+    double lastcycle;
+    double compound;
 };
 
 #endif // RERROBOT_H

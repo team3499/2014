@@ -1,7 +1,6 @@
 #include "drivesys.h"
 
-DriveSys::DriveSys(Operator *op){
-	this->op = op;
+DriveSys::DriveSys(Operator *opin) : op(opin), notdead(true){
 	this->axii = this->op->getAxisInstance();
 	
 	lg = new JagLog("");
@@ -45,14 +44,21 @@ DriveSys::~DriveSys(){
 	delete rr;
 }
 
-void DriveSys::setLogging(bool logEh){
-	this->logEh = ableToLog * logEh;
+void DriveSys::checkDead(){
+	if(!fl->IsAlive() || !fr->IsAlive() || !rl->IsAlive() || !rr->IsAlive())
+		notdead = false;
+	else
+		notdead = true;
+}
+
+void DriveSys::setLogging(bool logEhIn){
+	this->logEh = ableToLog && logEhIn;
 }
 bool DriveSys::loggingEh(){
-	return ableToLog * logEh;
+	return ableToLog && logEh;
 }
 bool DriveSys::isLogging(){
-	return ableToLog * logEh;
+	return ableToLog && logEh;
 }
 
 void DriveSys::vroomvrum(){
@@ -91,12 +97,9 @@ void DriveSys::vroomvrum(){
 	rr = (absf(rr) > 30 ? rr : 0.0);
 	rl = (absf(rl) > 30 ? rl : 0.0);
 
-	this->fr->Set(-fr);
-	this->fl->Set( fl);
-	this->rr->Set(-rr);
-	this->rl->Set( rl);
+	setOutputs(fl, -fr, rl, -rr);
 
-	if(logEh && ableToLog)
+	if(logEh && ableToLog && notdead)
         lg->logDrive(fr, this->fr->GetSpeed(), fl, this->fl->GetSpeed(), rr, this->rr->GetSpeed(), rl, this->rl->GetSpeed());
 }
 
@@ -113,8 +116,10 @@ void DriveSys::stop(){
 }
 
 void DriveSys::setOutputs(float fl, float fr, float rl, float rr){
-	this->fl->Set(fl);
-	this->fr->Set(fr);
-	this->rl->Set(rl);
-	this->rr->Set(rr);
+	if(notdead){
+		this->fl->Set(fl);
+		this->fr->Set(fr);
+		this->rl->Set(rl);
+		this->rr->Set(rr);
+	}
 }
