@@ -39,12 +39,6 @@ void Action::activate(){
     } // If we are too early, dont do anything.
 }
 
-//void Action::release(){
-//	for(int i = 0; i < releaseCount); ++i){
-//		(*(releases[i]))();
-//	}
-//}
-
 void Action::update(){
 	;
 }

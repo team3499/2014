@@ -23,3 +23,7 @@ PPC603gnu/
 
 *.user
 *.pro.user
+
+# Vim swap files
+*.swp
+

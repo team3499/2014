@@ -4,19 +4,37 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 HEADERS += RERRobot.h \
-    generated.h \
-    tcpconnection.h \
-    solenoidbreakout.h \
     action.h \
-    input/buttonreg.h \
-    input/jsbase.h
+    arduino.h \
+    const.h \
+    drivesys.h \
+    generated.h \
+        input/jsbase.h \
+        input/operator.h \
+    jaglog.h \
+    modeautonomous.h \
+    modebase.h \
+    modedisabled.h \
+    modeteleoperated.h \
+    modetest.h \
+    outputcommon.h \
+    solenoidbreakout.h \
+    tcpconnection.h \
 
 SOURCES += RERRobot.cpp \
-    tcpconnection.cpp \
-    solenoidbreakout.cpp \
     action.cpp \
-    input/buttonreg.cpp \
-    input/jsbase.cpp
+    drivesys.cpp \
+        input/jsbase.h \
+        input/operator.h \
+    jaglog.cpp \
+    modeautonomous.cpp \
+    modebase.cpp \
+    modedisabled.cpp \
+    modeteleoperated.cpp \
+    modetest.cpp \
+    outputcommon.cpp \
+    solenoidbreakout.cpp \
+    tcpconnection.cpp \
 
 OTHER_FILES += \
     sample.txt \

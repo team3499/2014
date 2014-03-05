@@ -65,23 +65,6 @@ void Operator::update(){
 	}
 }
 
-void Operator::updateDriveSystem(){
-	jsBaseTickAxis();
-	if(axis->trigger < -0.5){
-		;// Pass ball
-	} else if (axis->trigger > 0.5){
-		; // ShootBall
-	}
-	
-	//
-	// Meccanum Stuff!
-	//
-	
-	//
-	// Arm tilt level
-	//
-}
-
 void Operator::call(void (*function)()){
 	if(function != NULL){
 		(*function)();
