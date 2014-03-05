@@ -3,9 +3,9 @@
 
 #include <PWM.h>
 
-class ArduinoControl : public PWM {
+class ArduinoControl : private PWM {
 public:
-    ArduinoControl(unsigned int pwmport) : PWM(pwmport){
+    ArduinoControl(uint32_t pwmport) : PWM(pwmport){
         SetBounds(20.0, 10.0, 10.0, 10.0, 0.0);
         SetPeriodMultiplier(kPeriodMultiplier_4X);
         SetRaw(m_centerPwm);
@@ -14,22 +14,32 @@ public:
     
     ~ArduinoControl(){}
 
-    void setModeTeleop(){ this->SetSpeed(.2);}
-    void setModeAutonomous(){ this->SetSpeed(.4);}
-    void setModeDisabled(){ this->SetSpeed(0);}
+    void setModeTeleop(){
+    	this->SetSpeed(.2);
+    }
+    void setModeAutonomous(){
+    	this->SetSpeed(.4);
+    }
+    void setModeDisabled(){
+    	this->SetSpeed(0);
+    }
     
-    void setModeWaitCatch(){ this->SetSpeed(-0.2);}
-    void setModeBallHere(){ this->SetSpeed(-0.4);}
+    void setModeWaitCatch(){
+    	this->SetSpeed(-0.2);
+    }
+    void setModeBallHere(){
+    	this->SetSpeed(-0.4);
+    }
     
-    void unsetMode(){}
+    //void unsetMode(){}
     
     void setFlat(){
         SetRaw(m_centerPwm);
     }
     
-private:
-    int mode;
-    int modeStack;
+//private:
+//    int mode;
+//    int modeStack;
 };
 
 

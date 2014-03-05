@@ -23,6 +23,8 @@ private:
 	JsBase::JsButtons *btns;
 	
 	bool lockarms;
+	bool holdlights;
+	
 	bool showlag;
 	
 	Timer shooter_timeout;

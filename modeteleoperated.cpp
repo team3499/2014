@@ -18,9 +18,11 @@ ModeTeleoperated::~ModeTeleoperated(){
 void ModeTeleoperated::begin(){
 	m_ds->InOperatorControl(true);
     OUT("Teleop Init");
+    mainLights->setModeTeleop();
     compressor->Start();
     
     lockarms = false;
+    holdlights = false;
     
     drivesys->checkDead();
     
@@ -59,12 +61,17 @@ void ModeTeleoperated::run(){
     		if(lockarms || psensor->Get() == 0){
     			openarms = false;
     			lockarms = true;
+    			holdlights = true;
+    			mainLights->setModeBallHere();
     		} else {
     			openarms = true;
+    			mainLights->setModeWaitCatch();
     		}
     	} else {
     		openarms = false;
     		lockarms = false;
+    		holdlights = false;
+    		mainLights->setModeTeleop();
     	}
     }
 	

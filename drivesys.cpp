@@ -1,6 +1,12 @@
 #include "drivesys.h"
+#include <cstring>
 
 DriveSys::DriveSys(Operator *opin) : op(opin), notdead(true){
+	set = new JagSpeed;
+	oset = new JagSpeed;
+	memset(set, 0, sizeof(JagSpeed));
+	memset(oset, 0, sizeof(JagSpeed));
+	
 	this->axii = this->op->getAxisInstance();
 	
 	lg = new JagLog("");
@@ -38,6 +44,9 @@ DriveSys::DriveSys(Operator *opin) : op(opin), notdead(true){
 }
 
 DriveSys::~DriveSys(){
+	delete set;
+	delete oset;
+	
 	delete fl;
 	delete fr;
 	delete rl;
@@ -97,8 +106,20 @@ void DriveSys::vroomvrum(){
 	rr = (absf(rr) > 30 ? rr : 0.0);
 	rl = (absf(rl) > 30 ? rl : 0.0);
 
-	setOutputs(fl, -fr, rl, -rr);
-
+	// Ethan
+	// eset2->fr = (absf(fr) > 30 ? fr : 0.0);
+	// eset2->fl = (absf(fl) > 30 ? fl : 0.0);
+	// eset2->rr = (absf(rr) > 30 ? rr : 0.0);
+	// eset2->rl = (absf(rl) > 30 ? rl : 0.0);
+	
+    //if(!memcmp(eset, etmp, sizeof(JagSpeed))){
+    //    setOutputs(eset);
+    //}
+	
+	//
+	
+	setSpeeds(fl, fr, rl, rr);
+	
 	if(logEh && ableToLog && notdead)
         lg->logDrive(fr, this->fr->GetSpeed(), fl, this->fl->GetSpeed(), rr, this->rr->GetSpeed(), rl, this->rl->GetSpeed());
 }
@@ -108,18 +129,32 @@ void DriveSys::drive(){
 }
 
 void DriveSys::tchunk(){
-	setOutputs(0.0, 0.0, 0.0, 0.0);
+	memset(set, 0, sizeof(JagLog));
+	setOutputs();
 }
 
 void DriveSys::stop(){
 	tchunk();
 }
 
-void DriveSys::setOutputs(float fl, float fr, float rl, float rr){
-	if(notdead){
-		this->fl->Set(fl);
-		this->fr->Set(fr);
-		this->rl->Set(rl);
-		this->rr->Set(rr);
+void DriveSys::setSpeeds(float fl, float fr, float rl, float rr){
+	set->fl = fl;
+	set->fr = -fr;
+	set->rl = rl;
+	set->rr = -rr;
+	setOutputs();
+}
+
+void DriveSys::setOutputs(){
+	if(!memcmp(set, oset, sizeof(JagSpeed))){
+		if(notdead){
+			this->fl->Set(set->fl);
+			this->fr->Set(set->fr);
+			this->rl->Set(set->rl);
+			this->rr->Set(set->rr);
+		}
+		JagSpeed *tmp = oset;
+		oset = set;
+		set = tmp;
 	}
 }

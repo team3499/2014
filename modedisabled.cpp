@@ -12,6 +12,7 @@ ModeDisabled::~ModeDisabled(){
 void ModeDisabled::begin(){
 	m_ds->InDisabled(true);
     OUT("Disabled Init");
+    mainLights->setModeDisabled();
     compressor->Stop();
 }
 void ModeDisabled::run(){
