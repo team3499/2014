@@ -1,4 +1,5 @@
 #include "modeautonomous.h"
+#include "arduino.h"
 
 #include <Timer.h>
 
@@ -14,7 +15,7 @@ void ModeAutonomous::begin(){
     OUT("Autonomous Init");
 
     mainLights->setModeAutonomous();
-    mainlights->setTeam((m_ds->GetAlliance == DriverStation::kRed) ? Arduino::TeamRed : Arduino::TeamBlue);
+    mainLights->setTeam((m_ds->GetAlliance() == DriverStation::kRed) ? ArduinoControl::TeamRed : ArduinoControl::TeamBlue);
 
     compressor->Start();
     step = 0;

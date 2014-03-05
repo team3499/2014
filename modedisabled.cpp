@@ -14,7 +14,7 @@ void ModeDisabled::begin(){
     OUT("Disabled Init");
 
     mainLights->setModeDisabled();
-    mainlights->setTeam((m_ds->GetAlliance == DriverStation::kRed) ? Arduino::TeamRed : Arduino::TeamBlue);
+    mainLights->setTeam((m_ds->GetAlliance() == DriverStation::kRed) ? ArduinoControl::TeamRed : ArduinoControl::TeamBlue);
 
     compressor->Stop();
 }

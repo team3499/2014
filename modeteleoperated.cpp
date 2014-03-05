@@ -20,7 +20,7 @@ void ModeTeleoperated::begin(){
     OUT("Teleop Init");
 
     mainLights->setModeTeleop();
-    mainlights->setTeam((m_ds->GetAlliance == DriverStation::kRed) ? Arduino::TeamRed : Arduino::TeamBlue);
+    mainLights->setTeam((m_ds->GetAlliance() == DriverStation::kRed) ? ArduinoControl::TeamRed : ArduinoControl::TeamBlue);
 
     compressor->Start();
     

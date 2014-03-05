@@ -17,11 +17,11 @@ public:
         SetRaw(m_centerPwm);
         this->SetSpeed(0);
 
-        do = new DigitalOutput(8);
+        dio = new DigitalOutput(8);
     }
     
     ~ArduinoControl(){
-        delete do;
+        delete dio;
     }
 
     void setModeTeleop(){
@@ -45,13 +45,13 @@ public:
         SetRaw(m_centerPwm);
     }
 
-    void setTeamColor(TeamColor color){
-        do->set((bool) color);
+    void setTeam(TeamColor color){
+    	dio->Set((bool) color);
     }
 
     
 private:
-    DigitalOutput *do;
+    DigitalOutput *dio;
 };
 
 
