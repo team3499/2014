@@ -16,6 +16,9 @@ ModeTest::~ModeTest(){
 void ModeTest::begin(){
 	m_ds->InTest(true);
     OUT("Test Init");
+
+    mainlights->setTeam((m_ds->GetAlliance == DriverStation::kRed) ? Arduino::TeamRed : Arduino::TeamBlue);
+
     compressor->Start();
     drivesys->checkDead();
     

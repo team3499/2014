@@ -18,17 +18,15 @@
 #include "drivesys.h"
 #include "input/operator.h"
 #include "solenoidbreakout.h"
-#include "tcpconnection.h"
 
 #include "const.h"
 
 class OutputCommon {
 protected:
-	void initCommon();
-	void destroyCommon();
-	
+    void initCommon();
+    void destroyCommon();
+
     static DriverStationLCD *dsLCD;
-    static TCPConnection *tcpc;
 
     static Operator *op;
     
@@ -41,7 +39,6 @@ protected:
 
     static Compressor *compressor; // Relay 2, Digital I/O 2
     static SolenoidBreakout *airsys; // Solenoids 1-8
-    //static Relay *auxpwoer; // Relay 5
 };
 
 #endif // OUTPUTCOMMON_H

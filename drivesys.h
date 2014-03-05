@@ -9,6 +9,13 @@
 
 class DriveSys {
 public:
+	typedef struct JagSpeed {
+		float fl;
+		float fr;
+		float rl;
+		float rr;
+	};
+	
 	DriveSys(Operator *op);
 	~DriveSys();
 	
@@ -22,13 +29,15 @@ public:
 	
 	void setPID(double p, double i, double d);
 
-	void setOutputs(float fl, float fr, float rl, float rr);
+	void setSpeeds(float fl, float fr, float rl, float rr);
 	
 	bool isNotDead(){
 		return notdead;
 	}
 	
 private:
+	void setOutputs();
+	
 	bool ableToLog; // basically if we opened the file ok
 	bool logEh;     // what we want to be doing
 	
@@ -39,6 +48,10 @@ private:
 	JsBase::JsAxis *axii;
 	
 	bool notdead;
+	
+	JagSpeed *set;
+	JagSpeed *oset;
+	// JagSpeed *eset, *eset2;
 };
 
 

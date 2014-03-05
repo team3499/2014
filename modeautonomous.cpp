@@ -12,11 +12,15 @@ ModeAutonomous::~ModeAutonomous(){
 void ModeAutonomous::begin(){
 	m_ds->InAutonomous(true);
     OUT("Autonomous Init");
+
+    mainLights->setModeAutonomous();
+    mainlights->setTeam((m_ds->GetAlliance == DriverStation::kRed) ? Arduino::TeamRed : Arduino::TeamBlue);
+
     compressor->Start();
     step = 0;
     drivetime = new Timer();
     drivetime->Start();
-    drivesys->setOutputs(-400.0, 400.0, 400.0, -400.0);
+    drivesys->setSpeeds(400.0, 400.0, 400.0, 400.0);
     drivesys->checkDead();
 	OUT("Autonomous start");
 }
@@ -25,7 +29,7 @@ void ModeAutonomous::run(){
 	case 0:
 		if(drivetime->HasPeriodPassed(1.0)){
 			OUT("Autonomous step 0 done");
-		    drivesys->setOutputs(0, 0, 0, 0);
+		    drivesys->setSpeeds(0, 0, 0, 0);
 			++step;
 			drivetime->Reset();
 			drivetime->Start();

@@ -4,7 +4,7 @@
 #include <PWM.h>
 #include <DigitalOutput.h>
 
-class ArduinoControl : public PWM {
+class ArduinoControl : private PWM {
 public:
 
     enum TeamColor {
@@ -24,14 +24,22 @@ public:
         delete do;
     }
 
-    void setModeTeleop(){ this->SetSpeed(.2);}
-    void setModeAutonomous(){ this->SetSpeed(.4);}
-    void setModeDisabled(){ this->SetSpeed(0);}
+    void setModeTeleop(){
+    	this->SetSpeed(.2);
+    }
+    void setModeAutonomous(){
+    	this->SetSpeed(.4);
+    }
+    void setModeDisabled(){
+    	this->SetSpeed(0);
+    }
     
-    void setModeWaitCatch(){ this->SetSpeed(-0.2);}
-    void setModeBallHere(){ this->SetSpeed(-0.4);}
-    
-    void unsetMode(){}
+    void setModeWaitCatch(){
+    	this->SetSpeed(-0.2);
+    }
+    void setModeBallHere(){
+    	this->SetSpeed(-0.4);
+    }
     
     void setFlat(){
         SetRaw(m_centerPwm);
@@ -43,9 +51,6 @@ public:
 
     
 private:
-    int mode;
-    int modeStack;
-
     DigitalOutput *do;
 };
 
