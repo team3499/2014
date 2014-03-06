@@ -21,6 +21,7 @@ public:
     void tchunk();    /* AKA stop  */                                                                                                                                                                                void stop();
     
     void setPID(double p, double i, double d);
+    void resetPID();
 
     void setOutputs(float fl, float fr, float rl, float rr);
     
@@ -39,6 +40,11 @@ private:
     JsBase::JsAxis *axii;
     
     bool notdead;
+    
+    float ofl;
+    float ofr;
+    float orl;
+    float orr;
 };
 
 

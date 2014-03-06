@@ -15,7 +15,7 @@ ModeTest::~ModeTest(){
 
 void ModeTest::begin(){
     m_ds->InTest(true);
-    OUT("Test Init");
+    OUT("Test Begin");
     compressor->Start();
     drivesys->checkDead();
     

@@ -83,7 +83,7 @@ public:
     
     void jsBaseTick();
     void jsBaseTickAxis();
-    bool hasChanged();
+    //bool hasChanged();
 
     float getTrigger();
     
@@ -92,11 +92,8 @@ public:
     JsBase::JsAxis *getAxisInstance();
     JsBase::JsButtons *getButtonsInstance();
     
-    unsigned int nowPressed();    
-    unsigned int nowUnPressed();
-    
-    JsBase::JsAxis *axis;
-    JsBase::JsButtons *data;
+//    unsigned int nowPressed();    
+//    unsigned int nowUnPressed();
     
 private:
     static bool initialized;
@@ -105,7 +102,10 @@ private:
 
     Joystick *js;
     
-    JsBase::JsButtons *lastdata;
+    JsBase::JsAxis *axis;
+    JsBase::JsButtons *data;
+    
+    //JsBase::JsButtons *lastdata;
 };
 
 #endif // JSBASE_H

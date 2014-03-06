@@ -47,8 +47,9 @@ void RERRobot::StartCompetition(){
     
     // Init output stuff
     dsLCD->Clear();
-    dsLCD->PrintfLine(DriverStationLCD::kUser_Line1, "BD: "BUILD_DATE);
+    //dsLCD->PrintfLine(DriverStationLCD::kUser_Line1, "BD: "BUILD_DATE);
     dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "INIT");
+    dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "No Mode");
     dsLCD->UpdateLCD();
     
     setupSmartDashboard();
@@ -72,6 +73,8 @@ void RERRobot::StartCompetition(){
                         printf("Tick Avg: %f\n", compound);
                     cyclecounter = 0;
                 }
+                
+                mainLights->setTeamColor((m_ds->GetAlliance() == DriverStation::kRed) ? ArduinoControl::Red : ArduinoControl::Blue);
                 
                 if(IsDisabled() != disabled){
                     disabled = IsDisabled();
@@ -98,7 +101,7 @@ void RERRobot::StartCompetition(){
                         } else {
                             OUT("Warning: NULL enabledMode on start()");
                         }
-                        dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, " ENABLED");
+                        dsLCD->PrintfLine(DriverStationLCD::kUser_Line2, "ENABLED");
                     }
                 }
                 
@@ -159,7 +162,7 @@ void RERRobot::setupSmartDashboard(){
     SD_PB("SHOW_LAG_OUTPUT", false);
     //SD_PB("DISABLE_DA_JAGS", false);
     
-    SD_PN("SHOOTER_DELAY", 0.080);
+    SD_PN("SHOOTER_DELAY", 0.150);
 
     //SD_PN("Proximity Sensor", 1337);
 }

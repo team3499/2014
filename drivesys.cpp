@@ -35,6 +35,8 @@ DriveSys::DriveSys(Operator *opin) : op(opin), notdead(true){
     fr->EnableControl();
     rl->EnableControl();
     rr->EnableControl();
+    
+    tchunk();
 }
 
 DriveSys::~DriveSys(){
@@ -45,10 +47,10 @@ DriveSys::~DriveSys(){
 }
 
 void DriveSys::checkDead(){
-    if(!fl->IsAlive() || !fr->IsAlive() || !rl->IsAlive() || !rr->IsAlive())
-        notdead = false;
-    else
-        notdead = true;
+//    if(!fl->IsAlive() || !fr->IsAlive() || !rl->IsAlive() || !rr->IsAlive())
+//        notdead = false;
+//    else
+//        notdead = true;
 }
 
 void DriveSys::setLogging(bool logEhIn){
@@ -65,7 +67,7 @@ void DriveSys::vroomvrum(){
     op->jsBaseTick();
     op->jsBaseTickAxis();
 
-    float jx = axii->leftStick.x;
+    float jx = axii->leftStick.x * 0.5;
     float jy = axii->leftStick.y;
     float dx = axii->dpad_x * .707;
     float dy = axii->dpad_y * .707;
@@ -87,17 +89,17 @@ void DriveSys::vroomvrum(){
     rr = rr * rr * (rr > 0 ? 1 : -1);
     rl = rl * rl * (rl > 0 ? 1 : -1);
 
-    fr *= 400; // multiply by wheel constant
-    fl *= 400; // multiply by wheel constant
-    rr *= 400; // multiply by wheel constant
-    rl *= 400; // multiply by wheel constant
+    fr *= 350; // multiply by wheel constant
+    fl *= 350; // multiply by wheel constant
+    rr *= 350; // multiply by wheel constant
+    rl *= 350; // multiply by wheel constant
 
     fr = (absf(fr) > 30 ? fr : 0.0);
     fl = (absf(fl) > 30 ? fl : 0.0);
     rr = (absf(rr) > 30 ? rr : 0.0);
     rl = (absf(rl) > 30 ? rl : 0.0);
 
-    setOutputs(fl, -fr, rl, -rr);
+    setOutputs(fl, fr, rl, rr);
 
     if(logEh && ableToLog && notdead)
         lg->logDrive(fr, this->fr->GetSpeed(), fl, this->fl->GetSpeed(), rr, this->rr->GetSpeed(), rl, this->rl->GetSpeed());
@@ -117,9 +119,31 @@ void DriveSys::stop(){
 
 void DriveSys::setOutputs(float fl, float fr, float rl, float rr){
     if(notdead){
-        this->fl->Set(fl);
-        this->fr->Set(fr);
-        this->rl->Set(rl);
-        this->rr->Set(rr);
+        if(ofl != fl)
+            this->fl->Set(fl);
+        if(ofr != fr)
+            this->fr->Set(-fr);
+        if(ofl != rl)
+            this->rl->Set(rl);
+        if(orr != rr)
+            this->rr->Set(-rr);
     }
+    ofl = fl;
+    ofr = fr;
+    orl = rl;
+    orr = rr;
+}
+
+void DriveSys::resetPID(){
+    fl->SetPID(0.200, 0.001, 0.000);
+    fr->SetPID(0.200, 0.001, 0.000);
+    rl->SetPID(0.200, 0.001, 0.000);
+    rr->SetPID(0.200, 0.001, 0.000);
+}
+
+void DriveSys::setPID(double p, double i, double d){
+    fl->SetPID(p, i, d);
+    fr->SetPID(p, i, d);
+    rl->SetPID(p, i, d);
+    rr->SetPID(p, i, d);
 }

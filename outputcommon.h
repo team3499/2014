@@ -18,7 +18,6 @@
 #include "drivesys.h"
 #include "input/operator.h"
 #include "solenoidbreakout.h"
-#include "tcpconnection.h"
 
 #include "const.h"
 
@@ -28,20 +27,17 @@ protected:
     void destroyCommon();
     
     static DriverStationLCD *dsLCD;
-    static TCPConnection *tcpc;
-
     static Operator *op;
     
     static DigitalInput *psensor; // Digital I/O 5
-    static ArduinoControl *mainLights;
+    static ArduinoControl *mainLights; // PWM 7, Digital I/O 8
 
-    static DriveSys *drivesys;
+    static DriveSys *drivesys; // CAN Jaguars 2,3,4,5
     
     static CANJaguar *handstilt; // For tilting the arm up and down. #63
 
     static Compressor *compressor; // Relay 2, Digital I/O 2
-    static SolenoidBreakout *airsys; // Solenoids 1-8
-    //static Relay *auxpwoer; // Relay 5
+    static SolenoidBreakout *airsys; // Solenoids 1-7
 };
 
 #endif // OUTPUTCOMMON_H

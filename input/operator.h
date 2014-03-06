@@ -14,8 +14,8 @@ public:
 
     void unregAction(unsigned int button);
     
-    void update();
-    void updateDriveSystem();
+//    void update();
+//    void updateDriveSystem();
     
 private:
     

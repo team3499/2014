@@ -1,7 +1,6 @@
 #include "outputcommon.h"
 
 DriverStationLCD *OutputCommon::dsLCD;
-TCPConnection *OutputCommon::tcpc;
 
 Operator *OutputCommon::op; // oper8shunal
 
@@ -14,12 +13,10 @@ CANJaguar *OutputCommon::handstilt; // For tilting the arm up and down. #63
 
 Compressor *OutputCommon::compressor; // Relay 2, Digital I/O 2
 SolenoidBreakout *OutputCommon::airsys; // Solenoids 1-8
-//Relay *OutputCommon::auxpwoer; // Relay 5
 
 void OutputCommon::initCommon(){
     // Initialize
     dsLCD = DriverStationLCD::GetInstance();
-    //tcpc = new TCPConnection();
 
     op = new Operator();
     
@@ -32,7 +29,6 @@ void OutputCommon::initCommon(){
 
     compressor = new Compressor(2, 2);
     airsys = new SolenoidBreakout();
-    //auxpwoer = new Relay(1, 5, Relay::kForwardOnly);
 }
 
 void OutputCommon::destroyCommon(){
@@ -49,5 +45,4 @@ void OutputCommon::destroyCommon(){
     
     delete compressor;
     delete airsys;
-    //delete auxpwoer;
 }

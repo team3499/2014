@@ -16,11 +16,16 @@ ModeTeleoperated::~ModeTeleoperated(){
 }
 
 void ModeTeleoperated::begin(){
-    m_ds->InOperatorControl(true);
-    OUT("Teleop Init");
+    m_ds->InOperatorControl(true);    
+    OUT("Teleop Begin");
     compressor->Start();
     
+    mainLights->setModeTeleop();
+    
     lockarms = false;
+    //holdlights = false;
+    shootball = false;
+    passball = false;
     
     drivesys->checkDead();
     
@@ -30,6 +35,8 @@ void ModeTeleoperated::begin(){
     
     axii = op->getAxisInstance();
     btns = op->getButtonsInstance();
+    
+    airsys->unShootBall();
 }
 
 void ModeTeleoperated::run(){
@@ -45,11 +52,6 @@ void ModeTeleoperated::run(){
     
     uint32_t jagtime = GetFPGATime();
     
-    // Reset
-    //openarms = false;
-    //shootball = false;
-    //passball = false;
-        
     // Arm open/close/latch
     if(btns->button5){
         openarms = true;
@@ -115,6 +117,76 @@ void ModeTeleoperated::run(){
         }
     }
     
+//    // Reset
+//    openarms = false;
+//        
+//    // Arm open/close/latch
+//    if(btns->button5){
+//        openarms = true;
+//        lockarms = false;
+//    } else {
+//        if(btns->button3){
+//            if(lockarms || psensor->Get() == 0){
+//                openarms = false;
+//                lockarms = true;
+//                mainLights->setModeBallHere();
+//            } else {
+//                openarms = true;
+//                mainLights->setModeWaitCatch();
+//            }
+//        } else {
+//            openarms = false;
+//            lockarms = false;
+//            mainLights->setModeTeleop();
+//        }
+//    }
+//    
+//    // Reset
+//    shootball = false;
+//    passball = false;
+//    
+//    // Piston shoot/pass/delay
+//    if(btns->button4){
+//        shootball = true;
+//        
+//        // cancel any timeout
+//        shooter_timeout.Stop();
+//        timeout_started = false;
+//    } else if(btns->button6){
+//        passball = true;
+//        
+//        shooter_timeout.Stop();
+//        timeout_started = false;
+//    } else {
+//        
+//        // Shooter timeout logic
+//        if(axii->trigger >= 0.5){
+//            openarms = true;
+//            // Check if timeout has started
+//            if(timeout_started){
+//                // Check if timeout has passed
+//                if(shooter_timeout.HasPeriodPassed(shooter_delay)){
+//                    //OUT("Shoot!");
+//                    // Shoot ball
+//                    shootball = true;
+//                }
+//            } else {
+//                //OUT("Wait to shoot...");
+//                // Start timeout
+//                shooter_timeout.Reset();
+//                shooter_timeout.Start();
+//                timeout_started = true;
+//            }
+//        } else {
+//            if(timeout_started){
+//                //OUT("Stop Wait");
+//                shooter_timeout.Stop();
+//                timeout_started = false;
+//            }
+//            //openarms = false;
+//        }
+//    }
+    
     // Publish control logic
     if(openarms)
         airsys->openArm();
@@ -139,7 +211,7 @@ void ModeTeleoperated::run(){
     
     //SD_PN("Proximity Sensor", psensor->Get());
     
-    mainLights->setFlat();
+    //mainLights->setFlat();
 
     int pretcptime = GetFPGATime();
 //    char *tcpdata;

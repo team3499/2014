@@ -3,7 +3,6 @@
 
 #include "modebase.h"
 #include "input/jsbase.h"
-#include "tcpconnection.h"
 #include "jaglog.h"
 
 #include <fstream>

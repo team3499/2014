@@ -14,7 +14,7 @@ JsBase::JsBase() {
 	this->axis = new JsBase::JsAxis;
 	
     this->data = new JsButtons;
-    this->lastdata = new JsButtons;
+    //this->lastdata = new JsButtons;
 }
 
 bool JsBase::getButton(JsBase::Button b){
@@ -72,10 +72,10 @@ bool JsBase::getButton(unsigned int button){
 }
 
 
-bool JsBase::hasChanged(){
-    jsBaseTick();
-    return (!!(data->buttons - lastdata->buttons));
-}
+//bool JsBase::hasChanged(){
+//    jsBaseTick();
+//    return (!!(data->buttons - lastdata->buttons));
+//}
 
 
 // This returns a POINTER to MEMORY THAT GETS UPDATED (maybe). DO NOT SET OR DELETE!
@@ -88,9 +88,6 @@ JsBase::JsButtons *JsBase::getButtonsInstance(){
 }
 
 void JsBase::jsBaseTick(){
-    delete lastdata;
-    lastdata = data;
-    data = new JsButtons;
     data->button1  = js->GetRawButton(1);
     data->button2  = js->GetRawButton(2);
     data->button3  = js->GetRawButton(3);
@@ -133,14 +130,14 @@ unsigned int JsBase::getRawInt(){
 }
 
 
-unsigned int JsBase::nowPressed(){
-	// AKA: what wasn't pressed, AND what is now pressed
-	return ((~lastdata->buttons) & data->buttons);
-}
-
-unsigned int JsBase::nowUnPressed(){
-	// AKA: what was pressed, AND what is not pressed
-	return ((lastdata->buttons) & ~(data->buttons));
-}
+//unsigned int JsBase::nowPressed(){
+//	// AKA: what wasn't pressed, AND what is now pressed
+//	return ((~lastdata->buttons) & data->buttons);
+//}
+//
+//unsigned int JsBase::nowUnPressed(){
+//	// AKA: what was pressed, AND what is not pressed
+//	return ((lastdata->buttons) & ~(data->buttons));
+//}
 
 
