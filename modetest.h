@@ -8,22 +8,22 @@
 
 class ModeTest : public ModeBase {
 public:
-	ModeTest(DriverStation *ds);
-	~ModeTest();
-	
-	void begin();
-	void run();
-	void end();
-	
-	const char *typeString();
+    ModeTest(DriverStation *ds);
+    ~ModeTest();
+    
+    void begin();
+    void run();
+    void end();
+    
+    const char *typeString();
 private:
-	int test_mode;
-	JagLog *jaglog;
-	
-	int arm_step;
-	Timer *armtime;
-	int arm_count;
-	float armspeed;
+    int test_mode;
+    JagLog *jaglog;
+    
+    int arm_step;
+    Timer *armtime;
+    int arm_count;
+    float armspeed;
 };
 
 #endif // MODETEST_H

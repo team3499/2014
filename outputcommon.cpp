@@ -36,10 +36,10 @@ void OutputCommon::initCommon(){
 }
 
 void OutputCommon::destroyCommon(){
-	delete dsLCD;
-	
-	delete op;
-	
+    delete dsLCD;
+    
+    delete op;
+    
     delete psensor;
     delete mainLights;
 

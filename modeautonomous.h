@@ -8,17 +8,17 @@
 
 class ModeAutonomous : public ModeBase {
 public:
-	ModeAutonomous(DriverStation *ds);
-	~ModeAutonomous();
-	
-	void begin();
-	void run();
-	void end();
-	
-	const char *typeString();
+    ModeAutonomous(DriverStation *ds);
+    ~ModeAutonomous();
+    
+    void begin();
+    void run();
+    void end();
+    
+    const char *typeString();
 private:
-	int step;
-	Timer *drivetime;
+    int step;
+    Timer *drivetime;
 
 };
 

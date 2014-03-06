@@ -24,9 +24,9 @@
 
 class OutputCommon {
 protected:
-	void initCommon();
-	void destroyCommon();
-	
+    void initCommon();
+    void destroyCommon();
+    
     static DriverStationLCD *dsLCD;
     static TCPConnection *tcpc;
 

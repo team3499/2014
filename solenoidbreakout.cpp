@@ -56,7 +56,7 @@ void SolenoidBreakout::shootCenter(){
     s2->Set(false);
     s3->Set(true);
     s4->Set(false);
-    s5->Set(false);	
+    s5->Set(false);    
 }
 
 void SolenoidBreakout::unShootBall(){

@@ -40,11 +40,11 @@ void Action::activate(){
 }
 
 //void Action::release(){
-//	for(int i = 0; i < releaseCount); ++i){
-//		(*(releases[i]))();
-//	}
+//    for(int i = 0; i < releaseCount); ++i){
+//        (*(releases[i]))();
+//    }
 //}
 
 void Action::update(){
-	;
+    ;
 }

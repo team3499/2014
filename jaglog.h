@@ -8,16 +8,16 @@
 
 class JagLog {
 public:
-	JagLog(const char *loglabel);
-	~JagLog();
-	
-	bool canLog();
-	
-	void logDrive(double frset, double fr, double flset, double fl, double rrset, double rr, double rlset, double rl);
-	void logArm(double set, double current);
+    JagLog(const char *loglabel);
+    ~JagLog();
+    
+    bool canLog();
+    
+    void logDrive(double frset, double fr, double flset, double fl, double rrset, double rr, double rlset, double rl);
+    void logArm(double set, double current);
 private:
-	std::ofstream jaglog;
-	bool logEh;
+    std::ofstream jaglog;
+    bool logEh;
 };
 
 #endif // JAGLOG_H

@@ -14,7 +14,7 @@
 #define OUT(A) printf("$$FRC3499$$ - " A "\n"); fflush(stdout)
 #define VOUT(A) printf("$$FRC3499$$ - %s\n", A); fflush(stdout)
 
-#define absf(x) 	(x > 0 ? x : -x)
-#define maxf(x, y)	(x > y ? x : y)
+#define absf(x)     (x > 0 ? x : -x)
+#define maxf(x, y)    (x > y ? x : y)
 
 #endif // CONST_H

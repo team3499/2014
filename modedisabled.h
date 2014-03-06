@@ -5,12 +5,12 @@
 
 class ModeDisabled : public ModeBase {
 public:
-	ModeDisabled(DriverStation *ds);
-	~ModeDisabled();
-	
-	void begin();
-	void run();
-	void end();
+    ModeDisabled(DriverStation *ds);
+    ~ModeDisabled();
+    
+    void begin();
+    void run();
+    void end();
 };
 
 #endif // MODEDISABLED_H

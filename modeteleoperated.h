@@ -10,28 +10,28 @@
 
 class ModeTeleoperated : public ModeBase {
 public:
-	ModeTeleoperated(DriverStation *ds);
-	~ModeTeleoperated();
-	
-	void begin();
-	void run();
-	void end();
-	
-	const char *typeString();
+    ModeTeleoperated(DriverStation *ds);
+    ~ModeTeleoperated();
+    
+    void begin();
+    void run();
+    void end();
+    
+    const char *typeString();
 private:
-	JsBase::JsAxis *axii;
-	JsBase::JsButtons *btns;
-	
-	bool lockarms;
-	bool showlag;
-	
-	Timer shooter_timeout;
-	bool timeout_started;
-	float shooter_delay;
-	
-	bool openarms;
-	bool shootball;
-	bool passball;
+    JsBase::JsAxis *axii;
+    JsBase::JsButtons *btns;
+    
+    bool lockarms;
+    bool showlag;
+    
+    Timer shooter_timeout;
+    bool timeout_started;
+    float shooter_delay;
+    
+    bool openarms;
+    bool shootball;
+    bool passball;
 };
 
 #endif // MODETELEOPERATED_H

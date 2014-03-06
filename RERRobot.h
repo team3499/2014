@@ -23,7 +23,7 @@
 class RERRobot : public RobotBase, public OutputCommon {
 private:
     typedef enum {
-    	unknown = 0,
+        unknown = 0,
         test = 1,
         teleop = 2,
         autonomous = 3
