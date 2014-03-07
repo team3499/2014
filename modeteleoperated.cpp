@@ -110,7 +110,7 @@ void ModeTeleoperated::run(){
                 timeout_started = true;
             }
         } else {
-            if(__builtin_expect(timeout_started, 1)){
+            if(__builtin_expect(timeout_started, 0)){
                 OUT("Stop Wait");
                 shooter_timeout.Stop();
                 timeout_started = false;
