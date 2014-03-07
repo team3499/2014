@@ -133,7 +133,11 @@ void RERRobot::StartCompetition(){
                     } else {
                         OUT("Warning: mode unknown");
                     }
-                    dsLCD->PrintfLine(DriverStationLCD::kUser_Line3, enabledMode->typeString());
+                    if(enabledMode != NULL){
+                        dsLCD->PrintfLine(DriverStationLCD::kUser_Line3, enabledMode->typeString());
+                    } else {
+                        OUT("Warning: NULL enabledMode on typeString()");
+                    }
                 }
         
                 if(disabled){
@@ -145,6 +149,8 @@ void RERRobot::StartCompetition(){
                         enabledMode->run();
                     }
                 }
+                
+                mainLights->update();
                 
                 dsLCD->UpdateLCD();
                 m_watchdog.Feed();

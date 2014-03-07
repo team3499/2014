@@ -1,15 +1,17 @@
 #include "drivesys.h"
 
-DriveSys::DriveSys(Operator *opin) : op(opin), notdead(true){
+#include "ports.h"
+
+DriveSys::DriveSys(Operator *opin) : logEh(true), op(opin), notdead(true){
     this->axii = this->op->getAxisInstance();
     
     lg = new JagLog("");
     ableToLog = lg->canLog();
     
-    fl = new CANJaguar(5, CANJaguar::kSpeed);
-    fr = new CANJaguar(2, CANJaguar::kSpeed);
-    rl = new CANJaguar(4, CANJaguar::kSpeed);
-    rr = new CANJaguar(3, CANJaguar::kSpeed);
+    fl = new CANJaguar(JAGUAR_FL_CAN, CANJaguar::kSpeed);
+    fr = new CANJaguar(JAGUAR_FR_CAN, CANJaguar::kSpeed);
+    rl = new CANJaguar(JAGUAR_RL_CAN, CANJaguar::kSpeed);
+    rr = new CANJaguar(JAGUAR_RR_CAN, CANJaguar::kSpeed);
     
     fl->SetExpiration(0.1);
     fr->SetExpiration(0.1);
@@ -54,7 +56,7 @@ void DriveSys::checkDead(){
 }
 
 void DriveSys::setLogging(bool logEhIn){
-    this->logEh = ableToLog && logEhIn;
+    this->logEh = logEhIn;
 }
 bool DriveSys::loggingEh(){
     return ableToLog && logEh;
@@ -100,9 +102,6 @@ void DriveSys::vroomvrum(){
     rl = (absf(rl) > 30 ? rl : 0.0);
 
     setOutputs(fl, fr, rl, rr);
-
-    if(logEh && ableToLog && notdead)
-        lg->logDrive(fr, this->fr->GetSpeed(), fl, this->fl->GetSpeed(), rr, this->rr->GetSpeed(), rl, this->rl->GetSpeed());
 }
 
 void DriveSys::drive(){
@@ -132,6 +131,9 @@ void DriveSys::setOutputs(float fl, float fr, float rl, float rr){
     ofr = fr;
     orl = rl;
     orr = rr;
+    
+    if(logEh && ableToLog && notdead)
+        lg->logDrive(fr, this->fr->GetSpeed(), fl, this->fl->GetSpeed(), rr, this->rr->GetSpeed(), rl, this->rl->GetSpeed());
 }
 
 void DriveSys::resetPID(){

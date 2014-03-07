@@ -1,52 +1,84 @@
 #ifndef ARDUINO_H
 #define ARDUINO_H
 
+#include "ports.h"
 #include <PWM.h>
 
-class ArduinoControl : public PWM {
+class ArduinoControl : private PWM{
 public:
     enum TeamColor {
         Blue = 0, Red = 1
     };
-    
-    ArduinoControl(unsigned int pwmport) : PWM(pwmport){
-        SetBounds(20.0, 10.0, 10.0, 10.0, 0.0);
-        SetPeriodMultiplier(kPeriodMultiplier_4X);
-        SetRaw(m_centerPwm);
-        this->SetSpeed(0);
+    enum LightsMode {
+        Off = 0,
+        Default = 1,
+        Disabled = 2,
+        Teleop = 3,
+        Autonomous = 4,
+        Test = 5,
         
-        teamcolor = new DigitalOutput(4);
-        setColorEh = 0;
+        WaitCatch = 6,
+        HasBall = 7
+    };
+    
+    ArduinoControl(unsigned int pwmport, unsigned int colorport) : PWM(MAIN_SIDECAR, pwmport), mode(Default), color(false){
+        PWM::SetBounds(20.0, 10.0, 10.0, 10.0, 0.0);
+        PWM::SetPeriodMultiplier(PWM::kPeriodMultiplier_4X);
+        PWM::SetRaw(PWM::m_centerPwm);
+        
+        colorchannel = new DigitalOutput(MAIN_SIDECAR, colorport);
+        
+        update();
     }
     
-    ~ArduinoControl(){}
+    ~ArduinoControl(){
+        //delete modechannel;
+        delete colorchannel;
+    }
 
-    void setModeTeleop(){ this->SetSpeed(.2);}
-    void setModeAutonomous(){ this->SetSpeed(.4);}
-    void setModeDisabled(){ this->SetSpeed(0);}
-    
-    void setModeWaitCatch(){ this->SetSpeed(-0.2);}
-    void setModeBallHere(){ this->SetSpeed(-0.4);}
-    
-    void unsetMode(){}
-    
-    void setFlat(){
-        SetRaw(m_centerPwm);
+    void setMode(LightsMode newmode){
+        switch(newmode){
+        case Off:
+        case Default:
+        case Disabled:
+            mode = 0;
+            break;
+        case Teleop:
+            mode = 0.2;
+            break;
+        case Autonomous:
+        case Test:
+            mode = 0.4;
+            break;
+        case WaitCatch:
+            mode = -0.2;
+            break;
+        case HasBall:
+            mode = -0.4;
+            break;
+        }
     }
     
-    void setTeamColor(TeamColor color){
-//        if(!setColorEh++) // v1
-            teamcolor->Set((bool)color);
-//        if(!setColorEh && !(++setColorEh)) // v2
-//            teamcolor->Set((bool)color);
+    void setTeamColor(TeamColor newcolor){
+        color = (bool)newcolor;
     }
+    
+    void update(){
+        PWM::SetSpeed(mode);
+        colorchannel->Set(color);
+    }
+    
+//    void setFlat(){
+//        //modechannel->SetRaw(PWM::m_centerPwm);
+//    }
     
 private:
-    int setColorEh;
+    //PWM *modechannel;
+    DigitalOutput *colorchannel;
     
-    int mode;
-    int modeStack;
-    DigitalOutput *teamcolor;
+    float mode;
+    bool color;
+    
 };
 
 

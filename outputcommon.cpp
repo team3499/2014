@@ -1,5 +1,7 @@
 #include "outputcommon.h"
 
+#include "ports.h"
+
 DriverStationLCD *OutputCommon::dsLCD;
 
 Operator *OutputCommon::op; // oper8shunal
@@ -20,14 +22,14 @@ void OutputCommon::initCommon(){
 
     op = new Operator();
     
-    psensor = new DigitalInput(1, 5);
-    mainLights  = new ArduinoControl(7);
+    psensor = new DigitalInput(MAIN_SIDECAR, PROXIMITY_SENSOR_DIO);
+    mainLights  = new ArduinoControl(ARDUINO_LIGHT_MODE_PWM, ARDUINO_LIGHT_COLOR_DIO);
     
     drivesys = new DriveSys(op);
 
-    handstilt = new CANJaguar(63, CANJaguar::kPercentVbus);
+    handstilt = new CANJaguar(JAGUAR_HANDS_CAN, CANJaguar::kPercentVbus);
 
-    compressor = new Compressor(2, 2);
+    compressor = new Compressor(MAIN_SIDECAR, COMPRESSOR_TRANSDUCER_DIO, MAIN_SIDECAR, COMPRESSOR_RELAY);
     airsys = new SolenoidBreakout();
 }
 

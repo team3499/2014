@@ -1,0 +1,20 @@
+#ifndef PORTS_H
+#define PORTS_H
+
+#define MAIN_SIDECAR 1
+
+#define PROXIMITY_SENSOR_DIO 5
+
+#define ARDUINO_LIGHT_MODE_PWM 7
+#define ARDUINO_LIGHT_COLOR_DIO 4
+
+#define JAGUAR_FL_CAN 5
+#define JAGUAR_FR_CAN 2
+#define JAGUAR_RL_CAN 4
+#define JAGUAR_RR_CAN 3
+#define JAGUAR_HANDS_CAN 63
+
+#define COMPRESSOR_RELAY 2
+#define COMPRESSOR_TRANSDUCER_DIO 2
+
+#endif // PORTS_H

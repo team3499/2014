@@ -39,14 +39,13 @@ JagLog::JagLog(const char *loglabel){
 //        sprintf("JagLog file: \"%s\"\n", name.c_str());
 //        VOUT(wrt);
     
-    VOUT(name.c_str());
-    
     jaglog.open(name.c_str());
     
     if(jaglog.bad()){
         OUT("!! OPENING OF THE JAGUAR LOGGING FILE FAILED!");
         logEh = false;
     } else {
+        VOUT(name.c_str());
         logEh = true;
     }
 }

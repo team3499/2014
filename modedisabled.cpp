@@ -14,7 +14,7 @@ void ModeDisabled::begin(){
     OUT("Disabled Begin");
     compressor->Stop();
     
-    mainLights->setModeDisabled();
+    mainLights->setMode(ArduinoControl::Disabled);
 }
 void ModeDisabled::run(){
     Wait(0.005);

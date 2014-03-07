@@ -14,7 +14,7 @@ void ModeAutonomous::begin(){
     OUT("Autonomous Begin");
     compressor->Start();
     
-    mainLights->setModeAutonomous();
+    mainLights->setMode(ArduinoControl::Autonomous);
     
     step = 0;
     drivetime = new Timer();

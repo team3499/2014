@@ -20,7 +20,7 @@ void ModeTeleoperated::begin(){
     OUT("Teleop Begin");
     compressor->Start();
     
-    mainLights->setModeTeleop();
+    mainLights->setMode(ArduinoControl::Teleop);
     
     lockarms = false;
     //holdlights = false;
@@ -52,6 +52,8 @@ void ModeTeleoperated::run(){
     
     uint32_t jagtime = GetFPGATime();
     
+    mainLights->setMode(ArduinoControl::Teleop);
+    
     // Arm open/close/latch
     if(btns->button5){
         openarms = true;
@@ -61,8 +63,10 @@ void ModeTeleoperated::run(){
             if(lockarms || psensor->Get() == 0){
                 openarms = false;
                 lockarms = true;
+                mainLights->setMode(ArduinoControl::HasBall);
             } else {
                 openarms = true;
+                mainLights->setMode(ArduinoControl::WaitCatch);
             }
         } else {
             openarms = false;
@@ -106,7 +110,7 @@ void ModeTeleoperated::run(){
                 timeout_started = true;
             }
         } else {
-            if(timeout_started){
+            if(__builtin_expect(timeout_started, 1)){
                 OUT("Stop Wait");
                 shooter_timeout.Stop();
                 timeout_started = false;
