@@ -1,6 +1,7 @@
 #ifndef ARDUINO_H
 #define ARDUINO_H
 
+#include "const.h"
 #include "ports.h"
 #include <PWM.h>
 
@@ -37,6 +38,7 @@ public:
     }
 
     void setMode(LightsMode newmode){
+        float oldmode = mode;
         switch(newmode){
         case Off:
         case Default:
@@ -56,6 +58,9 @@ public:
         case HasBall:
             mode = -0.4;
             break;
+        }
+        if(oldmode != mode){
+            printf("Mode changed from %f to %f\n", oldmode, mode);
         }
     }
     

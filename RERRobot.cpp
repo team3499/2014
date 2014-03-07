@@ -74,7 +74,7 @@ void RERRobot::StartCompetition(){
                     cyclecounter = 0;
                 }
                 
-                mainLights->setTeamColor((m_ds->GetAlliance() == DriverStation::kRed) ? ArduinoControl::Red : ArduinoControl::Blue);
+                mainLights->setTeamColor((m_ds->IsFMSAttached() && m_ds->GetAlliance() == DriverStation::kRed) ? ArduinoControl::Red : ArduinoControl::Blue);
                 
                 if(IsDisabled() != disabled){
                     disabled = IsDisabled();
