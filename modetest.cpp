@@ -38,28 +38,6 @@ void ModeTest::begin(){
 }
 void ModeTest::run(){
     switch(test_mode){
-    case 1:
-//        switch((int)SD_GN("TEST_SUB_MODE")){
-//        case 0:
-//            mainLights->setModeTeleop();
-//            break;
-//        case 1:
-//            mainLights->setModeDisabled();
-//            break;
-//        case 2:
-//            mainLights->setModeAutonomous();
-//            break;
-//        case 3:
-//            mainLights->setModeWaitCatch();
-//            break;
-//        case 4:
-//            mainLights->setModeBallHere();
-//            break;
-//        default:
-//            mainLights->setModeDisabled();
-//            break;
-//        }
-        break;
     case 4:
         switch(arm_step){
         case 0:
