@@ -5,22 +5,38 @@ CONFIG -= qt
 
 HEADERS += RERRobot.h \
     generated.h \
-    tcpconnection.h \
     solenoidbreakout.h \
-    action.h \
-    input/buttonreg.h \
-    input/jsbase.h
+    input/jsbase.h \
+    arduino.h \
+    const.h \
+    drivesys.h \
+    jaglog.h \
+    modeautonomous.h \
+    modebase.h \
+    modedisabled.h \
+    modeteleoperated.h \
+    modetest.h \
+    outputcommon.h \
+    ports.h \
+    input/operator.h
 
 SOURCES += RERRobot.cpp \
-    tcpconnection.cpp \
     solenoidbreakout.cpp \
-    action.cpp \
-    input/buttonreg.cpp \
-    input/jsbase.cpp
+    input/jsbase.cpp \
+    drivesys.cpp \
+    jaglog.cpp \
+    modeautonomous.cpp \
+    modebase.cpp \
+    modedisabled.cpp \
+    modeteleoperated.cpp \
+    modetest.cpp \
+    outputcommon.cpp \
+    input/operator.cpp
 
 OTHER_FILES += \
     sample.txt \
     CMakeLists.txt \
-    .gitignore
+    .gitignore \
+    README.md
 
 INCLUDEPATH += /usr/powerpc-wrs-vxworks/include/WPILib

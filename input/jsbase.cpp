@@ -1,18 +1,19 @@
 #include "jsbase.h"
+#include "const.h"
 
 bool JsBase::initialized = false;
 
 JsBase::JsBase() {
-	if(!initialized){
+    if(!initialized){
         this->js = new Joystick(1);
         JsBase::initialized = true;
-	} else {
-		printf("THERE IS A MISUSE OF CODE! SOMEONE INITIALIZED ANOTHER INSTANCE OF JSBASE\n");
-		return;
-	}
+    } else {
+        printf("THERE IS A MISUSE OF CODE! SOMEONE INITIALIZED ANOTHER INSTANCE OF JSBASE\n");
+        return;
+    }
     
-	this->axis = new JsBase::JsAxis;
-	
+    this->axis = new JsBase::JsAxis;
+
     this->data = new JsButtons;
     //this->lastdata = new JsButtons;
 }
@@ -50,16 +51,16 @@ bool JsBase::getButton(JsBase::Button b){
         return getButton(9);
         break;
     case JsBase::BUTTON_DPAD_UP:
-    	return js->GetRawAxis(7) > 0.5;
+        return js->GetRawAxis(7) > 0.5;
         break;
     case JsBase::BUTTON_DPAD_DOWN:
-    	return js->GetRawAxis(7) < -0.5;
+        return js->GetRawAxis(7) < -0.5;
         break;
     case JsBase::BUTTON_D_DPAD_LEFT:
-    	return js->GetRawAxis(6) < -0.5;
+        return js->GetRawAxis(6) < -0.5;
         break;
     case JsBase::BUTTON_D_DPAD_RIGHT:
-    	return js->GetRawAxis(6) > 0.5;
+        return js->GetRawAxis(6) > 0.5;
         break;
     default:
         return 0;
@@ -80,11 +81,11 @@ bool JsBase::getButton(unsigned int button){
 
 // This returns a POINTER to MEMORY THAT GETS UPDATED (maybe). DO NOT SET OR DELETE!
 JsBase::JsAxis *JsBase::getAxisInstance(){
-	return this->axis;
+    return this->axis;
 }
 
 JsBase::JsButtons *JsBase::getButtonsInstance(){
-	return this->data;
+    return this->data;
 }
 
 void JsBase::jsBaseTick(){
@@ -106,18 +107,18 @@ void JsBase::jsBaseTick(){
 }
 
 void JsBase::jsBaseTickAxis(){
-	// Standerdize ALL joysticks 
-	axis->trigger = getTrigger();
-	
-	axis->ls_x = js->GetRawAxis(1);
-	axis->ls_y = -js->GetRawAxis(2);
-	
-	axis->rs_x = js->GetRawAxis(4);
-	axis->rs_y = js->GetRawAxis(5);
-	
-	axis->dpad_x = js->GetRawAxis(6);
-//	axis->dpad_y = js->GetRawAxis(0);
-	axis->dpad_y = 0.0;
+    // Standerdize ALL joysticks
+    axis->trigger = getTrigger();
+
+    axis->ls_x = js->GetRawAxis(1);
+    axis->ls_y = -js->GetRawAxis(2);
+
+    axis->rs_x = js->GetRawAxis(4);
+    axis->rs_y = js->GetRawAxis(5);
+
+    axis->dpad_x = js->GetRawAxis(6);
+//    axis->dpad_y = js->GetRawAxis(0);
+    axis->dpad_y = 0.0;
 }
 
 // This assumes the RIGHT trigger is positive
@@ -126,18 +127,18 @@ float JsBase::getTrigger(){
 }
 
 unsigned int JsBase::getRawInt(){
-	return data->buttons;
+    return data->buttons;
 }
 
 
 //unsigned int JsBase::nowPressed(){
-//	// AKA: what wasn't pressed, AND what is now pressed
-//	return ((~lastdata->buttons) & data->buttons);
+//    // AKA: what wasn't pressed, AND what is now pressed
+//    return ((~lastdata->buttons) & data->buttons);
 //}
 //
 //unsigned int JsBase::nowUnPressed(){
-//	// AKA: what was pressed, AND what is not pressed
-//	return ((lastdata->buttons) & ~(data->buttons));
+//    // AKA: what was pressed, AND what is not pressed
+//    return ((lastdata->buttons) & ~(data->buttons));
 //}
 
 

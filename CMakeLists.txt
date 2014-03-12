@@ -17,16 +17,26 @@ SET(RER_2014_HEADERS ### =================== HEADERS =================== ###
 
 SET(RER_2014_SOURCES ### =================== SOURCES =================== ###
     RERRobot.cpp
-#    tcpconnection.cpp
+
+    modeautonomous.cpp
+    modebase.cpp
+    modedisabled.cpp
+    modeteleoperated.cpp
+    modetest.cpp
+
+    outputcommon.cpp
     solenoidbreakout.cpp
-    action.cpp
-    input/buttonreg.cpp
+    drivesys.cpp
+    jaglog.cpp
+
+    input/operator.cpp
     input/jsbase.cpp
 )
 
 ### =================== CONFIG =================== ###
 
 INCLUDE_DIRECTORIES(
+    ${CMAKE_SOURCE_DIR}
     ${CMAKE_BINARY_DIR}
     ${WPILib_INCLUDE_DIRS}
 )

@@ -1,6 +1,8 @@
 #ifndef CONST_H
 #define CONST_H
 
+#include "stdio.h"
+
 // SmartDashboard macros: n = name, x = value
 #define SD_PN(n, x) SmartDashboard::PutNumber(n, x)
 #define SD_GN(n)    SmartDashboard::GetNumber(n)

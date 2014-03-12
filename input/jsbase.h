@@ -43,37 +43,37 @@ public:
     };
     
     struct JsAxis {
-    	float trigger;
-    	union {
-    		struct {
-    			float x;
-    			float y;
-    		} rightStick;
-    		struct {
-    			float rs_x;
-    			float rs_y;
-    		};
-    	};
-    	union {
-    		struct {
-    			float x;
-    			float y;
-    		} leftStick;
-    		struct {
-    			float ls_x;
-    			float ls_y;
-    		};
-    	};
-    	union {
-    		struct {
-    			float x;
-    			float y;
-    		} dpad;
-    		struct {
-    			float dpad_x;
-    			float dpad_y;
-    		};
-    	};
+        float trigger;
+        union {
+            struct {
+                float x;
+                float y;
+            } rightStick;
+            struct {
+                float rs_x;
+                float rs_y;
+            };
+        };
+        union {
+            struct {
+                float x;
+                float y;
+            } leftStick;
+            struct {
+                float ls_x;
+                float ls_y;
+            };
+        };
+        union {
+            struct {
+                float x;
+                float y;
+            } dpad;
+            struct {
+                float dpad_x;
+                float dpad_y;
+            };
+        };
     };
 
 public:
